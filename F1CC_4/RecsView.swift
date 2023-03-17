@@ -720,7 +720,7 @@ func start() {
         row_ctr = row_ctr + 11      //next driver
     }
  */
-    print("!! Recs (Driver)= ", Recs)
+    //print("!! Recs (Driver)= ", Recs)
     
     
     // **********************************************************************************************
@@ -948,9 +948,9 @@ func start() {
         var iSpacer = Int((40 - iSumStr) / 7 )
         var iLeftSpacer = Int(iLSpacer/2)
         
-        print("!! iLSpacer= \(iLSpacer)")
-        print("!! iSpacer= \(iSpacer)")
-        print("!! iLeftSpacer= \(iSpacer)")
+        //print("!! iLSpacer= \(iLSpacer)")
+        //print("!! iSpacer= \(iSpacer)")
+        //print("!! iLeftSpacer= \(iSpacer)")
         
         RecsDispDriver[row_ctr] = Spaces.prefix(iLeftSpacer) + db.sDriver[RecNumber][1] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
                 

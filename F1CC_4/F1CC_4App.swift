@@ -4,6 +4,15 @@
 //
 //  Created by David Joyce on 2023-03-16.
 //
+// To do
+// Check Recs detail for spacing
+// Design recs basic
+// Check sliders
+// Check on iPhone 13 and iPhone 8
+// Check AdMob
+// Check calcs
+// Check min, max, mid text files
+// Check againt Android version
 
 import SwiftUI
 import GoogleMobileAds

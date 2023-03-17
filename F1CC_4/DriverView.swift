@@ -394,7 +394,7 @@ struct DriverView: View {
                 db.sDriver = try db.dbReadDriver()
                 db.sPart = try db.dbReadPart()
                 db.sMult = try db.dbReadMult()
-                print("!!!\(db.sDriver)")
+                //print("!!! db.sDriver= \(db.sDriver)")
                 
                 for ctr in stride(from: 0, to: 650, by: 11) {   // set up bDriverBoost on initial run
                     if (db.sDriver[ctr][14] == "1.0") {

@@ -150,27 +150,27 @@
 		B00F31A829C39417007D698A /* F1CC_4 */ = {
 			isa = PBXGroup;
 			children = (
-				B00F31F529C3AA33007D698A /* F1CC-4-Info.plist */,
 				B00F31A929C39417007D698A /* F1CC_4App.swift */,
-				B00F31AB29C39417007D698A /* ContentView.swift */,
 				B00F31E129C39849007D698A /* MainView.swift */,
 				B00F31E329C3985D007D698A /* SplashScreenView.swift */,
 				B00F31E529C39865007D698A /* DriverView.swift */,
+				B00F31EB29C39883007D698A /* CarView.swift */,
+				B00F31EF29C39897007D698A /* RecsView.swift */,
 				B00F31E729C39870007D698A /* PartUpdateView.swift */,
 				B00F31E929C3987A007D698A /* DriverUpdateView.swift */,
-				B00F31EB29C39883007D698A /* CarView.swift */,
+				B00F31F329C398BB007D698A /* DBHandler.swift */,
 				B00F31FA29C3B787007D698A /* Localizable.strings */,
 				B00F31ED29C3988C007D698A /* TestView.swift */,
-				B00F31EF29C39897007D698A /* RecsView.swift */,
 				B00F31F129C398AA007D698A /* DHJColour.swift */,
 				B00F31D529C394EB007D698A /* Interstitial.swift */,
 				B00F31DF29C39555007D698A /* AppDelegate.swift */,
-				B00F31F329C398BB007D698A /* DBHandler.swift */,
+				B00F31F529C3AA33007D698A /* F1CC-4-Info.plist */,
 				B00F31AD29C3941A007D698A /* Assets.xcassets */,
 				B00F31DA29C3953A007D698A /* testdata5 max.txt */,
 				B00F31D829C3953A007D698A /* testdata5 mid.txt */,
 				B00F31D729C3953A007D698A /* testdata5 min.txt */,
 				B00F31D929C3953A007D698A /* testdata5.txt */,
+				B00F31AB29C39417007D698A /* ContentView.swift */,
 				B00F31AF29C3941A007D698A /* Preview Content */,
 			);
 			path = F1CC_4;
