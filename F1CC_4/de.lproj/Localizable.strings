@@ -78,9 +78,9 @@
 "rearwing" = "Heckflügel";
 "reliability" = "Zuverlässigker";
 "rememberRecs" = "\n\nDenken Sie daran, Empfehlungen sofort auszuführen, nachdem Sie die Karten- oder Münzwerte eines Fahrers oder einer Komponente geändert haben!";
-"resultsLine1" = "AS  VKa / BKa  MS";
-"resultsLine4B" = "AB  MB";
-"resultsLine4D" = "AB  Be MB";
+"resultsLine1" = "AS       VKa / BKa       MS";
+"resultsLine4B" = "AB                 MB";
+"resultsLine4D" = "AB       Be       MB";
 "resultRecs1" = "     Name     AS     AB     MS     VKa     VMu";
 "resultRecs2" = "   MS     MB     Be     BKa     BMu";
 "shortTerm" = "Kurz-Ziele";

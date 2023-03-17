@@ -124,15 +124,15 @@ struct DriverView: View {
                                     .padding(.bottom, 20)
                                 Text ("consistency")
                                     .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 20)
+                                    .padding(.bottom, 22)
                                 Text ("fuelManagement")
-                                    .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 20)
+                                    .font(.system(size: 9, design: .monospaced))
+                                    .padding(.bottom, 22)
                                 Text ("tireManagement")
-                                    .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 20)
+                                    .font(.system(size: 9, design: .monospaced))
+                                    .padding(.bottom, 22)
                                 Text ("wetWeatherAbility")
-                                    .font(.system(size: 11, design: .monospaced))
+                                    .font(.system(size: 9, design: .monospaced))
                                     .padding(.bottom, 25)
                             }
                             .offset(x: -5, y:20)
@@ -231,17 +231,17 @@ struct DriverView: View {
                                     let colorFont = cmode[colorInt2]      //  get the level and apply the right background colour to it
                                     
                                     VStack {
-                                        Text("resultsLine1")
+                                        Text("resultsLine1")    // CL ACa/NCa PL
                                             .font(.system(size: 9))
                                             .frame(width: 120)
                                             .background(colorBack)
-                                        Text(DriverDisplay[(index_h + index_v)][0])
+                                        Text(DriverDisplay[(index_h + index_v)][0])    // Stats for CL ACa/NCa PL
                                             .font(.system(size: CGFloat(fontSize[1]), design: .monospaced))
                                             .fontWeight(.semibold)
                                             .frame(width: 120, alignment: .leading)
                                             .background(colorBack)
                                         
-                                        Text(db.sDriver[(index_h + index_v)][1])
+                                        Text(db.sDriver[(index_h + index_v)][1])     // DriverName
                                                 .font(.system(size: 16))
                                                 .fontWeight(.semibold)
                                                 .frame(width: 120)
@@ -250,11 +250,11 @@ struct DriverView: View {
 
                                         if (db.sSelectedMode == "detailMode") {
                                             VStack {
-                                                Text("resultsLine4D")
+                                                Text("resultsLine4D")    // CR MR PR
                                                     .font(.system(size: 9))
                                                     .frame(width: 120)
                                                     .background(colorBack)
-                                                Text("\(db.sDriver[index_v + index_h][16]) \(db.sDriver[index_v + index_h][19]) \(db.sDriver[index_v + index_h][18])")
+                                                Text("\(db.sDriver[index_v + index_h][16]) \(db.sDriver[index_v + index_h][19]) \(db.sDriver[index_v + index_h][18])")   // Stats for CR MR PR
                                                 //Text($db.sDriver[index_v + index_h][16],$db.sDriver[index_v + index_h][19], db.sDriver[index_v + index_h][18])
                                                     .font(.system(size: 13, design: .monospaced))
                                                     .fontWeight(.semibold)
@@ -265,7 +265,7 @@ struct DriverView: View {
                                                     .font(.system(size: 9, design: .monospaced))
                                                     .frame(width: 120, alignment: .center)
                                                     .background(colorBack)
-                                                Text("\(db.sDriver[index_v + index_h][22])")
+                                                Text("\(db.sDriver[index_v + index_h][22])")   // Stats for NCo
                                                     .font(.system(size: 13, design: .monospaced))
                                                     .fontWeight(.semibold)
                                                     .frame(width: 120)

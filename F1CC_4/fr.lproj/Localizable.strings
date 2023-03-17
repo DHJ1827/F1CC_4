@@ -78,9 +78,9 @@
 "rearwing" = "Aileron arrière";
 "reliability" = "Fiabilité";
 "rememberRecs" = "\n\nN'oubliez pas d'exécuter immédiatement les recommandations après avoir modifié les valeurs des cartes ou des pièces d'un conducteur ou d'un composant !";
-"resultsLine1" = "NA  CsD / CaN  NP";
-"resultsLine4B" = "CR  ÉP";
-"resultsLine4D" = "NA  NM ÉP";
+"resultsLine1" = "NA       CsD / CaN       NP";
+"resultsLine4B" = "CR                 ÉP";
+"resultsLine4D" = "NA       NM       ÉP";
 "resultRecs1" = "    Name  CL  CR  PL  ACa  ACo";
 "resultRecs2" = "  PL  PR  MR  NCa  NCo";
 "shortTerm" = "Court Terme";

@@ -42,7 +42,7 @@
 "engine" = "Motor";
 "epic" = "Épico";
 "frontwing" = "Alerón delantero";
-"fuelManagement" = "Gestión de combustible";
+"fuelManagement" = "Gest. de combustible";    //Gestión
 "gearbox" = "Caja de cambios";
 "grip" = "Agarre";
 "info_contents_driver" = "Introducción Piloto\n\nF1 Clash Companion lo ayudará a determinar y priorizar las actualizaciones de conductores y automóviles. Hay 3 pantallas. \n\nInstrucciones fáciles:\nHaga clic en la pantalla de Conductores y en la pantalla de Automóviles para ingresar sus niveles, tarjetas y monedas. Vaya a la sección Resumen en la pantalla Recomendaciones y aparecerá una lista de sus mejores opciones a corto plazo (CP) para jugar. Si es posible, debe actualizar estas opciones de inmediato. A medida que continúa jugando, actualice sus niveles con frecuencia y vuelva a consultar la pantalla Recomendaciones para obtener más orientación.\n\nMás detalles:\n1. la pantalla Driver, lista los 20 drivers con sus estadísticas, \n2. la pantalla Coche y \n3. la pantalla de Recomendaciones. \n\nComenzando en la parte superior izquierda y en el sentido de las agujas del reloj, las estadísticas son: \n\nCL= Nivel Actual del Conductor \nACa= número de Tarjetas Disponibles \nNCa= número de tarjetas necesarias (NCa) para pasar al siguiente nivel \nPL= Nivel Posible del Conductor, utilizando todas las NCa \nCR = Calificación actual (CR) que indica la fuerza (0-100) del controlador en el CL \nPR= Valoración Posible (PR) que indica la fuerza (0-100) del Driver en el PL \nMR = Calificación máxima (MR) que indica la fuerza más alta posible para el controlador \n NCo= número de monedas necesarias (NCo) necesarias para actualizar a PL \n \nComience haciendo clic en la pantalla para actualizar el nivel actual de los conductores (CL) o las tarjetas disponibles (ACa) o el botón Monedas para actualizar la cantidad de monedas disponibles (ACo). \n \n También hay 6 controles deslizantes de amplificadores de componentes. Puede variar estos amplificadores para personalizar sus requisitos de carrera. Como ejemplo, es posible que desee encontrar el mejor controlador para clima húmedo que tenga con la mejor consistencia.  \n \n Todas las demás estadísticas se calculan utilizando algoritmos basados en inteligencia artificial.";
@@ -78,9 +78,9 @@
 "rearwing" = "Alerón trasera";
 "reliability" = "Fiabilidad";
 "rememberRecs" = "\n\n¡Recuerde ejecutar Recomendaciones inmediatamente después de cambiar los valores de monedas o tarjetas de cualquier conductor o componente!";
-"resultsLine1" = "NA  TaD / TaN  NP";
-"resultsLine4B" = "VA  CP";
-"resultsLine4D" = "VA CM CP";
+"resultsLine1" = "NA       TaD / TaN       NP";
+"resultsLine4B" = "VA                 CP";
+"resultsLine4D" = "VA       CM       CP";
 "resultRecs1" = "    Name  CL  CR  PL  ACa  ACo";
 "resultRecs2" = "  PL  PR  MR  NCa  NCo";
 "shortTerm" = "Término Corto";

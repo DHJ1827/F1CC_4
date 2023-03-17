@@ -42,7 +42,7 @@
 "engine" = "Motore";
 "epic" = "Epico";
 "frontwing" = "Ala anteriore";
-"fuelManagement" = "Gestione del carburate";
+"fuelManagement" = "Gest. del carburate";
 "gearbox" = "Riduttore";
 "grip" = "Aderenza";
 "info_contents_driver" = "Introduzione Pilota\n\nF1 Clash Companion ti aiuterà a determinare e dare priorità agli aggiornamenti del conducente e dell\'auto. Ci sono 3 schermi. \n\nIstruzioni facili:\nFai clic sulla schermata Piloti e sulla schermata Auto per inserire i tuoi livelli, carte e monete. Vai alla sezione Riepilogo nella schermata Raccomandazioni ed elencherà le tue migliori scelte a breve termine (BT) per il gioco. Se possibile, dovresti aggiornare queste scelte immediatamente. Mentre continui a giocare, aggiorna frequentemente i tuoi livelli e torna alla schermata Consigli per ulteriori indicazioni!\n\nPiù dettagli:\n1. la schermata Pilota, elenca i 20 piloti con le loro statistiche, \n2. la schermata Auto e \n3. la schermata Raccomandazioni.  \n\nPartendo in alto a sinistra e procedendo in senso orario, le statistiche sono: \n\nCL= Livello attuale del driver \nACa= numero di Carte Disponibili \nNCa= numero di carte necessarie (NCa) per passare al livello successivo \nPL= Possibile Livello del Driver, utilizzando tutte le NCa \nCR= Current Rating (CR) che indica la forza (0-100) del Pilota al CL \nPR= Possibile Rating (PR) che indica la forza (0-100) del Pilota al PL \nMR= Maximum Rating (MR) che indica la massima forza possibile per il Pilota \nNCo= numero di monete necessarie (NCo) necessarie per l\'aggiornamento al PL \n\nInizia facendo clic sullo schermo per aggiornare il livello corrente del conducente (CL) o le carte disponibili (ACa) o il pulsante Monete per aggiornare il numero di monete disponibili (ACo). \n\nCi sono anche 6 cursori per amplificatori di componenti. Puoi variare questi amplificatori per personalizzare le tue esigenze di corsa. Ad esempio, potresti voler trovare il miglior driver Wet Weather che hai con la migliore coerenza.  \n\nTutte le altre statistiche sono calcolate utilizzando algoritmi basati sull\'intelligenza artificiale.\n\n";
@@ -78,9 +78,9 @@
 "rearwing" = "Ala posteriore";
 "reliability" = "Affidabilità";
 "rememberRecs" = "\n\nRicordati di eseguire immediatamente le raccomandazioni dopo aver modificato i valori delle carte o delle monete di qualsiasi pilota o componente!";
-"resultsLine1" = "LA  CaD / CaN  LP";
-"resultsLine4B" = "VA  VP";
-"resultsLine4D" = "VA  PM VP";
+"resultsLine1" = "LA       CaD / CaN       LP";
+"resultsLine4B" = "VA                 VP";
+"resultsLine4D" = "VA       PM       VP";
 "resultRecs1" = "    Name  CL  CR  PL  ACa  ACo";
 "resultRecs2" = "  PL  PR  MR  NCa  NCo";
 "shortTerm" = "Breve Termine";
