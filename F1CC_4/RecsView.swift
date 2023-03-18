@@ -946,15 +946,25 @@ func start() {
         iSumStr = (db.sDriver[RecNumber][1] + db.sDriver[RecNumber][15] + db.sDriver[RecNumber][16] + db.sDriver[RecNumber][17] + db.sDriver[RecNumber][20] + db.sMult[11][1]).count
         var iLSpacer = 40 - (iSumStr + Int((40 - iSumStr) / 7) * 5)
         var iSpacer = Int((40 - iSumStr) / 7 )
-        var iLeftSpacer = Int(iLSpacer/2)
-        
+        //var iLeftSpacer = Int(iLSpacer/2)
+        var iLeftSpacer = 0   // left justified
+        var iDriverSpacer = 0
+        iDriverSpacer = 9 - db.sDriver[RecNumber][1].count   //9 is perfect for Driver length. if its <9 then add spaces to iSpacer. if its >9 then remove spaces
+
         //print("!! iLSpacer= \(iLSpacer)")
         //print("!! iSpacer= \(iSpacer)")
         //print("!! iLeftSpacer= \(iSpacer)")
         
-        RecsDispDriver[row_ctr] = Spaces.prefix(iLeftSpacer) + db.sDriver[RecNumber][1] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
+        //RecsDispDriver[row_ctr] = Spaces.prefix(iLeftSpacer) + db.sDriver[RecNumber][1] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
                 
-        //RecsDispDriver[row_ctr] = "123456789012345678901234567890123456789"
+        //RecsDispDriver[row_ctr] = "1234567890" + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
+        
+        RecsDispDriver[row_ctr] = db.sDriver[RecNumber][1] + Spaces.prefix(iSpacer + iDriverSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
+        
+        
+        
+        //RecsDispDriver[row_ctr] = "1234567890" + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16]
+        //RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
         
         // build string 1
         // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
@@ -975,10 +985,10 @@ func start() {
             iSpacer = Int((40 - iSumStr)/7)
             iLeftSpacer = Int(iLSpacer/2)
             
-            RecsDispDriver[row_ctr  + 1] = String(Spaces.prefix(iLeftSpacer)) + String(xPL) + String(Spaces.prefix(iSpacer)) + String(xPR) + String(Spaces.prefix(iSpacer)) + String(xMR) + String(Spaces.prefix(iSpacer)) + String(xNCa) + String(Spaces.prefix(iSpacer)) + String(xNCo)
+            //RecsDispDriver[row_ctr  + 1] = String(Spaces.prefix(iLeftSpacer)) + String(xPL) + String(Spaces.prefix(iSpacer)) + String(xPR) + String(Spaces.prefix(iSpacer)) + String(xMR) + String(Spaces.prefix(iSpacer)) + String(xNCa) + String(Spaces.prefix(iSpacer)) + String(xNCo)
             
-//            RecsDispDriver[row_ctr + 1] = Spaces.prefix(4) + String(xPL) + Spaces.prefix(4) + String(xPR) + Spaces.prefix(4) + String(xMR)
-//            RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(7) + String(xNCa) + Spaces.prefix(2) + String(xNCo)      //PL, PR, MR, NCa, NCo
+            RecsDispDriver[row_ctr + 1] = Spaces.prefix(6) + String(xPL) + Spaces.prefix(4) + String(xPR) + Spaces.prefix(4) + String(xMR)
+            RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(7) + String(xNCa) + Spaces.prefix(3) + String(xNCo)      //PL, PR, MR, NCa, NCo
             // *************** need to fix for long NCa and NCo
         } else {
             //do loop
@@ -1175,7 +1185,8 @@ func start() {
         RecNumber = Int(Recs[rec_ctr][0])
         
         // build string 0
-        RecsDispParts[row_ctr] = Spaces.prefix(6 - Int(db.sPart[RecNumber][1].count/2)) + db.sPart[RecNumber][1]     //Name
+        //RecsDispParts[row_ctr] = Spaces.prefix(6 - Int(db.sPart[RecNumber][1].count/2)) + db.sPart[RecNumber][1]     //Name
+        RecsDispParts[row_ctr] = db.sPart[RecNumber][1]     // Part Name, left justified
         col = RecsDispParts[row_ctr].count
         RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(13 - col) + db.sPart[RecNumber][15]    //CL
         col = RecsDispParts[row_ctr].count
@@ -1194,7 +1205,7 @@ func start() {
         RecsDispParts[row_ctr + 1] = ""   //clear it
         
         if (db.sPart[RecNumber][15] == db.sPart[RecNumber][17]) {
-            RecsDispParts[row_ctr + 1] = Spaces.prefix(4) + db.sPart[RecNumber][18] + Spaces.prefix(4) + db.sPart[RecNumber][19] + Spaces.prefix(7) + db.sPart[RecNumber][21] + Spaces.prefix(2) + db.sPart[RecNumber][21]      //PL, PR, MR, NCa, NCo
+            RecsDispParts[row_ctr + 1] = Spaces.prefix(4) + db.sPart[RecNumber][17] + Spaces.prefix(4) + db.sPart[RecNumber][18] + Spaces.prefix(4) + db.sPart[RecNumber][19] + Spaces.prefix(5) + db.sPart[RecNumber][21] + Spaces.prefix(5) + db.sPart[RecNumber][22]      //PL, PR, MR, NCa, NCo
             //print("!!RecsDisParts[row_ctr+1]if: \(RecsDispParts[row_ctr+1])")
             // *************** need to fix for long NCa and NCo
         } else {

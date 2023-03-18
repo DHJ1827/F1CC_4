@@ -4,18 +4,7 @@
 //
 //  Created by David Joyce on 2023-03-16.
 //
-// To do
-// Check Recs detail for spacing
-//    - fix string 0 and 1 spacing: line 42 and 54 for varied spacing depending on string lengths
-// Design recs basic
-// Check sliders
-// Check on iPhone 13 and iPhone 8
-// Check AdMob
-// Check calcs
-// Check min, max, mid text files
-// Check againt Android version
-// need consistent font and colours for headings and titles throughut
-// create app icon
+
 
 import SwiftUI
 import GoogleMobileAds

@@ -231,11 +231,11 @@ struct CarView: View {
                         }
                         
                     }  //HStack
-                }            //VStack title and images/sliders- all upto drivers
-                Spacer(minLength: 40)
+                }    //VStack title and images/sliders- all upto drivers
+                
+                Spacer(minLength: 20)
                 
                 // start of parts
-                
                 
                 ZStack {   // parts with opaque button on top
                     
