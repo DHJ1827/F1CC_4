@@ -68,7 +68,7 @@
 "numberCoins" = "Number of Coins:";
 "ok" = "OK";
 "overtaking" = "Overtaking";
-"pitStopTime" = "Pit Stop Time";
+"pitStopTime %@" = "Pit Stop Time: %@";
 "PL" = "PL";
 "possibleLevel" = "Possible Level";
 "possibleRating" = "Possible Rating";

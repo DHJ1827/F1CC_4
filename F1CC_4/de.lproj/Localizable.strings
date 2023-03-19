@@ -68,7 +68,7 @@
 "numberCoins" = "Anzahl Münzen";
 "ok" = "OK";
 "overtaking" = "Überholvorgang";
-"pitStopTime" = "Durchschnittliche Zeit für PS";
+"pitStopTime %@" = "Durchschnittliche Zeit für PS: %@";
 "PL" = "MS";
 "possibleLevel" = "Mögliches Stufe";
 "possibleRating" = "Mögliche Bewertung";

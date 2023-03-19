@@ -106,6 +106,7 @@ struct DriverView: View {
                                 Text("coins \(db.sMult[11][1])")
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                     .frame(minWidth: 100, minHeight: 30, alignment: .center)
+                                    .padding(.horizontal, 10)
                                     .foregroundColor(Color.white)
                                     .background(Color.colours.backgrd_blue)
                             }

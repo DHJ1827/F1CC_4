@@ -68,7 +68,7 @@
 "numberCoins" = "Numero di monete:";
 "ok" = "OK";
 "overtaking" = "Sorpasso";
-"pitStopTime" = "Tempo media del pit stop";
+"pitStopTime %@" = "Tempo media del pit stop: %@";
 "PL" = "LP";
 "possibleLevel" = "Livello possibile";
 "possibleRating" = "Valutazione possibile";

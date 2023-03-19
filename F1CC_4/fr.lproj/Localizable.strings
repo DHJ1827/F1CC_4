@@ -68,7 +68,7 @@
 "numberCoins" = "Nombre de pièces:";
 "ok" = "OK";
 "overtaking" = "Dépassement";
-"pitStopTime" = "Durée moyenne d\'un Pit Stop";
+"pitStopTime %@" = "Durée moyenne d\'un Pit Stop: %@";
 "PL" = "NP";
 "possibleLevel" = "Niveau possible";
 "possibleRating" = "Évaluation possible";

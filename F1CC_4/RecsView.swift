@@ -415,23 +415,25 @@ struct RecsView: View {
                     VStack(alignment: .center) {
                         HStack{
                             Text("coins \(db.sMult[11][1])")       // Coins display
-                                .font(.body)
-                                .fontWeight(.semibold)
-                                .frame(width: 240)
+                                .font(.system(size: 14, weight: .bold, design: .default))
+                                .frame(minWidth: 100, minHeight: 30, alignment: .center)
+                                .padding(.horizontal, 10)
+                                .foregroundColor(Color.white)
+                                .background(Color.colours.backgrd_blue)
                         }
-                        .frame(width: 240)
-                        .border(.black)
+                        
                         Spacer(minLength: 15)
+                        
                         VStack(alignment: .center) {
                             let pitString: String = String(Double(Int(pitStopTime * 100))/100) + " s."
-                            Text("pitStopTime")
-                                .font(.body)
-                                .fontWeight(.semibold)
-                                .frame(width: 280)
-                            Text(pitString)
+                            Text("pitStopTime \(pitString)")
+                                .font(.system(size: 14, weight: .bold, design: .default))
+                                .frame(minWidth: 100, minHeight: 30, alignment: .center)
+                                .padding(.horizontal, 10)
+                                .foregroundColor(Color.white)
+                                .background(Color.colours.backgrd_blue)
                         }
-                        .frame(width: 280)
-                        .border(.black)
+                        
 
                     }    //VStack
                     Spacer(minLength: 15)

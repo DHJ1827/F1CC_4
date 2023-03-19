@@ -68,7 +68,7 @@
 "numberCoins" = "Número de monedas:";
 "ok" = "OK";
 "overtaking" = "Adelantamiento";
-"pitStopTime" = "Tiempo de parada en boxes";
+"pitStopTime %@" = "Tiempo de parada en boxes: %@";
 "PL" = "NP";
 "possibleLevel" = "Nivel posible";
 "possibleRating" = "Calificación posible";
