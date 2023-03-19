@@ -605,15 +605,15 @@ let amountFormatter: NumberFormatter = {
     
 func start() {
     // used in DispRecs calcs:
-    var test1: (String)
-    var CL1: (Int)
-    var PL1: (Int)
-    var LH: (String)
-    var RH: (String)
-    var factor: (String)
-    var strFactor: (String)
-    var spaces: (Int)
-    var interstitial: GADInterstitialAd?
+//    var test1: (String)
+//    var CL1: (Int)
+//    var PL1: (Int)
+//    var LH: (String)
+//    var RH: (String)
+//    var factor: (String)
+//    var strFactor: (String)
+//    var spaces: (Int)
+//    var interstitial: GADInterstitialAd?
     
     var factors: [String]
     

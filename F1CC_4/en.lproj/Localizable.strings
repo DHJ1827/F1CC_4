@@ -29,7 +29,7 @@
 "cards" = "Cards";
 "CL_error" = "Current Level must be between 0 - 11 for ";
 "CL" = "CL";
-"coins %@" = "Coins:\n %@";
+"coins %@" = "Coins: %@";
 "common" = "Common";
 "consistency" = "Consistency";
 "CR" = "CR";

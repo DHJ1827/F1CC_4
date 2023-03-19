@@ -29,7 +29,7 @@
 "cards" = "Tarjetas";
 "CL_error" = "El Nivel Actual debe estar entre 0 y 11 para ";
 "CL" = "NA";
-"coins %@" = "Monedas:\n %@";
+"coins %@" = "Monedas: %@";
 "common" = "Común";
 "consistency" = "Consistencia";
 "CR" = "VA";

@@ -29,7 +29,7 @@
 "cards" = "Cartes";
 "CL_error" = "Le Niveau Actuel doit être compris entre 0 et 11 pour ";
 "CL" = "NA";
-"coins %@" = "Pièces\n %@";
+"coins %@" = "Pièces %@";
 "common" = "Commun";
 "consistency" = "Régularité";
 "CR" = "NA";

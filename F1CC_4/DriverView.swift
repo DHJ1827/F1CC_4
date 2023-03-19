@@ -104,7 +104,8 @@ struct DriverView: View {
                                 isDriverUpdateViewShowing = true
                             }) {
                                 Text("coins \(db.sMult[11][1])")
-                                    .frame(minWidth: 90, minHeight: 50, alignment: .center)
+                                    .font(.system(size: 14, weight: .bold, design: .default))
+                                    .frame(minWidth: 100, minHeight: 30, alignment: .center)
                                     .foregroundColor(Color.white)
                                     .background(Color.colours.backgrd_blue)
                             }

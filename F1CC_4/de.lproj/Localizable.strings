@@ -29,7 +29,7 @@
 "cards" = "Karten";
 "CL_error" = "Der Aktuelles Stufe muss zwischen 0 und 11 liegen ";
 "CL" = "AS";
-"coins %@" = "Münzen:\n %@";
+"coins %@" = "Münzen: %@";
 "common" = "Verbreitet";
 "consistency" = "Konstanz";
 "CR" = "AB";

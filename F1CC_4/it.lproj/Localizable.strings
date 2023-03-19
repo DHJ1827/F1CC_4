@@ -29,7 +29,7 @@
 "cards" = "Carte";
 "CL_error" = "Il Livello Attuale deve essere compreso tra 0 e 11 per ";
 "CL" = "LA";
-"coins %@" = "Monete:\n %@";
+"coins %@" = "Monete: %@";
 "common" = "Comune";
 "consistency" = "Constanza";
 "CR" = "VA";
