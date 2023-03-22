@@ -54,10 +54,12 @@
 "level" = "Level";
 "longTerm" = "Long Term";
 "LT" = "LT";
+"LT_recs" = "LT: Long Term";
 "maximumRating" = "Maximum Rating";
 "mediumTerm" = "Medium Term";
 "MR" = "MR";
 "MT" = "MT";
+"MT_recs" = "MT: Medium Term";
 "name" = "Name";
 "NCa" = "NCa";
 "NCo" = "NCo";
@@ -76,6 +78,7 @@
 "PR" = "PR";
 "rare" = "Rare";
 "rearwing" = "Rear Wing";
+"recommendations" = "Recommendations";
 "reliability" = "Reliability";
 "rememberRecs" = "\n\nRemember to immediately run Recommendations after changing any driver's or component's cards or coins values!";
 "resultsLine1" = "CL       ACa / NCa       PL";
@@ -85,6 +88,7 @@
 "resultRecs2" = "       PL      PR        MR         NCa       NCo";
 "shortTerm" = "Short Term";
 "ST" = "ST";
+"ST_recs" = "ST: Short Term";
 "summary" = "Summary";
 "suspension" = "Suspension";
 "tireManagement" = "Tire Management";

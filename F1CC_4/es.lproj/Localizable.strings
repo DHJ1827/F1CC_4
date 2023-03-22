@@ -54,10 +54,12 @@
 "level" = "Nivel";
 "longTerm" = "Largo Termino";
 "LT" = "LT";
+"LT_recs" = "LT: Largo Termino";
 "maximumRating" = "Calificación máxima";
 "mediumTerm" = "Término Medio";
 "MR" = "CM";
 "MT" = "TM";
+"MT_recs" = "TM: Término Medio";
 "name" = "Nombre";
 "NCa" = "TaN";
 "NCo" = "MoN";
@@ -76,6 +78,7 @@
 "PR" = "CP";
 "rare" = "Extraño";
 "rearwing" = "Alerón trasera";
+"recommendations" = "Recomendaciones";
 "reliability" = "Fiabilidad";
 "rememberRecs" = "\n\n¡Recuerde ejecutar Recomendaciones inmediatamente después de cambiar los valores de monedas o tarjetas de cualquier conductor o componente!";
 "resultsLine1" = "NA       TaD / TaN       NP";
@@ -85,6 +88,7 @@
 "resultRecs2" = "  PL  PR  MR  NCa  NCo";
 "shortTerm" = "Término Corto";
 "ST" = "TC";
+"ST_recs" = "TC: Término Corto";
 "summary" = "Resumen";
 "suspension" = "Suspensión";
 "tireManagement" = "Gestión de neumáticos";

@@ -54,10 +54,12 @@
 "level" = "Livello";
 "longTerm" = "Lungo Termine";
 "LT" = "LT";
+"LT_recs" = "LT: Lungo Termine";
 "maximumRating" = "Punteggio massimo";
 "mediumTerm" = "Medio Termine";
 "MR" = "PM";
 "MT" = "MT";
+"MT_recs" = "MT: Medio Termine";
 "name" = "Nome";
 "NCa" = "CaN";
 "NCo" = "MoN";
@@ -76,6 +78,7 @@
 "PR" = "VP";
 "rare" = "Raro";
 "rearwing" = "Ala posteriore";
+"recommendations" = "Raccomandazioni";
 "reliability" = "Affidabilità";
 "rememberRecs" = "\n\nRicordati di eseguire immediatamente le raccomandazioni dopo aver modificato i valori delle carte o delle monete di qualsiasi pilota o componente!";
 "resultsLine1" = "LA       CaD / CaN       LP";
@@ -85,6 +88,7 @@
 "resultRecs2" = "  PL  PR  MR  NCa  NCo";
 "shortTerm" = "Breve Termine";
 "ST" = "BT";
+"ST_recs" = "BT: Breve Termine";
 "summary" = "Riepilogo";
 "suspension" = "Sospensione";
 "tireManagement" = "Gestione delle gomme";

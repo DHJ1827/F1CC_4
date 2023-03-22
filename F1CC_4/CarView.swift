@@ -21,26 +21,26 @@ struct CarSubView: View {
                 // instead of doing 3 per row
                 // do 2 rows of 3 and 1 row of 1
                 ForEach(Array(stride(from: 0, to: stop, by: 11)), id: \.self) { index_h in
-
+                    
                     let colorInt1: Int = Int(db.sPart[index_h + ctr][13])!
                     let colorBack = cmode[colorInt1]      //  get the level and apply the right background colour to it
-
-                    VStack {
-                    Text("resultsLine1")
-                        .font(.system(size: 9))
-                        .frame(width: 120)
-                        .background(colorBack)
-                    Text("\(db.sPart[ctr + index_h][15])  \(db.sPart[ctr + index_h][20]) / \(db.sPart[ctr + index_h][21])  \(db.sPart[ctr + index_h][17])")
-                        .font(.system(size: CGFloat(fontSize[1]), design: .monospaced))
-                        .fontWeight(.semibold)
-                        .frame(width: 120, alignment: .leading)
-                        .background(colorBack)
-                    Text(db.sPart[ctr + index_h][1])
-                        .font(.system(size: 16))
-                        .fontWeight(.semibold)
-                        .frame(width: 120)
-                        .background(colorBack)
                     
+                    VStack {
+                        Text("resultsLine1")
+                            .font(.system(size: 9))
+                            .frame(width: 120)
+                            .background(colorBack)
+                        Text("\(db.sPart[ctr + index_h][15])  \(db.sPart[ctr + index_h][20]) / \(db.sPart[ctr + index_h][21])  \(db.sPart[ctr + index_h][17])")
+                            .font(.system(size: CGFloat(fontSize[1]), design: .monospaced))
+                            .fontWeight(.semibold)
+                            .frame(width: 120, alignment: .leading)
+                            .background(colorBack)
+                        Text(db.sPart[ctr + index_h][1])
+                            .font(.system(size: 16))
+                            .fontWeight(.semibold)
+                            .frame(width: 120)
+                            .background(colorBack)
+                        
                         VStack{
                             Text("resultsLine4D")
                                 .font(.system(size: 9))
@@ -62,13 +62,13 @@ struct CarSubView: View {
                                 .frame(width: 120)
                                 .background(colorBack)
                         } // VStack
+                        
+                    }  //VStack
+                    .padding(.bottom, 6)
                     
-                }  //VStack
-                .padding(.bottom, 6)
-
-
-        }  //ForEach
-    }   //HStack
+                    
+                }  //ForEach
+            }   //HStack
             
             
         }
@@ -185,7 +185,7 @@ struct CarView: View {
                                     .font(.system(size: 11, design: .monospaced))
                                     .padding(.bottom, 20)
                             }
-                            .offset(x: -5, y:20)
+                            .offset(x: -5, y:40)
                             
                             VStack(alignment: .leading) {          //sliders
                                 Slider(value: $multPower, in: 0...200,step: 1,onEditingChanged: { data in
@@ -229,7 +229,7 @@ struct CarView: View {
                                 .offset(x: -5, y: 0)
                                 
                             }  //VStack of sliders
-                            .offset(x:-5, y:10)
+                            .offset(x:-5, y:30)
                         }
                         
                     }  //HStack
@@ -246,51 +246,69 @@ struct CarView: View {
                         
                         Group{
                             
-                            Text("brakes")
-                            Spacer(minLength: 10)
-                            CarSubView(ctr: 0, stop: 32)
-                            CarSubView(ctr: 33, stop: 32)
-                            CarSubView(ctr: 66, stop: 1)
+                            VStack(alignment: .leading) {
+                                Text("brakes")
+                                    .font(.system(size: 14, weight: .bold, design: .default))
+                                Spacer(minLength: 10)
+                                CarSubView(ctr: 0, stop: 32)
+                                CarSubView(ctr: 33, stop: 32)
+                                CarSubView(ctr: 66, stop: 1)
+                            }
                             Spacer(minLength: 15)
                         }
                         Group{
-                            Text("suspension")
-                            Spacer(minLength: 10)
-                            CarSubView(ctr: 77, stop: 32)
-                            CarSubView(ctr: 110, stop: 32)
-                            CarSubView(ctr: 143, stop: 1)
+                            VStack(alignment: .leading) {
+                                Text("suspension")
+                                    .font(.system(size: 14, weight: .bold, design: .default))
+                                Spacer(minLength: 10)
+                                CarSubView(ctr: 77, stop: 32)
+                                CarSubView(ctr: 110, stop: 32)
+                                CarSubView(ctr: 143, stop: 1)
+                            }
                             Spacer(minLength: 15)
                         }
                         Group{
-                            Text("frontwing")
-                            Spacer(minLength: 10)
-                            CarSubView(ctr: 154, stop: 32)
-                            CarSubView(ctr: 187, stop: 32)
-                            CarSubView(ctr: 220, stop: 1)
-                            Spacer(minLength: 15)
-                            Text("rearwing")
-                        }
-                        Group{
-                            Spacer(minLength: 10)
-                            CarSubView(ctr: 231, stop: 32)
-                            CarSubView(ctr: 264, stop: 32)
-                            CarSubView(ctr: 297, stop: 1)
+                            VStack(alignment: .leading) {
+                                Text("frontwing")
+                                    .font(.system(size: 14, weight: .bold, design: .default))
+                                Spacer(minLength: 10)
+                                CarSubView(ctr: 154, stop: 32)
+                                CarSubView(ctr: 187, stop: 32)
+                                CarSubView(ctr: 220, stop: 1)
+                            }
                             Spacer(minLength: 15)
                         }
                         Group{
-                            Text("gearbox")
-                            Spacer(minLength: 10)
-                            CarSubView(ctr: 308, stop: 32)
-                            CarSubView(ctr: 341, stop: 32)
-                            CarSubView(ctr: 374, stop: 1)
+                            VStack(alignment: .leading) {
+                                Text("rearwing")
+                                    .font(.system(size: 14, weight: .bold, design: .default))
+                                Spacer(minLength: 10)
+                                CarSubView(ctr: 231, stop: 32)
+                                CarSubView(ctr: 264, stop: 32)
+                                CarSubView(ctr: 297, stop: 1)
+                            }
                             Spacer(minLength: 15)
                         }
                         Group{
-                            Text("engine")
-                            Spacer(minLength: 10)
-                            CarSubView(ctr: 385, stop: 32)
-                            CarSubView(ctr: 418, stop: 32)
-                            CarSubView(ctr: 451, stop: 1)
+                            VStack(alignment: .leading) {
+                                Text("gearbox")
+                                    .font(.system(size: 14, weight: .bold, design: .default))
+                                Spacer(minLength: 10)
+                                CarSubView(ctr: 308, stop: 32)
+                                CarSubView(ctr: 341, stop: 32)
+                                CarSubView(ctr: 374, stop: 1)
+                            }
+                            Spacer(minLength: 15)
+                        }
+                        Group{
+                            VStack(alignment: .leading) {
+                                Text("engine")
+                                    .font(.system(size: 14, weight: .bold, design: .default))
+                                Spacer(minLength: 10)
+                                CarSubView(ctr: 385, stop: 32)
+                                CarSubView(ctr: 418, stop: 32)
+                                CarSubView(ctr: 451, stop: 1)
+                            }
                         }
                         
                         
@@ -432,9 +450,9 @@ struct InfoSheetCarView: View {
     var body: some View {
         ScrollView() {
             Text("info_contents_part")
-            .font(.system(size: 12))
-            .frame(width: 300)
-            .padding()
+                .font(.system(size: 12))
+                .frame(width: 300)
+                .padding()
         }
     }
 }

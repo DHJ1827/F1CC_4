@@ -54,10 +54,12 @@
 "level" = "Stufe";
 "longTerm" = "Langfristige Ziele";
 "LT" = "LZ";
+"LT_recs" = "LZ: Langfristige Ziele";
 "maximumRating" = "Bestwertung";
 "mediumTerm" = "Mittel-Ziele";
 "MR" = "Be";
 "MT" = "MZ";
+"MT_recs" = "MZ: Mittel-Ziele";
 "name" = "Name";
 "NCa" = "BKa";
 "NCo" = "BMu";
@@ -76,6 +78,7 @@
 "PR" = "MB";
 "rare" = "Selten";
 "rearwing" = "Heckflügel";
+"recommendations" = "Empfehlungen";
 "reliability" = "Zuverlässigker";
 "rememberRecs" = "\n\nDenken Sie daran, Empfehlungen sofort auszuführen, nachdem Sie die Karten- oder Münzwerte eines Fahrers oder einer Komponente geändert haben!";
 "resultsLine1" = "AS       VKa / BKa       MS";
@@ -85,6 +88,7 @@
 "resultRecs2" = "   MS     MB     Be     BKa     BMu";
 "shortTerm" = "Kurz-Ziele";
 "ST" = "KZ";
+"ST_recs" = "KZ: Kurz-Ziele";
 "summary" = "Zusammenfassung";
 "suspension" = "Suspension";
 "tireManagement" = "Reifen-Management";

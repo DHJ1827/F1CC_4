@@ -54,10 +54,12 @@
 "level" = "Niveau";
 "longTerm" = "Long Terme";
 "LT" = "LT";
+"LT_recs" = "LT: Long Terme";
 "maximumRating" = "Note maximale";
 "mediumTerm" = "Moyen Terme";
 "MR" = "NM";
 "MT" = "MT";
+"MT_recs" = "MT: Moyen Terme";
 "name" = "Nom";
 "NCa" = "CaN";
 "NCo" = "PiN";
@@ -76,6 +78,7 @@
 "PR" = "ÉP";
 "rare" = "Rare";
 "rearwing" = "Aileron arrière";
+"recommendations" = "Recommandations";
 "reliability" = "Fiabilité";
 "rememberRecs" = "\n\nN'oubliez pas d'exécuter immédiatement les recommandations après avoir modifié les valeurs des cartes ou des pièces d'un conducteur ou d'un composant !";
 "resultsLine1" = "NA       CsD / CaN       NP";
@@ -85,6 +88,7 @@
 "resultRecs2" = "  PL  PR  MR  NCa  NCo";
 "shortTerm" = "Court Terme";
 "ST" = "CT";
+"ST_recs" = "CT: Court Terme";
 "summary" = "Sommaire";
 "suspension" = "Suspension";
 "tireManagement" = "Gestion des pneus";
