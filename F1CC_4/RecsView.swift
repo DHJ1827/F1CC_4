@@ -471,24 +471,13 @@ struct RecsView: View {
                         .padding(.horizontal, 30)
                         
                     ForEach(Array(stride(from: 0, to: 34, by: 11)), id: \.self) { index_v in
-                        //let RecDriver: Int = Int(Recs[index_v/11])!
+
                         let sDriverList: [String] = ["ST", "ST", "MT", "LT"]
-                        //let iDriverTerm = Int(index_v / 11)   // doesnt work
-                        //let iDriverTerm = index_v  //works
-                        //let iDriverTerm = (index_v/11)  // doesnt work
-                        //let iDriverTerm: Int = (index_v/11)  // doesnt work
-                        //let iDriverTerm = Int(index_v / 11)
-                        //let iDriverTerm = 1
-                        //let iDriverTerm = Int(index_v)  //  works
-                        let iDriverTerm = Int(index_v)/11      // index_v is not an Int !!!!!!!
+                        let iDriverTerm = Int(index_v)/11      // index_v is not an Int- needs to be cast first !!!!!!!
                         let transDriverString = LocalizedStringKey(sDriverList[iDriverTerm]) // works
-                        //let transDriverString = LocalizedStringKey(sDriverList[1]) // works
-                        //let transDriverString = LocalizedStringKey(sDriverList[index_v/11]) //
                         
                         HStack(alignment: .top) {
-                            //let iDriverTerm = index_v/11  // doesnt work
-                            //Text("4")   //  choose ST, ST, MT and then LT for the 4 drivers recs
-                            //Text(sDriverList[index_v/11])  // doesnt work
+                            
                             Text(transDriverString)   //  choose ST, ST, MT and then LT for the 4 drivers recs
                                 .font(.system(size: 12))
                                 .frame(width: 20)
@@ -526,10 +515,10 @@ struct RecsView: View {
                                         .fontWeight(.regular)
                                         .frame(width: 320, alignment: .leading)
                                     //.background(cmode[Int(db.sDriver[ctr][13])!])
-                                    //                                    Text("123456789012345678901234567890123456789")
-                                    //                                        .font(.system(size: 13, design: .monospaced))
-                                    //                                        .fontWeight(.semibold)
-                                    //                                        .frame(width: 320, alignment: .center)
+                                    // Text("123456789012345678901234567890123456789")
+                                    // .font(.system(size: 13, design: .monospaced))
+                                    // .fontWeight(.semibold)
+                                    // .frame(width: 320, alignment: .center)
                                     Text(RecsDispDriver[index_v/11 * 4 + 3])     // string 3, can be multi-line
                                         .font(.system(size: 13, design: .monospaced))
                                         .fontWeight(.semibold)
@@ -596,20 +585,58 @@ struct RecsView: View {
                     
                 }  //VStack
             } else {
-                VStack(alignment: .leading) {
+                VStack {    //    Basic
                     
                     // WORKING Text("driver") + Text(": ") + Text(CLStart) + Text("cancel") + Text(" lol, \(CLMid) the end")
                     
-                    //Drivers: You should select/upgrade, and, to Level, and select him., You should also select, Brakes/Gear box/RearWing/Front Wing/Suspension, Engine:, You should select/upgrade, and select it
-                    Group {
-                        Text("driver") + Text("basicSelect") + Text(" \(db.sDriver[Int(Recs[0][0])][1]) ") + Text("and") + Text(" \(db.sDriver[Int(Recs[1][0])][1])") + Text(".")
-                        Text("driver") + Text("basicUpgrade") + Text(" \(db.sDriver[Int(Recs[0][0])][1]) ") + Text("toLevel") + Text(" \(db.sDriver[Int(Recs[1][0])][1]) ") + Text("andAlso") + Text(" \(db.sDriver[Int(Recs[1][0])][1])") + Text(".")
-                        
+                    //Drivers:
+                    // You should select A and B/ after upgrading A to level 4 and B to level 5/ after upgrading A to level 4/ and/ after upgrading B to level 4/.
+                    // basicDrSelect / basicTwoUpgrade / basicOneUpgrade @/ and /
+
+                    // You should select A and B.
+                    // You should select A and B after upgrading A to level 4 and after upgrading B to level 5.
+                    // You should select A and B after upgrading A to level 4.
+                    // You should select A and B after upgrading B to level 2.
+                    
+                    //Parts:
+                    // You should select A/ after upgrading A to level 4/.
+                    // basicPaSelect / basicOneUpgrade @C
+                    
+                    // You should select A.
+                    // You should select A after upgrading A to level 4.
+
+                    Text("driver")
+                        .font(.system(size: 14, weight: .bold, design: .default))
+                        .frame(minWidth: 100, minHeight: 30, alignment: .center)
+                        .padding(.horizontal, 10)
+                        .foregroundColor(Color.white)
+                        .background(Color.colours.backgrd_blue)
+                    
+                    VStack {
+                        if ((db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) && (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17])) {
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])")
+                        } else if ((db.sDriver[Int(Recs[0][0])][15] < db.sDriver[Int(Recs[0][0])][17]) && (db.sDriver[Int(Recs[1][0])][15] < db.sDriver[Int(Recs[1][0])][17])) {
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicTwoUpgrade \(db.sDriver[Int(Recs[0][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1)) \(db.sDriver[Int(Recs[1][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1))")
+                        } else if (db.sDriver[Int(Recs[0][0])][15] < db.sDriver[Int(Recs[0][0])][17]) {
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[0][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1))")
+                        } else {
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[1][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1))")
+                                }
                     }
+                    .font(.system(size: 14, weight: .bold, design: .default))
+                     
+                        Text("components")
+                            .font(.system(size: 14, weight: .bold, design: .default))
+                            .frame(minWidth: 100, minHeight: 30, alignment: .center)
+                            .padding(.horizontal, 10)
+                            .foregroundColor(Color.white)
+                            .background(Color.colours.backgrd_blue)
+                    
                     Group {
-                        Text("brakes") + Text("basicSelect") + Text(" \(db.sPart[Int(Recs[4][0])][1])") + Text(".")
-                        Text("brakes") + Text("basicUpgrade") + Text(" \(db.sPart[Int(Recs[4][0])][1]) ") + Text("toLevel") + Text(" \(db.sPart[Int(Recs[4][0])][17]) ") + Text("andSelect")
-                        
+                        Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])")
+                        Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[4][0])][15])!+1))")
+                        //Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade  \(db.sPart[Int(Recs[4][0])][17]) ")
+                        Text("**********************\n")
                         Text("gearbox") + Text("basicSelect") + Text(" \(db.sPart[Int(Recs[7][0])][1])") + Text(".")
                         Text("gearbox") + Text("basicUpgrade") + Text(" \(db.sPart[Int(Recs[7][0])][1]) ") + Text("toLevel") + Text(" \(db.sPart[Int(Recs[7][0])][17]) ") + Text("andSelect")
                     }
@@ -675,6 +702,7 @@ struct RecsView: View {
         
         var factors: [String]
         
+
         
         print("RV start....")
         //print("RV start2= ", Double(db.sDriver[0][16])!)
@@ -725,7 +753,7 @@ struct RecsView: View {
             //print("!! Recs659 \(row_ctr) \(Double(db.sDriver[row_ctr][18])) \(Double(db.sDriver[row_ctr][20])) \(Double(db.sDriver[row_ctr][21])) \(Double(db.sDriver[row_ctr][22])) \(Double(sMultStripped)) \(Recs[0][0]) \(Recs[1][0])")
             //print("!! Recs664 \(db.sMult[11][1])")
             
-            // if there are enough coins and cards and PR is bigger than the current CRs then chooise it (its a IU)
+            // if there are enough coins and cards and PR is bigger than the current CRs then choose it (its a IU)
             if ((Double(db.sDriver[row_ctr][18])! > Recs[0][1]) &&          // PR[18]
                 (Double(sMultStripped)! > Double(db.sDriver[row_ctr][22])!) &&          // ACo(converted from string to #) > NCo
                 (Double(db.sDriver[row_ctr][21])!) > Double(db.sDriver[row_ctr][20])! &&         // ACa > NCa
@@ -1013,16 +1041,8 @@ struct RecsView: View {
             //print("!! iSpacer= \(iSpacer)")
             //print("!! iLeftSpacer= \(iSpacer)")
             
-            //RecsDispDriver[row_ctr] = Spaces.prefix(iLeftSpacer) + db.sDriver[RecNumber][1] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
-            
-            //RecsDispDriver[row_ctr] = "1234567890" + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
-            
             RecsDispDriver[row_ctr] = db.sDriver[RecNumber][1] + Spaces.prefix(iSpacer + iDriverSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
             
-            
-            
-            //RecsDispDriver[row_ctr] = "1234567890" + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16]
-            //RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
             
             // build string 1
             // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
@@ -1065,16 +1085,23 @@ struct RecsView: View {
                     iSpacer = Int((40 - iSumStr)/7)
                     iLeftSpacer = Int(iLSpacer/2)
                     
-                    //                RecsDispDriver[row_ctr  + 1] = RecsDispDriver[row_ctr + 1] + String(Spaces.prefix(iLeftSpacer)) + String(xPL) + String(Spaces.prefix(iSpacer)) + String(xPR) + String(Spaces.prefix(iSpacer)) + String(xMR) + String(Spaces.prefix(iSpacer)) + String(xNCa) + String(Spaces.prefix(iSpacer)) + String(xNCo) + "\n"
+                    // RecsDispDriver[row_ctr  + 1] = RecsDispDriver[row_ctr + 1] + String(Spaces.prefix(iLeftSpacer)) + String(xPL) + String(Spaces.prefix(iSpacer)) + String(xPR) + String(Spaces.prefix(iSpacer)) + String(xMR) + String(Spaces.prefix(iSpacer)) + String(xNCa) + String(Spaces.prefix(iSpacer)) + String(xNCo) + "\n"
                     
-                    //                RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(4) + String(xPL) + Spaces.prefix(4) + String(xPR)
-                    //                RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(4) + String(xMR) + Spaces.prefix(2)
-                    //                RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + String(xNCa) + Spaces.prefix(1) + String(xNCo) + "\n"
+                    // RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(4) + String(xPL) + Spaces.prefix(4) + String(xPR)
+                    // RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(4) + String(xMR) + Spaces.prefix(2)
+                    // RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + String(xNCa) + Spaces.prefix(1) + String(xNCo) + "\n"
+                    
+                    RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(6) + String(xPL) + Spaces.prefix(4) + String(xPR) + Spaces.prefix(4) + String(xMR)    // PL, PR, MR
+                    RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(7) + String(xNCa) + Spaces.prefix(3) + String(xNCo) + "\n"    // NCa, NCo, \n
+                    
                     curr_ctr = curr_ctr + 1
                     // if curr cl is still less than pl, then + \n, next
                 }
                 print("!!row_ctr: \(row_ctr)")
-                //print("!!RecsDispDriver: \(RecsDispDriver[])")
+                //println(RecsDispDriver)
+                RecsDispDriver.forEach() { print("!!",$0) }
+                //dump(RecsDispDriver)
+                //print("!!RecsDispDriver: \(RecsDispDriver[row_ctr + 1].count)")
                 let subString = RecsDispDriver[row_ctr + 1].prefix((RecsDispDriver[row_ctr + 1].count) - 1)
                 RecsDispDriver[row_ctr + 1] = String(subString)  // remove last \n
             }

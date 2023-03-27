@@ -14,15 +14,15 @@
 "admob_ad_unit_id" = "ca-app-pub-4058577522896164/8172551523";
 "aero" = "Aero";
 "and" = "y";
-"andAlso" = "y seleccionarlo. También debe seleccionar";
-"andSelect" = "y seleccionarlo.";
 "app_name" = "F1CC";
 "availableCards" = "Tarjetas disponibles";
 "availableCoins" = "Monedas disponibles";
 "back_btn" = "Premi di nuovo indietro per uscire";
 "basicMode" = "Básico";
-"basicSelect" = ": Debe seleccionar";
-"basicUpgrade" = ": Deberías actualizar";
+"basicDrSelect" = ": Debe seleccionar %@ and  %@";
+"basicPaSelect" = "You should select %@";
+"basicOneUpgrade" = " after upgrading %@ to level %@";
+"basicTwoUpgrade" = " after upgrading %@ to level %@ and %@ to level %@";
 "blank" = "%d";
 "brakes" = "Frenos";
 "cancel" = "Cancelar";
@@ -31,6 +31,7 @@
 "CL" = "NA";
 "coins %@" = "Monedas: %@";
 "common" = "Común";
+"components" = "Componentes";
 "consistency" = "Consistencia";
 "CR" = "VA";
 "currentLevel" = "Nivel actual";

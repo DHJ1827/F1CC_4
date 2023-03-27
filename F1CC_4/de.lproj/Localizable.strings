@@ -1,4 +1,4 @@
-/* 
+/*
   Localizable.strings
   F1CC_4
 
@@ -14,15 +14,15 @@
 "admob_ad_unit_id" = "ca-app-pub-4058577522896164/8172551523";
 "aero" = "Aero";
 "and" = "und";
-"andAlso" = "und wähle ihn aus. Sie sollten auch auswählen";
-"andSelect" = "und wähle ihn aus.";
 "app_name" = "F1CC";
 "availableCards" = "Verfügbare Karten";
 "availableCoins" = "Verfügbare Münzen";
 "back_btn" = "Drücken Sie erneut zurück, um den Vorgang zu beenden";
 "basicMode" = "Basic";
-"basicSelect" = ": Sie sollten auswählen";
-"basicUpgrade" = ": Sie sollten upgraden";
+"basicDrSelect" = ": Sie sollten auswählen %@ and  %@";
+"basicPaSelect" = "You should select %@";
+"basicOneUpgrade" = " after upgrading %@ to level %@";
+"basicTwoUpgrade" = " after upgrading %@ to level %@ and %@ to level %@";
 "blank" = "%d";
 "brakes" = "Bremsen";
 "cancel" = "Stornieren";
@@ -31,6 +31,7 @@
 "CL" = "AS";
 "coins %@" = "Münzen: %@";
 "common" = "Verbreitet";
+"components" = "Komponentenverstärker-Schieberegler";
 "consistency" = "Konstanz";
 "CR" = "AB";
 "currentLevel" = "Aktuelles Stufe";

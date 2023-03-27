@@ -14,15 +14,15 @@
 "admob_ad_unit_id" = "ca-app-pub-4058577522896164/8172551523";
 "aero" = "Aérodynamique";
 "and" = "et";
-"andAlso" = "et sélectionnez-le. Vous devez également sélectionner";
-"andSelect" = "et sélectionnez-le.";
 "app_name" = "F1CC";
 "availableCards" = "Cartes disponibles";
 "availableCoins" = "Pièces disponibles";
 "back_btn" = "Appuyez à nouveau pour quitter";
 "basicMode" = "Simple";
-"basicSelect" = ": Vous devez sélectionner";
-"basicUpgrade" = ": Vous devriez mettre à jour";
+"basicDrSelect" = ": Vous devez sélectionner %@ and  %@";
+"basicPaSelect" = "You should select %@";
+"basicOneUpgrade" = " after upgrading %@ to level %@";
+"basicTwoUpgrade" = " after upgrading %@ to level %@ and %@ to level %@";
 "blank" = "";
 "brakes" = "Freins";
 "cancel" = "Annuler";
@@ -31,6 +31,7 @@
 "CL" = "NA";
 "coins %@" = "Pièces %@";
 "common" = "Commun";
+"components" = "Composants";
 "consistency" = "Régularité";
 "CR" = "NA";
 "currentLevel" = "Niveau actuel";

@@ -6,11 +6,12 @@
 //
 // TO DO
 // Check Recs detail
-//    - fix string 0 for Driver and Part: line 42 and 54 for varied spacing depending on string lengths. Ok for min. Try with mid and max. NCo = 0?
+//    - design recs basic and details- try mid so that there's some possible upgrades to drivers and parts. Also fix spacing for various scenarios
 //    - fix string 1 for Driver and Part: line 42 and 54 for varied spacing depending on string lengths. Ok for min. Try with mid and max. NCo = 0?
-//    - add section breaks/titles
-//    - add ST/MT/LT to all details margins
-//    - add Team Score??
+//    - add Team Score- use CR or PR sum for all ST drivers and parts
+//    - fix Driver display when PC > CL rows. right justify NBCa so that NCO is aligned
+//    - fix Part display spacing
+
 //
 // Check on iPhone 13 and iPhone 8
 // Check AdMob
@@ -50,11 +51,11 @@ struct MainView: View {
                     Label("Recs", systemImage: "list.dash")
                 }
             
-            TestView()
-                .environmentObject(db)
-                .tabItem {
-                    Label("Test", systemImage: "list.dash")
-                }
+//            TestView()
+//                .environmentObject(db)
+//                .tabItem {
+//                    Label("Test", systemImage: "list.dash")
+//                }
         }
         .onAppear(perform: start)
     }

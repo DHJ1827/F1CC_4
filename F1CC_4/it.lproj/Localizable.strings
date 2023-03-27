@@ -14,15 +14,15 @@
 "admob_ad_unit_id" = "ca-app-pub-4058577522896164/8172551523";
 "aero" = "Aerodinamica";
 "and" = "e";
-"andAlso" = "e selezionalo. Dovresti anche selezionare";
-"andSelect" = "e selezionalo.";
 "app_name" = "F1CC";
 "availableCards" = "Carte disponibili";
 "availableCoins" = "Monete disponibili";
 "back_btn" = "Premi di nuovo indietro per uscire";
 "basicMode" = "Base";
-"basicSelect" = ": Dovresti selezionare";
-"basicUpgrade" = ": Dovresti aggiornare";
+"basicDrSelect" = ": Dovresti selezionare %@ and  %@";
+"basicPaSelect" = "You should select %@";
+"basicOneUpgrade" = " after upgrading %@ to level %@";
+"basicTwoUpgrade" = " after upgrading %@ to level %@ and %@ to level %@";
 "blank" = "%d";
 "brakes" = "Freni";
 "cancel" = "Annulla";
@@ -31,6 +31,7 @@
 "CL" = "LA";
 "coins %@" = "Monete: %@";
 "common" = "Comune";
+"components" = "Componenti";
 "consistency" = "Constanza";
 "CR" = "VA";
 "currentLevel" = "Livello attuale";
