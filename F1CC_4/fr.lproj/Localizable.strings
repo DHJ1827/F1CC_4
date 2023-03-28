@@ -19,10 +19,11 @@
 "availableCoins" = "Pièces disponibles";
 "back_btn" = "Appuyez à nouveau pour quitter";
 "basicMode" = "Simple";
-"basicDrSelect" = ": Vous devez sélectionner %@ and  %@";
-"basicPaSelect" = "You should select %@";
-"basicOneUpgrade" = " after upgrading %@ to level %@";
-"basicTwoUpgrade" = " after upgrading %@ to level %@ and %@ to level %@";
+"basicDrSelect %@ %@" = "Vous devez sélectionner %@ et  %@";
+"basicPaSelect %@" = "Vous devez sélectionner %@";
+"basicPaUpgrade %@" = " et améliorez-le au niveau %@";
+"basicOneUpgrade %@ %@" = " et améliorez %@ au niveau %@";
+"basicTwoUpgrade %@ %@ %@ %@" = " et améliorez %@ au niveau %@ et %@ au niveau %@";
 "blank" = "";
 "brakes" = "Freins";
 "cancel" = "Annuler";
@@ -81,7 +82,7 @@
 "rearwing" = "Aileron arrière";
 "recommendations" = "Recommandations";
 "reliability" = "Fiabilité";
-"rememberRecs" = "\n\nN'oubliez pas d'exécuter immédiatement les recommandations après avoir modifié les valeurs des cartes ou des pièces d'un conducteur ou d'un composant !";
+"rememberRecs" = "N'oubliez pas d'exécuter immédiatement les recommandations après avoir modifié les valeurs des cartes ou des pièces d'un conducteur ou d'un composant !";
 "resultsLine1" = "NA       CsD / CaN       NP";
 "resultsLine4B" = "CR                 ÉP";
 "resultsLine4D" = "NA       NM       ÉP";

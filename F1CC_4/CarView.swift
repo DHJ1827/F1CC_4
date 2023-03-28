@@ -381,7 +381,8 @@ struct CarView: View {
                     .environmentObject(db)
             }
             .onAppear(perform: start)
-        }
+        }   // end of ScrollView
+        .clipped()
     }
     
     

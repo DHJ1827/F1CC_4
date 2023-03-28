@@ -21,9 +21,9 @@
 "basicMode" = "Basic";
 "basicDrSelect %@ %@" = "You should select %@ and %@";
 "basicPaSelect %@" = "You should select %@";
-"basicPaUpgrade %@" = " after upgrading it to level %@";
-"basicOneUpgrade %@ %@" = " after upgrading %@ to level %@";
-"basicTwoUpgrade %@ %@ %@ %@" = " after upgrading %@ to level %@ and %@ to level %@";
+"basicPaUpgrade %@" = " and upgrade it to level %@";
+"basicOneUpgrade %@ %@" = " and upgrade %@ to level %@";
+"basicTwoUpgrade %@ %@ %@ %@" = " and upgrade %@ to level %@ and %@ to level %@";
 "blank" = "%d";
 "brakes" = "Brakes";
 "cancel" = "Cancel";
@@ -82,7 +82,7 @@
 "rearwing" = "Rear Wing";
 "recommendations" = "Recommendations";
 "reliability" = "Reliability";
-"rememberRecs" = "\n\nRemember to immediately run Recommendations after changing any driver's or component's cards or coins values!";
+"rememberRecs" = "Remember to immediately run Recommendations after changing any driver's or component's cards or coins values!";
 "resultsLine1" = "CL       ACa / NCa       PL";
 "resultsLine4B" = "CR                 PR";
 "resultsLine4D" = "CR       MR      PR";

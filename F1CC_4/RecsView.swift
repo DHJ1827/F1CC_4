@@ -210,7 +210,7 @@ struct RecsView: View {
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .frame(width: 150)
-
+                
             }   //VStack
             
             Spacer(minLength: 15)
@@ -461,7 +461,7 @@ struct RecsView: View {
                     }    //VStack
                     Spacer(minLength: 15)
                 }
-                 
+                
                 Spacer(minLength: 15)
                 
                 VStack(alignment: .leading) {
@@ -469,9 +469,9 @@ struct RecsView: View {
                         .font(.system(size: 14, weight: .bold, design: .default))
                         .frame(minWidth: 100, minHeight: 30, alignment: .leading)
                         .padding(.horizontal, 30)
-                        
+                    
                     ForEach(Array(stride(from: 0, to: 34, by: 11)), id: \.self) { index_v in
-
+                        
                         let sDriverList: [String] = ["ST", "ST", "MT", "LT"]
                         let iDriverTerm = Int(index_v)/11      // index_v is not an Int- needs to be cast first !!!!!!!
                         let transDriverString = LocalizedStringKey(sDriverList[iDriverTerm]) // works
@@ -592,7 +592,7 @@ struct RecsView: View {
                     //Drivers:
                     // You should select A and B/ after upgrading A to level 4 and B to level 5/ after upgrading A to level 4/ and/ after upgrading B to level 4/.
                     // basicDrSelect / basicTwoUpgrade / basicOneUpgrade @/ and /
-
+                    
                     // You should select A and B.
                     // You should select A and B after upgrading A to level 4 and after upgrading B to level 5.
                     // You should select A and B after upgrading A to level 4.
@@ -604,7 +604,9 @@ struct RecsView: View {
                     
                     // You should select A.
                     // You should select A after upgrading A to level 4.
-
+                    
+                    Spacer(minLength: 30)
+                    
                     Text("driver")
                         .font(.system(size: 14, weight: .bold, design: .default))
                         .frame(minWidth: 100, minHeight: 30, alignment: .center)
@@ -621,49 +623,71 @@ struct RecsView: View {
                             Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[0][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1))")
                         } else {
                             Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[1][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1))")
-                                }
+                        }
                     }
                     .font(.system(size: 14, weight: .bold, design: .default))
-                     
-                        Text("components")
-                            .font(.system(size: 14, weight: .bold, design: .default))
-                            .frame(minWidth: 100, minHeight: 30, alignment: .center)
-                            .padding(.horizontal, 10)
-                            .foregroundColor(Color.white)
-                            .background(Color.colours.backgrd_blue)
+                    .frame(width: 360)
                     
-                    Group {
-                        Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])")
-                        Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[4][0])][15])!+1))")
-                        //Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade  \(db.sPart[Int(Recs[4][0])][17]) ")
-                        Text("**********************\n")
-                        Text("gearbox") + Text("basicSelect") + Text(" \(db.sPart[Int(Recs[7][0])][1])") + Text(".")
-                        Text("gearbox") + Text("basicUpgrade") + Text(" \(db.sPart[Int(Recs[7][0])][1]) ") + Text("toLevel") + Text(" \(db.sPart[Int(Recs[7][0])][17]) ") + Text("andSelect")
-                    }
-                    Group {
-                        Text("rearwing") + Text("basicSelect") + Text(" \(db.sPart[Int(Recs[10][0])][1])") + Text(".")
-                        Text("rearwing") + Text("basicUpgrade") + Text(" \(db.sPart[Int(Recs[10][0])][1]) ") + Text("toLevel") + Text(" \(db.sPart[Int(Recs[10][0])][17]) ") + Text("andSelect")
+                    Spacer(minLength: 30)
+                    
+                    Text("components")
+                        .font(.system(size: 14, weight: .bold, design: .default))
+                        .frame(minWidth: 100, minHeight: 30, alignment: .center)
+                        .padding(.horizontal, 10)
+                        .foregroundColor(Color.white)
+                        .background(Color.colours.backgrd_blue)
+                    
+                    VStack(alignment: .leading) {
+                        Group {
+                            if (db.sPart[Int(Recs[4][0])][15] == db.sPart[Int(Recs[4][0])][17]) {
+                                Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text(" \n")
+                            } else {
+                                Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[4][0])][15])!+1))") + Text(" \n")
+                            }
+                            if (db.sPart[Int(Recs[7][0])][15] == db.sPart[Int(Recs[7][0])][17]) {
+                                Text("gearbox") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[7][0])][1])") + Text(" \n")
+                            } else {
+                                Text("gearbox") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[7][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[7][0])][15])!+1))") + Text(" \n")
+                            }
+                            if (db.sPart[Int(Recs[10][0])][15] == db.sPart[Int(Recs[10][0])][17]) {
+                                Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text(" \n")
+                            } else {
+                                Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[10][0])][15])!+1))") + Text(" \n")
+                            }
+                        }    // group
+                        .font(.system(size: 14, weight: .bold, design: .default))
                         
-                        Text("frontwing") + Text("basicSelect") + Text(" \(db.sPart[Int(Recs[13][0])][1])") + Text(".")
-                        Text("frontwing") + Text("basicUpgrade") + Text(" \(db.sPart[Int(Recs[13][0])][1]) ") + Text("toLevel") + Text(" \(db.sPart[Int(Recs[13][0])][17]) ") + Text("andSelect")
-                    }
-                    Group {
-                        Text("suspension") + Text("basicSelect") + Text(" \(db.sPart[Int(Recs[16][0])][1])") + Text(".")
-                        Text("suspension") + Text("basicUpgrade") + Text(" \(db.sPart[Int(Recs[16][0])][1]) ") + Text("toLevel") + Text(" \(db.sPart[Int(Recs[16][0])][17]) ") + Text("andSelect")
-                        
-                        Text("engine") + Text("basicSelect") + Text(" \(db.sPart[Int(Recs[19][0])][1])") + Text(".")
-                        Text("engine") + Text("basicUpgrade") + Text(" \(db.sPart[Int(Recs[19][0])][1]) ") + Text("toLevel") + Text(" \(db.sPart[Int(Recs[19][0])][17]) ") + Text("andSelect")
-                    }
-                    Group {
-                        Text("rememberRecs")
-                            .font(.system(size: 15, design: .monospaced))
-                        //Text("\n\nRemember to immediately run Recommendations after changing any driver's or component's cards or coins values!")
-                            .font(.system(size: 15, design: .monospaced))
-                    }
+                        Group {
+                            if (db.sPart[Int(Recs[13][0])][15] == db.sPart[Int(Recs[13][0])][17]) {
+                                Text("frontwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[13][0])][1])") + Text(" \n")
+                            } else {
+                                Text("frontwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[13][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[13][0])][15])!+1))") + Text(" \n")
+                            }
+                            if (db.sPart[Int(Recs[16][0])][15] == db.sPart[Int(Recs[16][0])][17]) {
+                                Text("suspension") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[16][0])][1])") + Text(" \n")
+                            } else {
+                                Text("suspension") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[16][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[16][0])][15])!+1))") + Text(" \n")
+                            }
+                            if (db.sPart[Int(Recs[19][0])][15] == db.sPart[Int(Recs[19][0])][17]) {
+                                Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])")
+                            } else {
+                                Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[19][0])][15])!+1))")
+                            }
+                        }     //group
+                        .font(.system(size: 14, weight: .bold, design: .default))
+                    }   //VStack
+                    
+                    Spacer(minLength: 30)
+                    
+                    Text("rememberRecs")
+                        .font(.system(size: 14, weight: .bold, design: .default))
+                        .padding()
+                        .border(Color.colours.backgrd_blue, width: 4)
+                        .multilineTextAlignment(.center)
                     
                 }  //VStack
                 .font(.system(size: 13, design: .monospaced))
-                .frame(width: 320, alignment: .leading)
+                .frame(width: 360, alignment: .leading)
             }
         } //ScrollView
         .clipped()
@@ -702,7 +726,7 @@ struct RecsView: View {
         
         var factors: [String]
         
-
+        
         
         print("RV start....")
         //print("RV start2= ", Double(db.sDriver[0][16])!)

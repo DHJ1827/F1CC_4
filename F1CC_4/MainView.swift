@@ -12,7 +12,7 @@
 //    - fix Driver display when PC > CL rows. right justify NBCa so that NCO is aligned
 //    - fix Part display spacing
 
-//
+// Fix mid, min and max by changing 10% to 0, not 1
 // Check on iPhone 13 and iPhone 8
 // Check AdMob
 // Check calcs
@@ -20,7 +20,6 @@
 // Check against Android version
 // need consistent font and colours for headings and titles throughout
 //      - design recs basic. Add team score to Recs?
-// create page logos for bottom icons, remove names, remove Test
 // create app icon
 
 
@@ -36,19 +35,20 @@ struct MainView: View {
             DriverView()
                 .environmentObject(db)
                 .tabItem {
-                    Label("Driver", systemImage: "globe")
+                    Label("", systemImage: "steeringwheel")
+                        .foregroundColor(.black)
                 }
             
             CarView()
                 .environmentObject(db)
                 .tabItem {
-                    Label("Car", systemImage: "command")
+                    Label("", systemImage: "wrench.and.screwdriver")
                 }
             
             RecsView()
                 .environmentObject(db)
                 .tabItem {
-                    Label("Recs", systemImage: "list.dash")
+                    Label("", systemImage: "flag.checkered")
                 }
             
 //            TestView()
@@ -57,6 +57,8 @@ struct MainView: View {
 //                    Label("Test", systemImage: "list.dash")
 //                }
         }
+        .accentColor(.colours.backgrd_blue)
+        .toolbarBackground(Color.white)
         .onAppear(perform: start)
     }
     

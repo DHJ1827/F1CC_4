@@ -19,10 +19,11 @@
 "availableCoins" = "Verfügbare Münzen";
 "back_btn" = "Drücken Sie erneut zurück, um den Vorgang zu beenden";
 "basicMode" = "Basic";
-"basicDrSelect" = ": Sie sollten auswählen %@ and  %@";
-"basicPaSelect" = "You should select %@";
-"basicOneUpgrade" = " after upgrading %@ to level %@";
-"basicTwoUpgrade" = " after upgrading %@ to level %@ and %@ to level %@";
+"basicDrSelect %@ %@" = "Sie sollten auswählen %@ und  %@";
+"basicPaSelect %@" = "Sie sollten auswählen %@";
+"basicPaUpgrade %@" = " rüste es auf Stufe %@";
+"basicOneUpgrade %@ %@" = " und verbessere %@ auf Stufe %@";
+"basicTwoUpgrade %@ %@ %@ %@" = " und verbessere %@ auf Stufe %@ und %@ auf Stufe %@";
 "blank" = "%d";
 "brakes" = "Bremsen";
 "cancel" = "Stornieren";
@@ -81,7 +82,7 @@
 "rearwing" = "Heckflügel";
 "recommendations" = "Empfehlungen";
 "reliability" = "Zuverlässigker";
-"rememberRecs" = "\n\nDenken Sie daran, Empfehlungen sofort auszuführen, nachdem Sie die Karten- oder Münzwerte eines Fahrers oder einer Komponente geändert haben!";
+"rememberRecs" = "Denken Sie daran, Empfehlungen sofort auszuführen, nachdem Sie die Karten- oder Münzwerte eines Fahrers oder einer Komponente geändert haben!";
 "resultsLine1" = "AS       VKa / BKa       MS";
 "resultsLine4B" = "AB                 MB";
 "resultsLine4D" = "AB       Be       MB";

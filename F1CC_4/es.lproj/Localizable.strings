@@ -19,10 +19,11 @@
 "availableCoins" = "Monedas disponibles";
 "back_btn" = "Premi di nuovo indietro per uscire";
 "basicMode" = "Básico";
-"basicDrSelect" = ": Debe seleccionar %@ and  %@";
-"basicPaSelect" = "You should select %@";
-"basicOneUpgrade" = " after upgrading %@ to level %@";
-"basicTwoUpgrade" = " after upgrading %@ to level %@ and %@ to level %@";
+"basicDrSelect %@ %@" = "Debes seleccionar %@ y  %@";
+"basicPaSelect %@" = "Debes seleccionar %@";
+"basicPaUpgrade %@" = " y actualízalo al nivel %@";
+"basicOneUpgrade %@ %@" = " y mejora a %@ al nivel %@";
+"basicTwoUpgrade %@ %@ %@ %@" = " y mejora a %@ al nivel %@ y %@ al nivel %@";
 "blank" = "%d";
 "brakes" = "Frenos";
 "cancel" = "Cancelar";
@@ -81,7 +82,7 @@
 "rearwing" = "Alerón trasera";
 "recommendations" = "Recomendaciones";
 "reliability" = "Fiabilidad";
-"rememberRecs" = "\n\n¡Recuerde ejecutar Recomendaciones inmediatamente después de cambiar los valores de monedas o tarjetas de cualquier conductor o componente!";
+"rememberRecs" = "¡Recuerde ejecutar Recomendaciones inmediatamente después de cambiar los valores de monedas o tarjetas de cualquier conductor o componente!";
 "resultsLine1" = "NA       TaD / TaN       NP";
 "resultsLine4B" = "VA                 CP";
 "resultsLine4D" = "VA       CM       CP";

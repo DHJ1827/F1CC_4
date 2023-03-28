@@ -19,10 +19,11 @@
 "availableCoins" = "Monete disponibili";
 "back_btn" = "Premi di nuovo indietro per uscire";
 "basicMode" = "Base";
-"basicDrSelect" = ": Dovresti selezionare %@ and  %@";
-"basicPaSelect" = "You should select %@";
-"basicOneUpgrade" = " after upgrading %@ to level %@";
-"basicTwoUpgrade" = " after upgrading %@ to level %@ and %@ to level %@";
+"basicDrSelect %@ %@" = "Dovresti selezionare %@ e  %@";
+"basicPaSelect %@" = "Dovresti selezionare %@";
+"basicPaUpgrade %@" = " e aggiornalo al livello %@";
+"basicOneUpgrade %@ %@" = " e aggiorna %@ al livello %@";
+"basicTwoUpgrade %@ %@ %@ %@" = " e aggiorna %@ al livello %@ e %@ al livello %@";
 "blank" = "%d";
 "brakes" = "Freni";
 "cancel" = "Annulla";
@@ -81,7 +82,7 @@
 "rearwing" = "Ala posteriore";
 "recommendations" = "Raccomandazioni";
 "reliability" = "Affidabilità";
-"rememberRecs" = "\n\nRicordati di eseguire immediatamente le raccomandazioni dopo aver modificato i valori delle carte o delle monete di qualsiasi pilota o componente!";
+"rememberRecs" = "Ricordati di eseguire immediatamente le raccomandazioni dopo aver modificato i valori delle carte o delle monete di qualsiasi pilota o componente!";
 "resultsLine1" = "LA       CaD / CaN       LP";
 "resultsLine4B" = "VA                 VP";
 "resultsLine4D" = "VA       PM       VP";
