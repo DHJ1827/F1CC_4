@@ -30,6 +30,10 @@ struct DriverView: View {
 
     var ctr = 0
     var ctr1 = 0
+    @State var ctrCL: Int = 0
+    @State var ctrPL: Int = 0
+    @State var ctrNCo: Int = 0
+    @State var startNCo: Int = 0
     @State var ctr5: Int = 0
     
     @State var DriverDisplay : [[String]] = Array(repeating: Array(repeating: "1", count: 2), count: 659)
@@ -369,7 +373,54 @@ struct DriverView: View {
                         db.sDriver[ctr][30] = "4"  //black
                     }
                 }   //  ctr
+                
+                //  update RecPL and RecPR when ACo > NCo. Loo pthrough all drivers, check if cl=pl or CL<PL, set [31] to PL and [32] to PR
+                                
+                //print("!!376 \(db.sDriver[0][15]) \(db.sDriver[0][20])")
+                let sMultStripped = db.sMult[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
+                
+                for ctr in stride(from: 0, to: 650, by: 11) {
+                    if (db.sDriver[ctr][15] == db.sDriver[ctr][17]) {   // CL=PL so set [31 and [32] to same
+                        //print("!!379 \(db.sDriver[0][15]) \(db.sDriver[0][31])")
+                        db.sDriver[ctr][31] = db.sDriver[ctr][17]   // save PL(ACo>NCo) = PL
+                        db.sDriver[ctr][32] = db.sDriver[ctr][18]   // save PR(ACo>NCo) = PR
+                    } else if ((db.sDriver[ctr][15] < db.sDriver[ctr][17]) &&          // PR[18]
+                                (Double(sMultStripped)! > Double(db.sDriver[ctr][22])!)) {   // CL<PL and ACo > NCo
+                        //printArrRow(arrName: db.sDriver, xRow: 11)
+                        db.sDriver[ctr][31] = db.sDriver[ctr][17]   // save PL(ACo>NCo) = PL
+                        db.sDriver[ctr][32] = db.sDriver[ctr][18]   // save PR(ACo>NCo) = PL
+                    } else {      //  CL<PL but there aren't enough coins to get to PL, so figure out if a lower PL can br reached
+                        let startCL = Int(db.sDriver[ctr][15])!    // CL   2
+                        ctrPL = Int(db.sDriver[ctr][17])!    // PL   6
+                        ctrCL = startCL   // counter for CL      2
+                        if (startCL > 1) {
+                            startNCo = Int(db.sDriver[ctr + ctrCL - 2][10])!  // get the base cumul coins for starting CL
+                        } else {
+                            startNCo = 0   // for low CLs, starting=0
+                        }
+                        while (ctrCL < ctrPL) {      // CL<PL
+                            // get the NCo for ctrCL. If ACo>NCo then save the PR  for that ctrCL.
+                            // add +1 to ctrCL and see if it still works
+                            ctrNCo = 0    //get the ctrNCo
+                            if (ctrPL >= 1) {    // if PL>=1   ie. CL<>0
+                                ctrNCo = Int(db.sDriver[ctr + ctrCL - 1][10])! - startNCo  // and subtract the CL cumul coins already spent
+                            }
+                            //print("!! Row: \(ctr). Start NCo= \(startNCo). To upgrade from \(startCL) to CL= \(ctrCL + 1) to PL= \(ctrPL); NCo= \(ctrNCo) and ACo= \(sMultStripped)")
+                            
+                            if (Int(Double(sMultStripped)!) >= ctrNCo ) {
+                                db.sDriver[ctr][31] = String(ctrCL + 1)   // save PL(ACo>NCo)
+                                db.sDriver[ctr][32] = db.sDriver[ctr + ctrCL - 1][12]   // save PR(ACo>NCo)
+                                print("!!DV419 Saving PR(ACo>NCo) with PL= \(ctrCL + 1) and PR= \(db.sDriver[ctr + ctrCL][12])")
+                            }
+
+                            ctrCL = ctrCL + 1   // next CL
+                        }
+                    }
+                }   //  ctr
+                print("!!DV420")
+                //printArrRow(arrName: db.sDriver, xRow: 11)
                 start()
+                
             } else {
                 print("Bad level, cards or coins input")
                 showingAlert = true
@@ -440,6 +491,7 @@ struct DriverView: View {
         if (db.bFirstTimeLoad) {   //when loading, if its the first time then show the info sheet
             FirstTimeInfoView()
         }
+        
     }  // end of start
     
 
@@ -472,6 +524,18 @@ struct DriverView: View {
             db.sDriver = try db.sDriverCalc(sDriver: db.sDriver, sMult: db.sMult, sCard: db.sCard, bDriverBoost: db.bDriverBoost)
         } catch {
             print("DriverView: db.updateMult and/or db.sDriverCalc failed")
+        }
+    }
+    
+    func printArrRow(arrName: [[String]], xRow: Int) {
+        for m in 0..<33 {
+            print("!! [\(m)] = \(arrName[xRow][m])")
+        }
+    }
+    
+    func printArrCol(arrName: [[String]], xRow: Int) {
+        for m in 0..<33 {
+            print("!! [\(m)] = \(arrName[m][xRow])")
         }
     }
    

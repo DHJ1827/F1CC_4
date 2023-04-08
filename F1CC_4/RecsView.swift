@@ -143,7 +143,8 @@ struct RecsView: View {
     @State var maxLH = 0   // and its CL factor length
     @State var maxRH = 0   // and its PL factor length
     @State var longestLength = 0
-    @State var teamScore:Int  = 0
+    @State var teamScore:Int = 0
+    @State var upgradeID:Int = -1     //dummy integer
     
     @State private var showingInfoSheet = false
     
@@ -629,13 +630,11 @@ struct RecsView: View {
                     VStack {
                         if ((db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) && (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17])) {
                             Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])")
-                        } else if ((db.sDriver[Int(Recs[0][0])][15] < db.sDriver[Int(Recs[0][0])][17]) && (db.sDriver[Int(Recs[1][0])][15] < db.sDriver[Int(Recs[1][0])][17])) {
-                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicTwoUpgrade \(db.sDriver[Int(Recs[0][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1)) \(db.sDriver[Int(Recs[1][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1))")
-                        } else if (db.sDriver[Int(Recs[0][0])][15] < db.sDriver[Int(Recs[0][0])][17]) {
-                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[0][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1))")
                         } else {
-                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[1][0])][1]) \(String(Int(db.sDriver[Int(Recs[0][0])][15])!+1))")
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicOneUpgrade \(db.sDriver[upgradeID][1]) \(db.sDriver[upgradeID][31])")
+                            //Text("Yup")
                         }
+                        
                     }
                     .font(.system(size: 14, weight: .bold, design: .default))
                     .frame(width: 360)
@@ -775,39 +774,76 @@ struct RecsView: View {
         //*********************************************************************************************************
         //  ST Driver     Recs[0][0] is the id of the highest CR or PR for drivers, [0][1] is the CR for that id
         //                Recs[1][0] is the id of the 2nd highest CR or PR for drivers, [1[1] is the CR for that id
-        
+        //   Take a look at Rec[0] and [1]. Find the largest PR and recommend its upgraded first.
+        // For parts, do the same ie. which part gives the largest PR boost
+       row_ctr = 0
+        Recs[0][0] = Double(row_ctr)    // clear array to start over
+        Recs[0][1] = Double(row_ctr)
+        Recs[1][0] = Double(row_ctr)
+        Recs[1][1] = Double(row_ctr)
+        print("!!RV784 \(Recs[0][0]) \(Recs[0][1]) \(Recs[1][0]) \(Recs[1][1])")
+        while row_ctr < 659 {   // go through all drivers, 11 rows at a time
+            print("!!RV787 \(db.sDriver[row_ctr][32]) \(Recs[0][1]) \(db.sDriver[row_ctr][1]) \(db.sDriver[Int(Recs[0][0])][1])")
+            
+            if (Double(db.sDriver[row_ctr][32])! > Recs[0][1]) {   // PR > current Recs[0]
+                if(db.sDriver[row_ctr][1] != db.sDriver[Int(Recs[0][0])][1]) {   //check to make sure drivers names are different
+                    Recs[1][0] = Recs[0][0]   // push [0] down to [1]
+                    Recs[1][1] = Recs[0][1]   // push value [0] down to [1]
+                    Recs[0][0] = Double(row_ctr) //  id of new
+                    Recs[0][1] = Double(db.sDriver[row_ctr][32])!  // value of new
+                } else {    //drivers names are the same so add driver[0] but keep old driver[1]
+                    Recs[0][0] = Double(row_ctr) //  id of new
+                    Recs[0][1] = Double(db.sDriver[row_ctr][32])!  // value of new
+                }
+            } else if (Double(db.sDriver[row_ctr][32])! > Recs[1][1]) {    // CR > Recs[1]
+                Recs[1][0] = Double(row_ctr)    // id of new
+                Recs[1][1] = Double(db.sDriver[row_ctr][32])!  // value of new
+            }
+            row_ctr = row_ctr + 11      //next driver
+        }
+        // now find out the id to be upgraded
+        print("!!RV 800 \(Recs[0][0]) \(Recs[0][1]) \(Recs[1][0]) \(Recs[1][1])")
+        if ((Double(db.sDriver[Int(Recs[0][0])][32])! - Double(db.sDriver[Int(Recs[0][0])][16])!) >= (Double(db.sDriver[Int(Recs[1][0])][32])! - Double(db.sDriver[Int(Recs[1][0])][16])!)) {    // Recs0 PR > Recs1 PR
+            upgradeID = Int(Recs[0][0])
+        } else {
+            upgradeID = Int(Recs[1][0])
+        }
+        print("!!RV811 upgradeID= \(upgradeID)")
+        //******  OLD   *********
+        /*
         row_ctr = 0
         Recs[0][0] = Double(row_ctr)    // clear array to start over
         Recs[0][1] = Double(row_ctr)
         Recs[1][0] = Double(row_ctr)
         Recs[1][1] = Double(row_ctr)
         while row_ctr < 659 {   // go through all drivers, 11 rows at a time
-            if (Double(db.sDriver[row_ctr][16])! > Recs[0][1]) {   // CR > current Recs[0]
+            if (Double(db.sDriver[row_ctr][32])! > Recs[0][1]) {   // PR > current Recs[0]
                 if(db.sDriver[row_ctr][1] != db.sDriver[Int(Recs[0][0])][1]) {   //check to make sure drivers names are different
                     Recs[1][0] = Recs[0][0]   // push [0] down to [1]
                     Recs[1][1] = Recs[0][1]   // push value [0] down to [1]
                     Recs[0][0] = Double(row_ctr) //  id of new
-                    Recs[0][1] = Double(db.sDriver[row_ctr][16])!  // value of new
+                    Recs[0][1] = Double(db.sDriver[row_ctr][32])!  // value of new
                 } else {    //drivers names are the same so add driver[0] but keep old driver[1]
                     Recs[0][0] = Double(row_ctr) //  id of new
-                    Recs[0][1] = Double(db.sDriver[row_ctr][16])!  // value of new
+                    Recs[0][1] = Double(db.sDriver[row_ctr][32])!  // value of new
                 }
-            } else if (Double(db.sDriver[row_ctr][16])! > Recs[1][1]) {    // CR > Recs[1]
+            } else if (Double(db.sDriver[row_ctr][32])! > Recs[1][1]) {    // CR > Recs[1]
                 Recs[1][0] = Double(row_ctr)    // id of new
-                Recs[1][1] = Double(db.sDriver[row_ctr][16])!  // value of new
+                Recs[1][1] = Double(db.sDriver[row_ctr][32])!  // value of new
             }
             //print("!! Recs659 \(row_ctr) \(Double(db.sDriver[row_ctr][18])) \(Double(db.sDriver[row_ctr][20])) \(Double(db.sDriver[row_ctr][21])) \(Double(db.sDriver[row_ctr][22])) \(Double(sMultStripped)) \(Recs[0][0]) \(Recs[1][0])")
             //print("!! Recs664 \(db.sMult[11][1])")
             
             // if there are enough coins and cards and PR is bigger than the current CRs then choose it (its a IU)
             if ((Double(db.sDriver[row_ctr][18])! > Recs[0][1]) &&          // PR[18]
-                (Double(sMultStripped)! > Double(db.sDriver[row_ctr][22])!) &&          // ACo(converted from string to #) > NCo
+                (Double(sMultStripped)! > Double(db.sDriver[row_ctr][22])!) &&          // ACo(converted from string to # > NCo
                 (Double(db.sDriver[row_ctr][21])!) > Double(db.sDriver[row_ctr][20])! &&         // ACa > NCa
                 (Double(row_ctr) != Recs[1][0])) {       // no double drivers
                 Recs[1][0] = Recs[0][0]   // push [0] id down to [1]
                 Recs[1][1] = Recs[0][1]   // push value [0] down to [1]
                 Recs[0][0] = Double(row_ctr) //  id of new
                 Recs[0][1] = Double(db.sDriver[row_ctr][18])!  // value of new
+                // if CL0 < PL0 then theres an upgrade possibility. Same for CL1 and PL1. Check the PRs and upgrade the driver with the highest PR
             } else if (Double(db.sDriver[row_ctr][18])! > Recs[1][1]) &&          // PR > [1]
                         (Double(sMultStripped)! > Double(db.sDriver[row_ctr][22])!) &&          // ACo > NC0
                         (Double(db.sDriver[row_ctr][21])! > Double(db.sDriver[row_ctr][20])! &&        // ACa > NCa
@@ -815,94 +851,58 @@ struct RecsView: View {
                 Recs[1][0] = Double(row_ctr)    // id of new
                 Recs[1][1] = Double(db.sDriver[row_ctr][18])!  // value of new
             }
-            row_ctr = row_ctr + 11      //next driver
-        }
-                            
-                            
-                            
-                            /*    while row_ctr < 659 {   // go through all drivers, 11 rows at a time
-                             if (Double(db.sDriver[row_ctr][16])! > Recs[0][1]) {   // CR > current Recs[0]
-                             Recs[1][0] = Recs[0][0]   // push [0] down to [1]
-                             Recs[1][1] = Recs[0][1]   // push value [0] down to [1]
-                             Recs[0][0] = Double(row_ctr) //  id of new
-                             Recs[0][1] = Double(db.sDriver[row_ctr][16])!  // value of new
-                             } else if (Double(db.sDriver[row_ctr][16])! > Recs[1][1]) {    // CR > Recs[1]
-                             Recs[1][0] = Double(row_ctr)    // id of new
-                             Recs[1][1] = Double(db.sDriver[row_ctr][16])!  // value of new
-                             }
-                             //print("!! Recs663 \(row_ctr) \(Double(db.sDriver[row_ctr][18])) \(Double(db.sDriver[row_ctr][20])) \(Double(db.sDriver[row_ctr][21])) \(Double(db.sDriver[row_ctr][22])) \(Double(sMultStripped)) \(Recs[0][0]) \(Recs[1][0])")
-                             //print("!! Recs664 \(db.sMult[11][1])")
-                             
-                             // if there are enough coins and cards and PR is bigger than the current CRs then chooise it (its a IU)
-                             if ((Double(db.sDriver[row_ctr][18])! > Recs[0][1]) &&          // PR[18]
-                             (Double(sMultStripped)! > Double(db.sDriver[row_ctr][22])!) &&          // ACo(converted from string to #) > NCo
-                             (Double(db.sDriver[row_ctr][21])!) > Double(db.sDriver[row_ctr][20])! &&         // ACa > NCa
-                             (Double(row_ctr) != Recs[1][0])) {       // no double drivers
-                             Recs[1][0] = Recs[0][0]   // push [0] id down to [1]
-                             Recs[1][1] = Recs[0][1]   // push value [0] down to [1]
-                             Recs[0][0] = Double(row_ctr) //  id of new
-                             Recs[0][1] = Double(db.sDriver[row_ctr][18])!  // value of new
-                             } else if (Double(db.sDriver[row_ctr][18])! > Recs[1][1]) &&          // PR > [1]
-                             (Double(sMultStripped)! > Double(db.sDriver[row_ctr][22])!) &&          // ACo > NC0
-                             (Double(db.sDriver[row_ctr][21])! > Double(db.sDriver[row_ctr][20])! &&        // ACa > NCa
-                             (Double(row_ctr) != Recs[0][0])) {      // no double drivers
-                             Recs[1][0] = Double(row_ctr)    // id of new
-                             Recs[1][1] = Double(db.sDriver[row_ctr][18])!  // value of new
-                             }
-                             row_ctr = row_ctr + 11      //next driver
-                             }
-                             */
-                            //print("!! Recs (Driver)= ", Recs)
-                            
-                            
-                            // **********************************************************************************************
-                            // MT DRIVER
-                            
-                            var dToSort: [[Double]] = [[]]
-                            dToSort.removeAll()
-                            row_ctr = 0
-                            while row_ctr < 659 {   //loop through drivers
+         */
+
+        
+        
+        // **********************************************************************************************
+        // MT DRIVER
+        
+        var dToSort: [[Double]] = [[]]
+        dToSort.removeAll()
+        row_ctr = 0
+        while row_ctr < 659 {   //loop through drivers
             if(Double(db.sDriver[row_ctr][23])! > Double(db.sDriver[row_ctr][16])!) {    //PR+ > CR
                 dToSort.append([Double(row_ctr), Double(db.sDriver[row_ctr][24])!, Double(db.sDriver[row_ctr][25])!,(Double(db.sDriver[row_ctr][24])! + Double(db.sDriver[row_ctr][25])!)/2])     // sort array: id, ACoins/+NCumulCoins, Acards/+NCumulCards and avg(ACoins/+NCumulCoins + Acards/+NCumulCards)
             }
             row_ctr = row_ctr + 11
         }
-                            var dSorted = dToSort.sorted(by: {
+        var dSorted = dToSort.sorted(by: {
             ($0[3],$0[1],$0[2]) > ($1[3],$1[1],$1[2])
         })
-                            Recs[2][0] = dSorted[0][0]
-                            //print("Recs (Driver)= ", Recs)
-                            
-                            
-                            // **********************************************************************************************
-                            //LT Driver
-                            
-                            dToSort.removeAll()
-                            row_ctr = 0
-                            while row_ctr < 659 {   //loop through drivers
+        Recs[2][0] = dSorted[0][0]
+        //print("Recs (Driver)= ", Recs)
+        
+        
+        // **********************************************************************************************
+        //LT Driver
+        
+        dToSort.removeAll()
+        row_ctr = 0
+        while row_ctr < 659 {   //loop through drivers
             if(Double(db.sDriver[row_ctr][26])! > Double(db.sDriver[row_ctr][16])!) {    //PR+ > CR
                 dToSort.append([Double(row_ctr), Double(db.sDriver[row_ctr][27])!, Double(db.sDriver[row_ctr][28])!,(Double(db.sDriver[row_ctr][27])! + Double(db.sDriver[row_ctr][28])!)/2])     // sort array: id, ACoins/++NCumulCoins, Acards/++NCumulCards and avg(ACoins/++NCumulCoins + Acards/++NCumulCards)
             }
             row_ctr = row_ctr + 11
         }
-                            dSorted = dToSort.sorted(by: {
+        dSorted = dToSort.sorted(by: {
             ($0[3],$0[1],$0[2]) > ($1[3],$1[1],$1[2])
         })
-                            
-                            Recs[3][0] = dSorted[0][0]
-                            //print("Recs (Driver)= ", Recs)
-                            
-                            
-                            // **********************************************************************************************
-                            //ST Part
-                            
-                            row_ctr = 0
-                            row_start = 0
-                            cat_ctr = 1
-                            maxPart = 0
-                            
-                            // ************************* new way
-                            while row_start <= 461  { // < 461
+        
+        Recs[3][0] = dSorted[0][0]
+        //print("Recs (Driver)= ", Recs)
+        
+        
+        // **********************************************************************************************
+        //ST Part
+        
+        row_ctr = 0
+        row_start = 0
+        cat_ctr = 1
+        maxPart = 0
+        
+        // ************************* new way
+        while row_start <= 461  { // < 461
             //print("row_start= ",row_crow_start)
             
             while row_ctr <= row_start + 76 {     // 7 parts per category * 11 rows per part = 0-76
@@ -928,12 +928,12 @@ struct RecsView: View {
             
             row_start = row_start + 77     // next category in sPart[[]]
         }
-                            
-                            //print("!!ST Recs (Final)= ", Recs)
-                            
-                            row_ctr = 4     // 0-3 = drivers, 4-21 are parts
-                            pitStopTime = 0
-                            while row_ctr <= 7  { // < 461
+        
+        //print("!!ST Recs (Final)= ", Recs)
+        
+        row_ctr = 4     // 0-3 = drivers, 4-21 are parts
+        pitStopTime = 0
+        while row_ctr <= 7  { // < 461
             var id = Int(Recs[row_ctr][0])
             var CL = Int(db.sPart[id][15])!
             var pit = 0.0
@@ -943,20 +943,20 @@ struct RecsView: View {
             //pitStopTime = pitStopTime + sPart[Recs[row_ctr + sPart[row_ctr][15] - 1][0]][7]   // sRecs[rowctr] finds id. get CL[15] - 1 to get pitstoptime in [7]
             row_ctr += 1
         }
-                            
-                            
-                            
-                            // **********************************************************************************************
-                            //MT Part
-                            
-                            dToSort.removeAll()
-                            
-                            row_ctr = 0
-                            row_start = 0
-                            cat_ctr = 2
-                            maxPart = 0
-                            
-                            while row_start <= 461  { // < 461
+        
+        
+        
+        // **********************************************************************************************
+        //MT Part
+        
+        dToSort.removeAll()
+        
+        row_ctr = 0
+        row_start = 0
+        cat_ctr = 2
+        maxPart = 0
+        
+        while row_start <= 461  { // < 461
             //print("row_start= ",row_start)
             
             while row_ctr <= row_start + 76 {
@@ -980,21 +980,21 @@ struct RecsView: View {
             cat_ctr = cat_ctr + 3     // next category block in Recs displa
             row_start = row_start + 77    // next category in sPart
         }
-                            
-                            
-                            
-                            // **********************************************************************************************
-                            //LT Part
-                            
-                            dToSort.removeAll()
-                            
-                            row_ctr = 0
-                            row_start = 0
-                            cat_ctr = 3
-                            maxPart = 0
-                            
-                            // ************************* new way
-                            while row_start <= 450  { // < 461
+        
+        
+        
+        // **********************************************************************************************
+        //LT Part
+        
+        dToSort.removeAll()
+        
+        row_ctr = 0
+        row_start = 0
+        cat_ctr = 3
+        maxPart = 0
+        
+        // ************************* new way
+        while row_start <= 450  { // < 461
             //print("row_start= ",row_start)
             
             while row_ctr <= row_start + 76 {
@@ -1015,29 +1015,29 @@ struct RecsView: View {
             dToSort.removeAll()
             row_start = row_start + 77
         }
-                            
-                            //print("Recs (Parts)= ", Recs)
-                            
-                            
-                            // *************************************************************************************************************************
-                            
-                            // Recs Display Driver Calcs- update RecsDispDriver[35] = 4 drivers 4 lines ie. 0-3, 4-7, 8-11, 12-15
-                            
-                            // find longest driverr ability by language
-                            // if lang = Eng, maxDriverStat = Wet Weather Ability (19), if German, maxStat = Ang Stuess van dr Vicken (assume 29)
-                            // string 1 is driver stats, string 2 is PL/PR stats, string 3 is CL= and Pl= stats, strings 4-9 are capabilities
-                            // string 1- concatenate 6 strings. Length of name/2 at pos 6 + pos 13 + pos 19 + pos 23 + pos 28 + pos 37
-                            // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
-                            // string 2- concatenate 2 strings. pos 10 + pos 26
-                            // string 4 to 9- concatenate 3 strings. MaxStat/2 at pos 20. 4 spaces before from 1st stat= pos for all stats if stat > 9 otherwise subtract 1 space. 2 spaces after for 2 stat= pos for all 2nd stats if stat > 9, otherwise add 1 space.
-                            
-                            // big:little mapping. 10:14, 20:28+, 30:43, 39:56+. So mult factor = 1.4+, try 1.45
-                            
-                            
-                            let langCode = Bundle.main.preferredLocalizations[0]
-                            var maxDriverStat = 0     //  length of longest capability stat
-                            
-                            if (langCode == "fr") {
+        
+        //print("Recs (Parts)= ", Recs)
+        
+        
+        // *************************************************************************************************************************
+        
+        // Recs Display Driver Calcs- update RecsDispDriver[35] = 4 drivers 4 lines ie. 0-3, 4-7, 8-11, 12-15
+        
+        // find longest driverr ability by language
+        // if lang = Eng, maxDriverStat = Wet Weather Ability (19), if German, maxStat = Ang Stuess van dr Vicken (assume 29)
+        // string 1 is driver stats, string 2 is PL/PR stats, string 3 is CL= and Pl= stats, strings 4-9 are capabilities
+        // string 1- concatenate 6 strings. Length of name/2 at pos 6 + pos 13 + pos 19 + pos 23 + pos 28 + pos 37
+        // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
+        // string 2- concatenate 2 strings. pos 10 + pos 26
+        // string 4 to 9- concatenate 3 strings. MaxStat/2 at pos 20. 4 spaces before from 1st stat= pos for all stats if stat > 9 otherwise subtract 1 space. 2 spaces after for 2 stat= pos for all 2nd stats if stat > 9, otherwise add 1 space.
+        
+        // big:little mapping. 10:14, 20:28+, 30:43, 39:56+. So mult factor = 1.4+, try 1.45
+        
+        
+        let langCode = Bundle.main.preferredLocalizations[0]
+        var maxDriverStat = 0     //  length of longest capability stat
+        
+        if (langCode == "fr") {
             maxDriverStat = 24
             factors = ["Puissance", "Aérodynamique", "Adhérence", "Fiabilité", "Durée moyenne d\'un Pit Stop", "Dépassement", "Défense", "Régularité", "Économie d\'essence", "Gestion des pneus", "Performance sous la pluie"]
         } else if (langCode == "es") {
@@ -1053,23 +1053,23 @@ struct RecsView: View {
             maxDriverStat = 19           //always even
             factors = ["Power", "Aero", "Grip", "Reliability", "Pit Stop Time", "Overtaking", "Defending", "Consistency", "Fuel Management", "Tire Management", "Wet Weather Ability"]
         }
-                            //            1         2         3
-                            //   123456789012345678901234567890123456789
-                            
-                            
-                            var LStart = 14 - Int(maxDriverStat/2)   // left start column for capabilities= middle - 1/2 of longest -2 spaces - possible 2 for CL
-                            var RStart = 20 + Int(maxDriverStat/2)   // right start column for capabilities= middle + 1/2 of longest +2 spaces + possible 1 for CL
-                            //    print("!!! Lstart: \(LStart)")
-                            //    print("!!! Rstart: \(RStart)")
-                            //    print("!!! maxDriverStat: \(maxDriverStat)")
-                            var col = 0    // current column position
-                            var RecNumber = 0  // 22 values of recommended drivers and parts
-                            var sTemp = ""   // to be removed whenever
-                            var rSp = ""   // to be removed whenever
-                            
-                            row_ctr = 0    // 4 drivers x 4 strings
-                            var rec_ctr = 0   // 4 drivers (0 to 3) in Recs[]
-                            while row_ctr < 15 {
+        //            1         2         3
+        //   123456789012345678901234567890123456789
+        
+        
+        var LStart = 14 - Int(maxDriverStat/2)   // left start column for capabilities= middle - 1/2 of longest -2 spaces - possible 2 for CL
+        var RStart = 20 + Int(maxDriverStat/2)   // right start column for capabilities= middle + 1/2 of longest +2 spaces + possible 1 for CL
+        //    print("!!! Lstart: \(LStart)")
+        //    print("!!! Rstart: \(RStart)")
+        //    print("!!! maxDriverStat: \(maxDriverStat)")
+        var col = 0    // current column position
+        var RecNumber = 0  // 22 values of recommended drivers and parts
+        var sTemp = ""   // to be removed whenever
+        var rSp = ""   // to be removed whenever
+        
+        row_ctr = 0    // 4 drivers x 4 strings
+        var rec_ctr = 0   // 4 drivers (0 to 3) in Recs[]
+        while row_ctr < 15 {
             
             RecNumber = Int(Recs[rec_ctr][0])
             
@@ -1265,28 +1265,28 @@ struct RecsView: View {
             row_ctr = row_ctr + 4
             rec_ctr = rec_ctr + 1
         }
-                            
-                            
-                            
-                            
-                            
-                            // *************************************************************************************************************************
-                            
-                            // Recs Display Parts Calcs- update RecsDispParts[125] = 18 parts 4 lines ie. 0-3, 4-7, 8-11, 12-15, ......., 68-71
-                            
-                            // find longest parts ability by language
-                            // if lang = Eng, maxStat = Wet Weather Ability (19), if German, maxStat = Ang Stuess van dr Vicken (assume 29)
-                            // string 1 is driver stats, string 2 is PL/PR stats, string 3 is CL= and Pl= stats, strings 4-9 are capabilities
-                            // string 1- concatenate 6 strings. Length of name/2 at pos 6 + pos 13 + pos 19 + pos 23 + pos 28 + pos 37
-                            // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
-                            // string 2- concatenate 2 strings. pos 10 + pos 26
-                            // string 4- concatenate 3 strings. MaxStat/2 at pos 20. 4 spaces before from 1st stat= pos for all stats if stat > 9 otherwise subtract 1 space. 2 spaces after for 2 stat= pos for all 2nd stats if stat > 9, otherwise add 1 space.
-                            
-                            
-                            // find longest parts capability ability by language
-                            // if lang = Eng, maxStat = Reliability (11), if German, maxStat = Ang Stuess van dr Vicken (assume 29)
-                            var maxPartStat = 0
-                            if (langCode == "en") {
+        
+        
+        
+        
+        
+        // *************************************************************************************************************************
+        
+        // Recs Display Parts Calcs- update RecsDispParts[125] = 18 parts 4 lines ie. 0-3, 4-7, 8-11, 12-15, ......., 68-71
+        
+        // find longest parts ability by language
+        // if lang = Eng, maxStat = Wet Weather Ability (19), if German, maxStat = Ang Stuess van dr Vicken (assume 29)
+        // string 1 is driver stats, string 2 is PL/PR stats, string 3 is CL= and Pl= stats, strings 4-9 are capabilities
+        // string 1- concatenate 6 strings. Length of name/2 at pos 6 + pos 13 + pos 19 + pos 23 + pos 28 + pos 37
+        // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
+        // string 2- concatenate 2 strings. pos 10 + pos 26
+        // string 4- concatenate 3 strings. MaxStat/2 at pos 20. 4 spaces before from 1st stat= pos for all stats if stat > 9 otherwise subtract 1 space. 2 spaces after for 2 stat= pos for all 2nd stats if stat > 9, otherwise add 1 space.
+        
+        
+        // find longest parts capability ability by language
+        // if lang = Eng, maxStat = Reliability (11), if German, maxStat = Ang Stuess van dr Vicken (assume 29)
+        var maxPartStat = 0
+        if (langCode == "en") {
             maxPartStat = 11   // length of longest capability stat- Reliability
         } else if (langCode == "fr") {
             maxPartStat = 13
@@ -1297,21 +1297,21 @@ struct RecsView: View {
         } else if (langCode == "de") {
             maxPartStat = 13
         }
-                            if (maxPartStat%2 == 0) {   //even
+        if (maxPartStat%2 == 0) {   //even
             LStart = 20 - Int(maxPartStat/2) - 4   // left start column for even capabilities
             RStart = 19 + Int(maxPartStat/2) + 3   // right start column for odd capabilities- shifted one to the left since its off centre
         } else {
             LStart = 20 - Int(maxPartStat/2) - 4   // left start column for capabilities
             RStart = 20 + Int(maxPartStat/2) + 3   // right start column for capabilities
         }
-                            //print("!!************ \(LStart)")
-                            col = 0    // current column position
-                            RecNumber = 0  // 22 values of recommended drivers and parts
-                            
-                            
-                            row_ctr = 16    // 18 parts x 4 strings
-                            rec_ctr = 4   // 18 parts (0 to 3 are Drivers, 4-22 are Parts) in Recs[]
-                            while row_ctr < 87 {
+        //print("!!************ \(LStart)")
+        col = 0    // current column position
+        RecNumber = 0  // 22 values of recommended drivers and parts
+        
+        
+        row_ctr = 16    // 18 parts x 4 strings
+        rec_ctr = 4   // 18 parts (0 to 3 are Drivers, 4-22 are Parts) in Recs[]
+        while row_ctr < 87 {
             
             RecNumber = Int(Recs[rec_ctr][0])
             
@@ -1481,129 +1481,141 @@ struct RecsView: View {
             row_ctr = row_ctr + 4
             rec_ctr = rec_ctr + 1
         }
-                            
-                            // get the CL or CL+1 from the driver/part. Look up the CR.
-                            
-                            //var teamScore = 0    //clear old value
-                            
-                            //        var step3 = 0
-                            //        var iFinal: Int = 0
-                            //        var dFinal: Double = 0.0
-                            
-                            //        var step1: Int = Int(Recs[0][0])
-                            //        var step2: Int = Int(db.sDriver[step1][15])!
-                            //        var test345: String = db.sDriver[step1 + step2][12]   //works
-                            //        test345 = db.sDriver[Int(Recs[0][0]) + step2][12]    //works
-                            //        print(type(of: test345))
-                            //        test345 = db.sDriver[Int(Recs[0][0]) + step2][12]    //works
-                            //        dFinal = Double(test345)!   //works, must have !
-                            //        iFinal = Int(dFinal)  // works
-                            //        iFinal = Int(Double(test345)!)    // now combine, works
-                            //        iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + step2][12])!)    // more combining, works
-                            //        iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[step1][15])!][12])!)    // even more combining, works
-                            //        iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)    // final combining, works
-                            
-                            // get the row number for the weighted rating for the current CL
-                            if (db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) {
+        
+        // get the CL or CL+1 from the driver/part. Look up the CR.
+        
+        // **********************************************************************************
+        // **********************************************************************************
+        // Calculate teamScore
+        //
+        
+        teamScore = 0    //clear old value
+        
+
+        // PR= and PR1 = 0
+        // so we have Rec0 and Rec1. If their CLs = PLs then choose both with no upgrades
+        // if Rec0 Cl < PL then with the ACo how many levels up can you upgrade? Start at CL+1, determine PR, then repeat until you reach PL. Whatever PR0 you have wins. Record PLRec0.
+        // Do the same for Rec1 to find PR1. Record PLRec1.
+        // If PR0 >= PR1 then upgrade PR0 to level ? else upgrade  PR1 to level ??
+        
+        //        var step3 = 0
+        //        var iFinal: Int = 0
+        //        var dFinal: Double = 0.0
+        
+        //        var step1: Int = Int(Recs[0][0])
+        //        var step2: Int = Int(db.sDriver[step1][15])!
+        //        var test345: String = db.sDriver[step1 + step2][12]   //works
+        //        test345 = db.sDriver[Int(Recs[0][0]) + step2][12]    //works
+        //        print(type(of: test345))
+        //        test345 = db.sDriver[Int(Recs[0][0]) + step2][12]    //works
+        //        dFinal = Double(test345)!   //works, must have !
+        //        iFinal = Int(dFinal)  // works
+        //        iFinal = Int(Double(test345)!)    // now combine, works
+        //        iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + step2][12])!)    // more combining, works
+        //        iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[step1][15])!][12])!)    // even more combining, works
+        //        iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)    // final combining, works
+        
+        // get the row number for the weighted rating for the current CL
+        if (db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) {
             teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)    //CL row
+            
         } else {        // Cl < PL
             teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[0][0]) + 1 + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!) // 1 more row after CL row *******************  if C < 10, 11, 12? logic needed
         }
-                            
-                            if (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17]) {
+        
+        if (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17]) {
             teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[1][0]) + Int(db.sDriver[Int(Recs[1][0])][15])!][12])!)
         } else {        // Cl < PL
-            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[1][0]) + 1 + Int(db.sDriver[Int(Recs[1][0])][15])!][12])!)        }
-                            
-                            if (db.sPart[Int(Recs[4][0])][15] == db.sPart[Int(Recs[4][0])][17]) {
+            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[1][0]) + 1 + Int(db.sDriver[Int(Recs[1][0])][15])!][12])!)
+        }
+        
+        if (db.sPart[Int(Recs[4][0])][15] == db.sPart[Int(Recs[4][0])][17]) {
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[4][0]) + Int(db.sPart[Int(Recs[4][0])][15])!][12])!)
         } else {        // Cl < PL
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[4][0]) + 1 + Int(db.sPart[Int(Recs[4][0])][15])!][12])!)
         }
-                            if (db.sPart[Int(Recs[7][0])][15] == db.sPart[Int(Recs[7][0])][17]) {
+        if (db.sPart[Int(Recs[7][0])][15] == db.sPart[Int(Recs[7][0])][17]) {
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[7][0]) + Int(db.sPart[Int(Recs[7][0])][15])!][12])!)
         } else {        // Cl < PL
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[7][0]) + 1 + Int(db.sPart[Int(Recs[7][0])][15])!][12])!)
         }
-                            if (db.sPart[Int(Recs[10][0])][15] == db.sPart[Int(Recs[10][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[4][10]) + Int(db.sPart[Int(Recs[4][10])][15])!][12])!)
+        if (db.sPart[Int(Recs[10][0])][15] == db.sPart[Int(Recs[10][0])][17]) {
+            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[10][0]) + Int(db.sPart[Int(Recs[10][0])][4])!][12])!)
         } else {        // Cl < PL
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[10][0]) + 1 + Int(db.sPart[Int(Recs[10][0])][15])!][12])!)
         }
-                            if (db.sPart[Int(Recs[13][0])][15] == db.sPart[Int(Recs[13][0])][17]) {
+        if (db.sPart[Int(Recs[13][0])][15] == db.sPart[Int(Recs[13][0])][17]) {
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[13][0]) + Int(db.sPart[Int(Recs[13][0])][15])!][12])!)
         } else {        // Cl < PL
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[13][0]) + 1 + Int(db.sPart[Int(Recs[13][0])][15])!][12])!)
         }
-                            if (db.sPart[Int(Recs[16][0])][15] == db.sPart[Int(Recs[16][0])][17]) {
+        if (db.sPart[Int(Recs[16][0])][15] == db.sPart[Int(Recs[16][0])][17]) {
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[16][0]) + Int(db.sPart[Int(Recs[16][0])][15])!][12])!)
         } else {        // Cl < PL
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[16][0]) + 1 + Int(db.sPart[Int(Recs[16][0])][15])!][12])!)
         }
-                            if (db.sPart[Int(Recs[19][0])][15] == db.sPart[Int(Recs[19][0])][17]) {
+        if (db.sPart[Int(Recs[19][0])][15] == db.sPart[Int(Recs[19][0])][17]) {
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[19][0]) + Int(db.sPart[Int(Recs[19][0])][15])!][12])!)
         } else {        // Cl < PL
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[19][0]) + 1 + Int(db.sPart[Int(Recs[19][0])][15])!][12])!)
         }
-                            
-                            
-                            print("!! teamScore = \(teamScore)")
-                            dump(Recs)
-                            
-                            
-                            }  // start()
-                            
-                            
-                            /// Tells the delegate that the ad failed to present full screen content.
-                            func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
-            print("Ad did fail to present full screen content.")
+        
+        print("!! teamScore = \(teamScore)")
+        dump(Recs)
+        
+    }  // start()
+    
+    
+    /// Tells the delegate that the ad failed to present full screen content.
+    func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        print("Ad did fail to present full screen content.")
+    }
+    
+    /// Tells the delegate that the ad will present full screen content.
+    func adWillPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+        print("Ad will present full screen content.")
+    }
+    
+    /// Tells the delegate that the ad dismissed full screen content.
+    func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
+        print("Ad did dismiss full screen content.")
+    }
+    
+    
+    func printRecs(Recs: [[Double]]) {
+        
+        /*       print("!!Driver: ", Recs[0][0], Recs[1][0], Recs[2][0], Recs[3][0], db.sPart[Int(Recs[0][0])][1], db.sPart[Int(Recs[1][0])][1], db.sPart[Int(Recs[2][0])][1], db.sPart[Int(Recs[3][0])][1])
+         print("!!Brakes: ", Recs[4][0], Recs[5][0], Recs[6][0], db.sPart[Int(Recs[4][0])][1], db.sPart[Int(Recs[5][0])][1], db.sPart[Int(Recs[6][0])][1])
+         print("!!Driver: ", Recs[0][0], Recs[1][0], Recs[2][0], Recs[3][0], db.sDriver[Int(Recs[0][0])][1], db.sDriver[Int(Recs[1][0])][1], db.sDriver[Int(Recs[2][0])][1], db.sDriver[Int(Recs[3][0])][1])
+         print("!!Brakes: ", Recs[4][0], Recs[5][0], Recs[6][0], db.sPart[Int(Recs[4][0])][1], db.sPart[Int(Recs[5][0])][1], db.sPart[Int(Recs[6][0])][1])
+         print("!!Gearbox: ", Recs[7][0], Recs[8][0], Recs[9][0], db.sPart[Int(Recs[7][0])][1], db.sPart[Int(Recs[8][0])][1], db.sPart[Int(Recs[9][0])][1])
+         print("!!RearWing: ", Recs[10][0], Recs[11][0], Recs[12][0], db.sPart[Int(Recs[10][0])][1], db.sPart[Int(Recs[11][0])][1], db.sPart[Int(Recs[12][0])][1])
+         print("!!FrontWing: ", Recs[13][0], Recs[14][0], Recs[15][0], db.sPart[Int(Recs[13][0])][1], db.sPart[Int(Recs[14][0])][1], db.sPart[Int(Recs[15][0])][1])
+         print("!!Suspension: ", Recs[16][0] ,Recs[17][0], Recs[18][0], db.sPart[Int(Recs[16][0])][1], db.sPart[Int(Recs[17][0])][1], db.sPart[Int(Recs[18][0])][1])
+         print("!!Engine: ", Recs[19][0], Recs[20][0], Recs[21][0], db.sPart[Int(Recs[19][0])][1], db.sPart[Int(Recs[20][0])][1], db.sPart[Int(Recs[21][0])][1])
+         
+         */
+    }
+    
+}   // struct
+
+
+struct InfoSheetRecsView: View {
+    var body: some View {
+        ScrollView() {
+            Text("info_contents_recs")
+                .font(.system(size: 12))
+                .frame(width: 300)
+                .padding()
         }
-                            
-                            /// Tells the delegate that the ad will present full screen content.
-                            func adWillPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-            print("Ad will present full screen content.")
-        }
-                            
-                            /// Tells the delegate that the ad dismissed full screen content.
-                            func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-            print("Ad did dismiss full screen content.")
-        }
-                            
-                            
-                            func printRecs(Recs: [[Double]]) {
-            
-            /*       print("!!Driver: ", Recs[0][0], Recs[1][0], Recs[2][0], Recs[3][0], db.sPart[Int(Recs[0][0])][1], db.sPart[Int(Recs[1][0])][1], db.sPart[Int(Recs[2][0])][1], db.sPart[Int(Recs[3][0])][1])
-             print("!!Brakes: ", Recs[4][0], Recs[5][0], Recs[6][0], db.sPart[Int(Recs[4][0])][1], db.sPart[Int(Recs[5][0])][1], db.sPart[Int(Recs[6][0])][1])
-             print("!!Driver: ", Recs[0][0], Recs[1][0], Recs[2][0], Recs[3][0], db.sDriver[Int(Recs[0][0])][1], db.sDriver[Int(Recs[1][0])][1], db.sDriver[Int(Recs[2][0])][1], db.sDriver[Int(Recs[3][0])][1])
-             print("!!Brakes: ", Recs[4][0], Recs[5][0], Recs[6][0], db.sPart[Int(Recs[4][0])][1], db.sPart[Int(Recs[5][0])][1], db.sPart[Int(Recs[6][0])][1])
-             print("!!Gearbox: ", Recs[7][0], Recs[8][0], Recs[9][0], db.sPart[Int(Recs[7][0])][1], db.sPart[Int(Recs[8][0])][1], db.sPart[Int(Recs[9][0])][1])
-             print("!!RearWing: ", Recs[10][0], Recs[11][0], Recs[12][0], db.sPart[Int(Recs[10][0])][1], db.sPart[Int(Recs[11][0])][1], db.sPart[Int(Recs[12][0])][1])
-             print("!!FrontWing: ", Recs[13][0], Recs[14][0], Recs[15][0], db.sPart[Int(Recs[13][0])][1], db.sPart[Int(Recs[14][0])][1], db.sPart[Int(Recs[15][0])][1])
-             print("!!Suspension: ", Recs[16][0] ,Recs[17][0], Recs[18][0], db.sPart[Int(Recs[16][0])][1], db.sPart[Int(Recs[17][0])][1], db.sPart[Int(Recs[18][0])][1])
-             print("!!Engine: ", Recs[19][0], Recs[20][0], Recs[21][0], db.sPart[Int(Recs[19][0])][1], db.sPart[Int(Recs[20][0])][1], db.sPart[Int(Recs[21][0])][1])
-             
-             */
-        }
-                            
-                            }   // struct
-                            
-                            
-                            struct InfoSheetRecsView: View {
-            var body: some View {
-                ScrollView() {
-                    Text("info_contents_recs")
-                        .font(.system(size: 12))
-                        .frame(width: 300)
-                        .padding()
-                }
-            }
-        }
-                            
-                            
-                            
-                            struct RecsView_Previews: PreviewProvider {
-            static var previews: some View {
-                Text("Hello preview")
-            }
-        }
-                            
+    }
+}
+
+
+
+struct RecsView_Previews: PreviewProvider {
+    static var previews: some View {
+        Text("Hello preview")
+    }
+}
+

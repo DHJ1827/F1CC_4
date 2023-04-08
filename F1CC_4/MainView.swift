@@ -7,10 +7,10 @@
 // TO DO
 //
 // Fix
-// run, recs syas sainz and norris. then driver, recs, says Sainz and Sainz- no doubles allowed!
 // calcs, including teamScore are all mixed up!
 // Fix mid, min and max by changing 10% to 0, not 1
 // create app icon
+// 10% always set on new load
 //
 // UI
 // fix string 1 for Driver and Part: line 42 and 54 for varied spacing depending on string lengths. Ok for min. Try with mid and max. NCo = 0?

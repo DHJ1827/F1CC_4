@@ -15,8 +15,8 @@ var dbName = "/dbF1CC6.sqlite"
 
 class DBHandler: ObservableObject {
     
-    @Published var sDriver: [[String]] = Array(repeating: [String](repeating: "1", count: 31), count: 661)
-    @Published var sPart: [[String]] = Array(repeating: [String](repeating: "1", count: 30), count: 463)
+    @Published var sDriver: [[String]] = Array(repeating: [String](repeating: "1", count: 33), count: 661)
+    @Published var sPart: [[String]] = Array(repeating: [String](repeating: "1", count: 32), count: 463)
     @Published var sMult: [[String]] = Array(repeating: [String](repeating: "1", count: 2), count: 13)
     @Published var sCard: [[String]] = Array(repeating: [String](repeating: "1", count: 3), count: 13)
     @Published var bDriverBoost: [Bool] = Array(repeating: false, count: 661)
@@ -220,7 +220,7 @@ class DBHandler: ObservableObject {
         return try dbQueue.read { db -> [[String]] in     // if fetch fails, returns nil
             let rows = try Row.fetchAll(db, sql: "SELECT * FROM " + "driver")
             var row_ctr = 0
-            var arrRow = ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""]    //len = 31 ie. [0]->[30]
+            var arrRow = ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""]    //len = 33 ie. [0]->[32]
             var arrReturned = [[String]]()
             for row in rows {
                 arrRow[0] = "0"
@@ -255,7 +255,7 @@ class DBHandler: ObservableObject {
             let rows = try Row.fetchAll(db, sql: "SELECT * FROM " + "part")
             var row_ctr = 0
             //var arrRow = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"]
-            var arrRow = ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""]    //len = 31 ie. [0]->[30]
+            var arrRow = ["","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""]    //len = 33 ie. [0]->[32]
             var arrReturned = [[String]]()
             for row in rows {
                 arrRow[0] = row["part_category"]
