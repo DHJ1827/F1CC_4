@@ -145,6 +145,7 @@ struct RecsView: View {
     @State var longestLength = 0
     @State var teamScore:Int = 0
     @State var upgradeID:Int = -1     //dummy integer
+    @State var STPartRecID:Int = -1   // dummy integer
     
     @State private var showingInfoSheet = false
     
@@ -164,6 +165,7 @@ struct RecsView: View {
     
     let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic]
     let factors = ["Power", "Aero", "Grip", "Reliability", "Pit Stop Time", "Overtaking", "Defending", "Consistency", "Fuel Management", "Tire Management", "Wet Weather Ability"]
+    let assetLevel = ["","common", "rare", "epic"]
     
     @State var RecsDisp: [[String]]  = Array(repeating: Array(repeating: "", count: 9), count: 22)     //Detailed strings for 22 drivers and parts, each with 1st line, 2nd line, 3rd line and 4th-9th for Driver details or 4th-7th for Parts details
     @State var RecsDispDriver: [String]  = Array(repeating: "", count: 36)
@@ -629,10 +631,9 @@ struct RecsView: View {
                     
                     VStack {
                         if ((db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) && (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17])) {
-                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])")
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")")
                         } else {
-                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[1][0])][1])") + Text("basicOneUpgrade \(db.sDriver[upgradeID][1]) \(db.sDriver[upgradeID][31])")
-                            //Text("Yup")
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")") + Text("basicOneUpgrade \(db.sDriver[upgradeID][1]) \(db.sDriver[upgradeID][31])")
                         }
                         
                     }
@@ -650,39 +651,41 @@ struct RecsView: View {
                     
                     VStack(alignment: .leading) {
                         Group {
-                            if (db.sPart[Int(Recs[4][0])][15] == db.sPart[Int(Recs[4][0])][17]) {
+                            //if (db.sPart[Int(Recs[4][0])][15] == db.sPart[Int(Recs[4][0])][17]) {
+                            if (STPartRecID <=  76 ) {
+                                Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[4][0])][31])") + Text(" \n")
+                            } else {
                                 Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text(" \n")
-                            } else {
-                                Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[4][0])][15])!+1))") + Text(" \n")
                             }
-                            if (db.sPart[Int(Recs[7][0])][15] == db.sPart[Int(Recs[7][0])][17]) {
+                            
+                            if (STPartRecID >  76 && STPartRecID <=  153 ) {
+                                Text("gearbox") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[7][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[7][0])][31])") + Text(" \n")
+                            } else {
                                 Text("gearbox") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[7][0])][1])") + Text(" \n")
-                            } else {
-                                Text("gearbox") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[7][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[7][0])][15])!+1))") + Text(" \n")
                             }
-                            if (db.sPart[Int(Recs[10][0])][15] == db.sPart[Int(Recs[10][0])][17]) {
-                                Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text(" \n")
+                            if (STPartRecID >  153 && STPartRecID <=  230 ) {
+                                Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[10][0])][31])") + Text(" \n")
                             } else {
-                                Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[10][0])][15])!+1))") + Text(" \n")
+                                Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text(" \n")
                             }
                         }    // group
                         .font(.system(size: 14, weight: .bold, design: .default))
                         
                         Group {
-                            if (db.sPart[Int(Recs[13][0])][15] == db.sPart[Int(Recs[13][0])][17]) {
+                            if (STPartRecID >  230 && STPartRecID <= 307 ) {
+                                Text("frontwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[13][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[13][0])][31])") + Text(" \n")
+                            } else {
                                 Text("frontwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[13][0])][1])") + Text(" \n")
-                            } else {
-                                Text("frontwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[13][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[13][0])][15])!+1))") + Text(" \n")
                             }
-                            if (db.sPart[Int(Recs[16][0])][15] == db.sPart[Int(Recs[16][0])][17]) {
+                            if (STPartRecID >  307 && STPartRecID <=  384 ) {
+                                Text("suspension") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[16][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[16][0])][31])") + Text(" \n")
+                            } else {
                                 Text("suspension") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[16][0])][1])") + Text(" \n")
-                            } else {
-                                Text("suspension") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[16][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[16][0])][15])!+1))") + Text(" \n")
                             }
-                            if (db.sPart[Int(Recs[19][0])][15] == db.sPart[Int(Recs[19][0])][17]) {
-                                Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])")
+                            if (STPartRecID > 384 ) {
+                                Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[19][0])][31])") + Text(" \n")
                             } else {
-                                Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])") + Text("basicPaUpgrade \(String(Int(db.sPart[Int(Recs[19][0])][15])!+1))")
+                                Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])")
                             }
                         }     //group
                         .font(.system(size: 14, weight: .bold, design: .default))
@@ -690,7 +693,7 @@ struct RecsView: View {
                     
                     Spacer(minLength: 20)
                     
-                    Text("teamScore: \(teamScore)")
+                    Text("teamScore \(teamScore)")
                         .font(.system(size: 14, weight: .bold, design: .default))
                         .padding()
                         .border(Color.colours.backgrd_blue, width: 4)
@@ -781,11 +784,19 @@ struct RecsView: View {
         Recs[0][1] = Double(row_ctr)
         Recs[1][0] = Double(row_ctr)
         Recs[1][1] = Double(row_ctr)
-        print("!!RV784 \(Recs[0][0]) \(Recs[0][1]) \(Recs[1][0]) \(Recs[1][1])")
+        //print("!!RV784 \(Recs[0][0]) \(Recs[0][1]) \(Recs[1][0]) \(Recs[1][1])")
+        //printArrRow(arrName: db.sDriver, xRow: 253)
         while row_ctr < 659 {   // go through all drivers, 11 rows at a time
-            print("!!RV787 \(db.sDriver[row_ctr][32]) \(Recs[0][1]) \(db.sDriver[row_ctr][1]) \(db.sDriver[Int(Recs[0][0])][1])")
+            //print("!!RV787 PR: \(db.sDriver[row_ctr][32]) \(Recs[0][1]) \(db.sDriver[row_ctr][1]) \(db.sDriver[Int(Recs[0][0])][1])")
             
+            print("!!RV787 new candidate: \(db.sDriver[row_ctr][32]) Recs[0][1]= \(Recs[0][1])")
+            //printArrRow(arrName: db.sDriver, xRow: 253)
+            print("!!790 \(row_ctr)")
+            print("!! \(Double(db.sDriver[row_ctr][32])!)")
+            print("!!   \(Recs[0][1])")
             if (Double(db.sDriver[row_ctr][32])! > Recs[0][1]) {   // PR > current Recs[0]
+                
+                print("!!RV790 candidate driver: \(db.sDriver[row_ctr][1]) Recs[0][0] driver= \(db.sDriver[Int(Recs[0][0])][1])")
                 if(db.sDriver[row_ctr][1] != db.sDriver[Int(Recs[0][0])][1]) {   //check to make sure drivers names are different
                     Recs[1][0] = Recs[0][0]   // push [0] down to [1]
                     Recs[1][1] = Recs[0][1]   // push value [0] down to [1]
@@ -796,63 +807,24 @@ struct RecsView: View {
                     Recs[0][1] = Double(db.sDriver[row_ctr][32])!  // value of new
                 }
             } else if (Double(db.sDriver[row_ctr][32])! > Recs[1][1]) {    // CR > Recs[1]
+                print("!!RV802 new candidate: \(db.sDriver[row_ctr][32]) Recs[1][1]= \(Recs[0][1])")
+
                 Recs[1][0] = Double(row_ctr)    // id of new
                 Recs[1][1] = Double(db.sDriver[row_ctr][32])!  // value of new
             }
+            print("!!RV 800 row=\(row_ctr)  Recs[0][0]=\(Recs[0][0])  [0][1]=\(Recs[0][1])  [1][0]=\(Recs[1][0])  [1][1]=\(Recs[1][1])\n\n")
+
             row_ctr = row_ctr + 11      //next driver
         }
         // now find out the id to be upgraded
-        print("!!RV 800 \(Recs[0][0]) \(Recs[0][1]) \(Recs[1][0]) \(Recs[1][1])")
+        print("!!RV 812 final: 00: \(Recs[0][0]) 01: \(Recs[0][1]) 10: \(Recs[1][0]) 11: \(Recs[1][1])")
         if ((Double(db.sDriver[Int(Recs[0][0])][32])! - Double(db.sDriver[Int(Recs[0][0])][16])!) >= (Double(db.sDriver[Int(Recs[1][0])][32])! - Double(db.sDriver[Int(Recs[1][0])][16])!)) {    // Recs0 PR > Recs1 PR
             upgradeID = Int(Recs[0][0])
         } else {
             upgradeID = Int(Recs[1][0])
         }
         print("!!RV811 upgradeID= \(upgradeID)")
-        //******  OLD   *********
-        /*
-        row_ctr = 0
-        Recs[0][0] = Double(row_ctr)    // clear array to start over
-        Recs[0][1] = Double(row_ctr)
-        Recs[1][0] = Double(row_ctr)
-        Recs[1][1] = Double(row_ctr)
-        while row_ctr < 659 {   // go through all drivers, 11 rows at a time
-            if (Double(db.sDriver[row_ctr][32])! > Recs[0][1]) {   // PR > current Recs[0]
-                if(db.sDriver[row_ctr][1] != db.sDriver[Int(Recs[0][0])][1]) {   //check to make sure drivers names are different
-                    Recs[1][0] = Recs[0][0]   // push [0] down to [1]
-                    Recs[1][1] = Recs[0][1]   // push value [0] down to [1]
-                    Recs[0][0] = Double(row_ctr) //  id of new
-                    Recs[0][1] = Double(db.sDriver[row_ctr][32])!  // value of new
-                } else {    //drivers names are the same so add driver[0] but keep old driver[1]
-                    Recs[0][0] = Double(row_ctr) //  id of new
-                    Recs[0][1] = Double(db.sDriver[row_ctr][32])!  // value of new
-                }
-            } else if (Double(db.sDriver[row_ctr][32])! > Recs[1][1]) {    // CR > Recs[1]
-                Recs[1][0] = Double(row_ctr)    // id of new
-                Recs[1][1] = Double(db.sDriver[row_ctr][32])!  // value of new
-            }
-            //print("!! Recs659 \(row_ctr) \(Double(db.sDriver[row_ctr][18])) \(Double(db.sDriver[row_ctr][20])) \(Double(db.sDriver[row_ctr][21])) \(Double(db.sDriver[row_ctr][22])) \(Double(sMultStripped)) \(Recs[0][0]) \(Recs[1][0])")
-            //print("!! Recs664 \(db.sMult[11][1])")
-            
-            // if there are enough coins and cards and PR is bigger than the current CRs then choose it (its a IU)
-            if ((Double(db.sDriver[row_ctr][18])! > Recs[0][1]) &&          // PR[18]
-                (Double(sMultStripped)! > Double(db.sDriver[row_ctr][22])!) &&          // ACo(converted from string to # > NCo
-                (Double(db.sDriver[row_ctr][21])!) > Double(db.sDriver[row_ctr][20])! &&         // ACa > NCa
-                (Double(row_ctr) != Recs[1][0])) {       // no double drivers
-                Recs[1][0] = Recs[0][0]   // push [0] id down to [1]
-                Recs[1][1] = Recs[0][1]   // push value [0] down to [1]
-                Recs[0][0] = Double(row_ctr) //  id of new
-                Recs[0][1] = Double(db.sDriver[row_ctr][18])!  // value of new
-                // if CL0 < PL0 then theres an upgrade possibility. Same for CL1 and PL1. Check the PRs and upgrade the driver with the highest PR
-            } else if (Double(db.sDriver[row_ctr][18])! > Recs[1][1]) &&          // PR > [1]
-                        (Double(sMultStripped)! > Double(db.sDriver[row_ctr][22])!) &&          // ACo > NC0
-                        (Double(db.sDriver[row_ctr][21])! > Double(db.sDriver[row_ctr][20])! &&        // ACa > NCa
-                         (Double(row_ctr) != Recs[0][0])) {      // no double drivers
-                Recs[1][0] = Double(row_ctr)    // id of new
-                Recs[1][1] = Double(db.sDriver[row_ctr][18])!  // value of new
-            }
-         */
-
+        
         
         
         // **********************************************************************************************
@@ -901,7 +873,9 @@ struct RecsView: View {
         cat_ctr = 1
         maxPart = 0
         
-        // ************************* new way
+        // ***********************************************************************************************
+        // find for each category
+        
         while row_start <= 461  { // < 461
             //print("row_start= ",row_crow_start)
             
@@ -923,14 +897,30 @@ struct RecsView: View {
                 
             }
             //print("Recs[cat_ctr + 3][0]= ", Recs[cat_ctr + 3][0], " Recs[cat_ctr + 3][1]= ", Recs[cat_ctr + 3][1])
-            //print("\n")
+
             cat_ctr = cat_ctr + 3   // next category in Recs[]
-            
             row_start = row_start + 77     // next category in sPart[[]]
         }
         
         //print("!!ST Recs (Final)= ", Recs)
+        // ************************************************************************************************************************
+        // Find best ST Part for Basic Recs for all categories
+        // loop through the Parts Recs[x][1]s and find the highest
+        row_ctr = 0
         
+        var STPartRecPR: Double = 0.0
+        while row_ctr <= 461  {
+            if (Double(db.sPart[row_ctr][32])! > STPartRecPR) {     // [32] > current PR so set it
+                STPartRecPR = Double(db.sPart[row_ctr][32])!
+                STPartRecID = row_ctr
+            }
+
+           row_ctr = row_ctr + 11
+        }
+
+        
+        // ************************************************************************************************************************
+        // Calc pit stop time
         row_ctr = 4     // 0-3 = drivers, 4-21 are parts
         pitStopTime = 0
         while row_ctr <= 7  { // < 461
@@ -1581,6 +1571,17 @@ struct RecsView: View {
         print("Ad did dismiss full screen content.")
     }
     
+    func printArrRow(arrName: [[String]], xRow: Int) {
+        for m in 0..<33 {
+            print("!! [\(m)] = \(arrName[xRow][m])")
+        }
+    }
+    
+    func printArrCol(arrName: [[String]], xRow: Int) {
+        for m in 0..<33 {
+            print("!! [\(m)] = \(arrName[m][xRow])")
+        }
+    }
     
     func printRecs(Recs: [[Double]]) {
         

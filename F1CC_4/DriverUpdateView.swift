@@ -36,6 +36,11 @@ struct DriverUpdateView: View {
                         .fontWeight(.semibold)
                         .frame(width: 75)
                     TextField("Coins",text: $db.sMult[11][1])
+                        .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidBeginEditingNotification)) { obj in
+                                        if let textField = obj.object as? UITextField {
+                                            textField.selectedTextRange = textField.textRange(from: textField.beginningOfDocument, to: textField.endOfDocument)
+                                        }
+                                    }
                     
                 }   //HStack
                 

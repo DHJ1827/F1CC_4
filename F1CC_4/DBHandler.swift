@@ -161,7 +161,7 @@ class DBHandler: ObservableObject {
             }
         }
         
-            print("!!!! bFirstTimeLoad leaving dbHandler= \(bFirstTimeLoad)")
+        print("!!!! bFirstTimeLoad leaving dbHandler= \(bFirstTimeLoad)")
     }
     
     // ******************************************
@@ -239,6 +239,8 @@ class DBHandler: ObservableObject {
                 arrRow[15] = row["driver_current_level"]
                 arrRow[20] = row["driver_available_cards"]
                 arrRow[29] = row["driver_max_level"]
+                arrRow[31] = "0"
+                arrRow[32] = "0"
                 arrReturned.append(arrRow)
                 row_ctr = row_ctr + 1
             }
@@ -274,6 +276,8 @@ class DBHandler: ObservableObject {
                 arrRow[15] = row["part_current_level"]
                 arrRow[20] = row["part_available_cards"]
                 arrRow[29] = row["part_max_level"]
+                arrRow[31] = "0"
+                arrRow[32] = "0"
                 arrReturned.append(arrRow)
                 row_ctr = row_ctr + 1
             }
@@ -331,7 +335,7 @@ class DBHandler: ObservableObject {
                         """)
                     //}
                 }
-
+                
                 //}
                 
                 
@@ -413,7 +417,7 @@ class DBHandler: ObservableObject {
         // weighted rating and 10% font colours
         // sum of atributes x mult values
         // if [14] is 10% then change font to red
-
+        
         row_ctr = 0
         while row_ctr <= 659 {
             
@@ -431,10 +435,10 @@ class DBHandler: ObservableObject {
             
             
             /*
-            sDriverr[row_ctr][11] = String(format: "%.0f", Double(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])! + Int(sDriverr[row_ctr][8])! * Int(sMultt[10][1])!) * Double(sDriverr[row_ctr][14]))
-            */
+             sDriverr[row_ctr][11] = String(format: "%.0f", Double(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])! + Int(sDriverr[row_ctr][8])! * Int(sMultt[10][1])!) * Double(sDriverr[row_ctr][14]))
+             */
             
-//            sDriverr[row_ctr][11] = String(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])! + Int(sDriverr[row_ctr][8])! * Int(sMultt[10][1])!)
+            //            sDriverr[row_ctr][11] = String(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])! + Int(sDriverr[row_ctr][8])! * Int(sMultt[10][1])!)
             row_ctr = row_ctr + 1
         }
         
@@ -457,7 +461,7 @@ class DBHandler: ObservableObject {
             //dBoost = Double(sDriverr[row_ctr][14])!  //boost of driver
             //dTemp = dTemp * dBoost / Double(maxDriver)
             dTemp = dTemp / Double(maxDriver)
-           if (dTemp < 1 ) {
+            if (dTemp < 1 ) {
                 sDriverr[row_ctr][12] = String(format: "%.1f", 100 * dTemp)   // get the weighted / max, * 100 formatted to 1 decimal
             } else {
                 sDriverr[row_ctr][12] = "99.9"
@@ -470,7 +474,7 @@ class DBHandler: ObservableObject {
         
         // **** for this driver boost CR, MR and PR. Then update db so if file closes, boost values will be retained
         var tempCL = 0
-
+        
         row_ctr = 0
         while row_ctr <= 659 {
             tempCL = Int(sDriverr[row_ctr][15])! // get CL
@@ -510,7 +514,7 @@ class DBHandler: ObservableObject {
                     if (card_ctr == 11) {
                         sDriverr[row_ctr][17] = "11"    // coorect a potential error if CL is high
                     } else {
-                    sDriverr[row_ctr][17] = sCardd[card_ctr + 1][0]     //found the PL
+                        sDriverr[row_ctr][17] = sCardd[card_ctr + 1][0]     //found the PL
                     }
                     break
                 }
@@ -611,340 +615,435 @@ class DBHandler: ObservableObject {
             }
             row_ctr = row_ctr + 11
         }
-
-    
-    // **********************************************************************************************************************************************************
-    // ++PR Possible Rating for current PL + 2
-    
-    row_ctr = 0
-    while row_ctr <= 659 {
-        tempPL = Int(sDriverr[row_ctr][17])!
-        if (tempPL > 9) {        // if PL > 9 then max out at 11
-            sDriverr[row_ctr][26] = sDriverr[row_ctr + 10][12]
-        } else {
-            sDriverr[row_ctr][26] = sDriverr[row_ctr + tempPL + 2][12]    // jump up 2
-        }
-        row_ctr = row_ctr + 11
-    }
-    
-    // **********************************************************************************************************************************************************
-    //   ACards/++NCa Needed Cards to go to PL + 2
-    
-    row_ctr = 0
-    while row_ctr <= 659 {
-        tempPL = Int(sDriverr[row_ctr][17])!
-        if (tempPL == 0) {
-            sDriverr[row_ctr][28] = ".000001"  // assume PL = 0, set an initial value
-        } else if (tempPL > 9) {    // if PL is to big to jump up + 2
-            sDriverr[row_ctr][28] = String(Double(sDriverr[row_ctr][20])! / Double(sCardd[tempPL][1])!)
-        } else {
-            sDriverr[row_ctr][28] = String(Double(sDriverr[row_ctr][20])! / Double(sCardd[tempPL + 2][1])!)
-        }
-        if (Double(sDriverr[row_ctr][28])! > 1) {
-            sDriverr[row_ctr][28] = "1"
-        }
-        row_ctr = row_ctr + 11
-    }
-
-    // **********************************************************************************************************************************************************
-    // ACoins/+NCo Needed Coins to get to the PL + 2. Get cumul coins for PL+2 and subtract cumul coins for CL ie. from rows PL+1 to CL-1
-    
-    row_ctr = 0
-    while row_ctr <= 659 {
-        tempCL = Int(sDriverr[row_ctr][15])!
-        tempPL = Int(sDriverr[row_ctr][17])!
-        sDriverr[row_ctr][27] = "0.000001"  // assume PL = 0, set an initial value
-        if (tempPL > 9) {
-            tempPL = 9        // PL+2 maxes out at 11
-        } else {
-            tempPLplus2Coins = Int(sDriverr[row_ctr + tempPL + 1][10])!    //get cumul coins for PL+2 ie. row PL+1
-        }
-        
-        if (tempCL > 0) {   //  otherwise[27] stays at .0000001
-            sDriverr[row_ctr][27] =  String( ACo / (tempPLplus2Coins - Int(sDriverr[row_ctr + tempCL - 1][10])!) )
-        }
-        if (Double(sDriverr[row_ctr][27])! > 1) {
-            sDriverr[row_ctr][27] = "1"
-        }
-        row_ctr = row_ctr + 11
-    }
-    
-    // *****  DONE  ******************************************************************************************************************************************
-
-        
-    //print ("!!DBH 645 (about to return from DBH): ", sDriverr[0][16], sDriverr[11][16], sDriverr[22][16], sDriverr[33][16], "")
-    return sDriverr
-    
-}  //sDriverCalc()
-
-
-func sPartCalc(sPart: [[String]], sMult: [[String]], sCard: [[String]]) -> [[String]] {
-    //  Calculate sPart values
-    
-    var sPartt = sPart
-    var sMultt = sMult
-    var sCardd = sCard
-    
-    var ACo = Int(sMult[11][1].replacingOccurrences(of: ",", with: ""))!  // available coins
-    var tempPLplus1Coins = 0
-    var tempPLplus2Coins = 0
-    
-    // **********************************************************************************************************************************************************
-    // weighted rating: sum of atributes x mult values
-    
-    var row_ctr = 0
-    while row_ctr <= 461 {
-        sPartt[row_ctr][11] = String(Int(sPartt[row_ctr][3])! * Int(sMultt[0][1])! + Int(sPartt[row_ctr][4])! * Int(sMultt[1][1])! + Int(sPartt[row_ctr][5])! * Int(sMultt[2][1])! + Int(sPartt[row_ctr][6])! * Int(sMultt[3][1])!)
-        row_ctr = row_ctr + 1
-    }
-    
-    // **********************************************************************************************************************************************************
-    // NR normalized rating. normalize out of 100. Find max, in [11], for all drivers and use it to normalize all others.
-    
-    //0-76, 77-153,154-230, 231-307, 308-384, 385-461
-    
-    row_ctr = 0
-    var row_start = 0
-    var maxPart = 0
-    var dTemp: Double = 0.0
-    
-    while row_start <= 450  { // < 461
         
         
-        while row_ctr <= row_start + 76 {
-            //print("sPart MR max= ",row_ctr)
-            if (Int(sPartt[row_ctr][11])! > maxPart) {    //find the max driver rating
-                maxPart = Int(sPartt[row_ctr][11])!
+        // **********************************************************************************************************************************************************
+        // ++PR Possible Rating for current PL + 2
+        
+        row_ctr = 0
+        while row_ctr <= 659 {
+            tempPL = Int(sDriverr[row_ctr][17])!
+            if (tempPL > 9) {        // if PL > 9 then max out at 11
+                sDriverr[row_ctr][26] = sDriverr[row_ctr + 10][12]
+            } else {
+                sDriverr[row_ctr][26] = sDriverr[row_ctr + tempPL + 2][12]    // jump up 2
             }
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        //   ACards/++NCa Needed Cards to go to PL + 2
+        
+        row_ctr = 0
+        while row_ctr <= 659 {
+            tempPL = Int(sDriverr[row_ctr][17])!
+            if (tempPL == 0) {
+                sDriverr[row_ctr][28] = ".000001"  // assume PL = 0, set an initial value
+            } else if (tempPL > 9) {    // if PL is to big to jump up + 2
+                sDriverr[row_ctr][28] = String(Double(sDriverr[row_ctr][20])! / Double(sCardd[tempPL][1])!)
+            } else {
+                sDriverr[row_ctr][28] = String(Double(sDriverr[row_ctr][20])! / Double(sCardd[tempPL + 2][1])!)
+            }
+            if (Double(sDriverr[row_ctr][28])! > 1) {
+                sDriverr[row_ctr][28] = "1"
+            }
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        // ACoins/+NCo Needed Coins to get to the PL + 2. Get cumul coins for PL+2 and subtract cumul coins for CL ie. from rows PL+1 to CL-1
+
+        
+        row_ctr = 0
+        while row_ctr <= 659 {
+            tempCL = Int(sDriverr[row_ctr][15])!
+            tempPL = Int(sDriverr[row_ctr][17])!
+            sDriverr[row_ctr][27] = "0.000001"  // assume PL = 0, set an initial value
+            if (tempPL > 9) {
+                tempPL = 9        // PL+2 maxes out at 11
+            } else {
+                tempPLplus2Coins = Int(sDriverr[row_ctr + tempPL + 1][10])!    //get cumul coins for PL+2 ie. row PL+1
+            }
+            
+            if (tempCL > 0) {   //  otherwise[27] stays at .0000001
+                sDriverr[row_ctr][27] =  String( ACo / (tempPLplus2Coins - Int(sDriverr[row_ctr + tempCL - 1][10])!) )
+            }
+            if (Double(sDriverr[row_ctr][27])! > 1) {
+                sDriverr[row_ctr][27] = "1"
+            }
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        // fill in [31] and [32]= true PR when ACo>NCo. [31] is true PL, [32] is [31]'s PR.
+        let sMultStripped = sMultt[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
+        var ctrCL = 0
+        var ctrPL = 0
+        var ctrNCo = 0
+        var startNCo = 0
+        row_ctr = 0
+        
+        while row_ctr <= 659 {
+            if (sDriverr[row_ctr][15] == sDriverr[row_ctr][17]) {   // CL=PL so set [31 and [32] to same
+                //print("!!379 \(sDriverr[0][15]) \(sDriverr[0][31])")
+                sDriverr[row_ctr][31] = sDriverr[row_ctr][17]   // save PL(ACo>NCo) = PL
+                sDriverr[row_ctr][32] = sDriverr[row_ctr][18]   // save PR(ACo>NCo) = PR
+            } else if ((sDriverr[row_ctr][15] < sDriverr[row_ctr][17]) &&          // PR[18]
+                       (Double(sMultStripped)! > Double(sDriverr[row_ctr][22])!)) {   // CL<PL and ACo > NCo
+                //printArrRow(arrName: sDriverr, xRow: 11)
+                sDriverr[row_ctr][31] = sDriverr[row_ctr][17]   // save PL(ACo>NCo) = PL
+                sDriverr[row_ctr][32] = sDriverr[row_ctr][18]   // save PR(ACo>NCo) = PL
+            } else {      //  CL<PL but there aren't enough coins to get to PL, so figure out if a lower PL can br reached
+                let startCL = Int(sDriverr[row_ctr][15])!    // CL   2
+                ctrPL = Int(sDriverr[row_ctr][17])!    // PL   6
+                ctrCL = startCL   // counter for CL      2
+                if (startCL > 1) {
+                    startNCo = Int(sDriverr[row_ctr + ctrCL - 2][10])!  // get the base cumul coins for starting CL
+                } else {
+                    startNCo = 0   // for low CLs, starting=0
+                }
+                while (ctrCL < ctrPL) {      // CL<PL
+                    // get the NCo for ctrCL. If ACo>NCo then save the PR  for that ctrCL.
+                    // add +1 to ctrCL and see if it still works
+                    ctrNCo = 0    //get the ctrNCo
+                    if (ctrPL >= 1) {    // if PL>=1   ie. CL<>0
+                        ctrNCo = Int(sDriverr[row_ctr + ctrCL - 1][10])! - startNCo  // and subtract the CL cumul coins already spent
+                    }
+                    //print("!! Row: \(row_ctr). Start NCo= \(startNCo). To upgrade from \(startCL) to CL= \(ctrCL + 1) to PL= \(ctrPL); NCo= \(ctrNCo) and ACo= \(sMultStripped)")
+                    
+                    if (Int(Double(sMultStripped)!) >= ctrNCo ) {
+                        sDriverr[row_ctr][31] = String(ctrCL + 1)   // save PL(ACo>NCo)
+                        sDriverr[row_ctr][32] = sDriverr[row_ctr + ctrCL - 1][12]   // save PR(ACo>NCo)
+                        print("!!DV419 Saving PR(ACo>NCo) for row= \(row_ctr) with PL= \(ctrCL + 1) and PR= \(sDriverr[row_ctr + ctrCL][12])")
+                    } else {     //CL<PL but there aren't enough coins to do anything
+                        sDriverr[row_ctr][31] = sDriverr[row_ctr][15]   // save PL(ACo>NCo) = CL
+                        sDriverr[row_ctr][32] = sDriverr[row_ctr][16]   // save PR(ACo>NCo) = CR
+                    }
+                    
+                    ctrCL = ctrCL + 1   // next CL
+                }
+            }
+            row_ctr = row_ctr + 1
+        }   //  row_ctr
+        
+        // *****  DONE  ******************************************************************************************************************************
+  
+        return sDriverr
+        
+    }  //sDriverCalc()
+    
+    
+    func sPartCalc(sPart: [[String]], sMult: [[String]], sCard: [[String]]) -> [[String]] {
+        //  Calculate sPart values
+        
+        var sPartt = sPart
+        var sMultt = sMult
+        var sCardd = sCard
+        
+        var ACo = Int(sMult[11][1].replacingOccurrences(of: ",", with: ""))!  // available coins
+        var tempPLplus1Coins = 0
+        var tempPLplus2Coins = 0
+        
+        // **********************************************************************************************************************************************************
+        // weighted rating: sum of atributes x mult values
+        
+        var row_ctr = 0
+        while row_ctr <= 461 {
+            sPartt[row_ctr][11] = String(Int(sPartt[row_ctr][3])! * Int(sMultt[0][1])! + Int(sPartt[row_ctr][4])! * Int(sMultt[1][1])! + Int(sPartt[row_ctr][5])! * Int(sMultt[2][1])! + Int(sPartt[row_ctr][6])! * Int(sMultt[3][1])!)
             row_ctr = row_ctr + 1
         }
         
-        row_ctr = row_ctr - 77
-        while row_ctr <= row_start + 76 {
-            //print("sPart MR norm= ",row_ctr)
-            dTemp = Double(sPartt[row_ctr][11])!
-            dTemp = dTemp / Double(maxPart)
-            if (dTemp < 1 ) {
-                sPartt[row_ctr][12] = String(format: "%.1f", 100 * dTemp)   // get the weighted / max, * 100 formatted to 1 decimal
-             } else {
-                 sPartt[row_ctr][12] = "99.9"
-             }
-            row_ctr = row_ctr + 1
-        }
+        // **********************************************************************************************************************************************************
+        // NR normalized rating. normalize out of 100. Find max, in [11], for all drivers and use it to normalize all others.
         
-        row_start = row_start + 77
-    }
-    
-    
-    
-    
-    
-    
-    
-    // **********************************************************************************************************************************************************
-    // CR Current Rating for current CL. Get the CL in [15]. Subtract 1 from CL value and add that to the row_ctr to get the CR ie. if CL=1, subtract 1 as a offset so when you add row_ctr, you get a proper CR.
-    
-    var tempCL = 0
-    row_ctr = 0
-    while row_ctr <= 461 {
-        tempCL = Int(sPartt[row_ctr][15])! // get CL
-        if (tempCL == 0) {    // check to see if CL=0
-            sPartt[row_ctr][16] = "0"  // force CR = 0
-        } else {
-            sPartt[row_ctr][16] = sPartt[row_ctr + tempCL - 1][12]
-        }
-        row_ctr = row_ctr + 11
-    }
-    
-    // **********************************************************************************************************************************************************
-    //NCa Needed Cards to go from CL to CL+1. take the CL[15] and look up its value in sCard [1] to go from CL to CL+1
-    
-    row_ctr = 0
-    while row_ctr <= 461 {
-        sPartt[row_ctr][21] = sCardd[Int(sPartt[row_ctr][15])!][1]
-        row_ctr = row_ctr + 11
-    }
-    
-    // **********************************************************************************************************************************************************
-    //PL Possible Level use all available cards to determine PL. Get the current ACa[20], added to the CL[15]'s value in sCard ie. the number of cumulative cards to date. Find the PL
-    
-    row_ctr = 0
-    var totCards = 0
-    while row_ctr <= 461 {
-        tempCL = Int(sPartt[row_ctr][15])! // get CL
-        if (tempCL == 0) {
-            totCards = 0
-            sPartt[row_ctr][17] = "0"
-        } else {
-            totCards = Int(sPartt[row_ctr][20])! + Int(sCardd[tempCL - 1][2])!    // ACa + cumul to date ie. cards[CL-1] for actual cumul cost
-        }
-        var card_ctr = 11
-        while card_ctr >= 0 {   // start at max level 11 and loop down looking where total cards is slightly less than sCard level
-            if (totCards >= Int(sCardd[card_ctr][2])! && tempCL > 0) {
-                sPartt[row_ctr][17] = sCardd[card_ctr + 1][0]     //found the PL
-                break
+        //0-76, 77-153,154-230, 231-307, 308-384, 385-461
+        
+        row_ctr = 0
+        var row_start = 0
+        var maxPart = 0
+        var dTemp: Double = 0.0
+        
+        while row_start <= 450  { // < 461
+            
+            
+            while row_ctr <= row_start + 76 {
+                //print("sPart MR max= ",row_ctr)
+                if (Int(sPartt[row_ctr][11])! > maxPart) {    //find the max driver rating
+                    maxPart = Int(sPartt[row_ctr][11])!
+                }
+                row_ctr = row_ctr + 1
             }
-            card_ctr = card_ctr - 1
+            
+            row_ctr = row_ctr - 77
+            while row_ctr <= row_start + 76 {
+                //print("sPart MR norm= ",row_ctr)
+                dTemp = Double(sPartt[row_ctr][11])!
+                dTemp = dTemp / Double(maxPart)
+                if (dTemp < 1 ) {
+                    sPartt[row_ctr][12] = String(format: "%.1f", 100 * dTemp)   // get the weighted / max, * 100 formatted to 1 decimal
+                } else {
+                    sPartt[row_ctr][12] = "99.9"
+                }
+                row_ctr = row_ctr + 1
+            }
+            
+            row_start = row_start + 77
         }
-        row_ctr = row_ctr + 11
-    }
-    
-    // **********************************************************************************************************************************************************
-    // PR Possible Rating for current PL. Get the PL in [17]. Subtract 1 from PL value and add that to the row_ctr to get the PR ie. if PL=1, subtract 1 as a offset so when you add row_ctr, you get a proper PR.
-    
-    var tempPL = 0
-    row_ctr = 0
-    while row_ctr <= 461 {
-        tempPL = Int(sPartt[row_ctr][17])!     // get PL
-        if (tempPL == 0) {    // check to see if PL=0
-            sPartt[row_ctr][18] = "0"   // force PR=0
-        } else {
-            sPartt[row_ctr][18] = sPartt[row_ctr + tempPL - 1][12]
-        }
-        row_ctr = row_ctr + 11
-    }
-    
-    // **********************************************************************************************************************************************************
-    // MR Max Rating for current driver. Add 10 ie. level=11 to row_ctr and look up the normalized NR[12]
-    
-    row_ctr = 0
-    while row_ctr <= 461 {
-        sPartt[row_ctr][19] = sPartt[row_ctr + 10][12]
-        row_ctr = row_ctr + 11
-    }
-    
-    // **********************************************************************************************************************************************************
-    // NCo Needed Coins to get to the PL. First determine the number of coins needed to get to PL[17]. Save it temporarily in [22].Second subtract [22] from the number of coins already spent to get to CL[15]- take the CL[15] and look up its value in sCard to go from CL to CL+1
-    
-    row_ctr = 0
-    while row_ctr <= 461 {
-        tempCL = Int(sPartt[row_ctr][15])!
-        tempPL = Int(sPartt[row_ctr][17])!
-        sPartt[row_ctr][22] = "0"  // assume PL or CL = 0, set an initial value
-        if (tempPL > 1) {    // if PL>1
-            sPartt[row_ctr][22] = sPartt[row_ctr + tempPL - 1][10]  // get the PL cumul coins
-        }
-        if (tempCL > 1) {    // if CL>1
-            sPartt[row_ctr][22] = String(Int(sPartt[row_ctr][22])! - Int(sPartt[row_ctr + tempCL - 1][10])!)  // and subtract the CL cumul coins already spent
-        }
-        row_ctr = row_ctr + 11
-    }
-    
-    // **********************************************************************************************************************************************************
-    // +PR Possible Rating for current PL + 1
-    
-    row_ctr = 0
-    while row_ctr <= 461 {
-        tempPL = Int(sPartt[row_ctr][17])!
-        sPartt[row_ctr][23] = sPartt[row_ctr + tempPL][12]   //get the NR for at the PL row
-        row_ctr = row_ctr + 11
-    }
-    
-    // **********************************************************************************************************************************************************
-    //   ACards/+NCa Needed Cards to go to PL + 1
-    
-    row_ctr = 0
-    while row_ctr <= 461 {
-        tempPL = Int(sPartt[row_ctr][17])!
-        if (tempPL == 0) {
-            sPartt[row_ctr][25] = ".000001"  // assume PL = 0, set an initial value
-        } else if (tempPL > 10) {    // if PL is to big to jump up +1
-            sPartt[row_ctr][25] = String(Double(sPartt[row_ctr][20])! / Double(sCardd[tempPL][1])!)
-        } else {
-            sPartt[row_ctr][25] = String(Double(sPartt[row_ctr][20])! / Double(sCardd[tempPL + 1][1])!)
-        }
-        if (Double(sPartt[row_ctr][25])! > 1) {
-            sPartt[row_ctr][25] = "1"
-        }
-        row_ctr = row_ctr + 11
-    }
-    
-    // **********************************************************************************************************************************************************
-    // ACoins/+NCo Needed Coins to get to the PL+1. Get cumul coins for PL+1 and subtract cumul coins for CL ie. from rows PL to CL-1
-    
-    row_ctr = 0
-    while row_ctr <= 461 {
-        tempCL = Int(sPartt[row_ctr][15])!
-        tempPL = Int(sPartt[row_ctr][17])!
-        sPartt[row_ctr][24] = "0.000001"  // assume PL = 0, set an initial value
-        if (tempPL == 11) {
-            tempPL = 10        // PL+1 maxes out at 11
-        } else {
-            tempPLplus1Coins = Int(sPartt[row_ctr + tempPL][10])!    //get cumul coins for PL+1 ie. row PL
+
+        
+        // **********************************************************************************************************************************************************
+        // CR Current Rating for current CL. Get the CL in [15]. Subtract 1 from CL value and add that to the row_ctr to get the CR ie. if CL=1, subtract 1 as a offset so when you add row_ctr, you get a proper CR.
+        
+        var tempCL = 0
+        row_ctr = 0
+        while row_ctr <= 461 {
+            tempCL = Int(sPartt[row_ctr][15])! // get CL
+            if (tempCL == 0) {    // check to see if CL=0
+                sPartt[row_ctr][16] = "0"  // force CR = 0
+            } else {
+                sPartt[row_ctr][16] = sPartt[row_ctr + tempCL - 1][12]
+            }
+            row_ctr = row_ctr + 11
         }
         
-        if (tempCL > 0) {   //  otherwise[24] stays at .0000001
-            sPartt[row_ctr][24] =  String( ACo / (tempPLplus1Coins - Int(sPartt[row_ctr + tempCL - 1][10])!) )
+        // **********************************************************************************************************************************************************
+        //NCa Needed Cards to go from CL to CL+1. take the CL[15] and look up its value in sCard [1] to go from CL to CL+1
+        
+        row_ctr = 0
+        while row_ctr <= 461 {
+            sPartt[row_ctr][21] = sCardd[Int(sPartt[row_ctr][15])!][1]
+            row_ctr = row_ctr + 11
         }
-        if (Double(sPartt[row_ctr][24])! > 1) {
-            sPartt[row_ctr][24] = "1"
+        
+        // **********************************************************************************************************************************************************
+        //PL Possible Level use all available cards to determine PL. Get the current ACa[20], added to the CL[15]'s value in sCard ie. the number of cumulative cards to date. Find the PL
+        
+        row_ctr = 0
+        var totCards = 0
+        while row_ctr <= 461 {
+            tempCL = Int(sPartt[row_ctr][15])! // get CL
+            if (tempCL == 0) {
+                totCards = 0
+                sPartt[row_ctr][17] = "0"
+            } else {
+                totCards = Int(sPartt[row_ctr][20])! + Int(sCardd[tempCL - 1][2])!    // ACa + cumul to date ie. cards[CL-1] for actual cumul cost
+            }
+            var card_ctr = 11
+            while card_ctr >= 0 {   // start at max level 11 and loop down looking where total cards is slightly less than sCard level
+                if (totCards >= Int(sCardd[card_ctr][2])! && tempCL > 0) {
+                    sPartt[row_ctr][17] = sCardd[card_ctr + 1][0]     //found the PL
+                    break
+                }
+                card_ctr = card_ctr - 1
+            }
+            row_ctr = row_ctr + 11
         }
-    row_ctr = row_ctr + 11
-}
-
-// **********************************************************************************************************************************************************
-// ++PR Possible Rating for current PL + 2
-
-row_ctr = 0
-while row_ctr <= 461 {
-    tempPL = Int(sPartt[row_ctr][17])!
-    if (tempPL > 9) {        // if PL > 9 then max out at 11
-        sPartt[row_ctr][26] = sPartt[row_ctr + 10][12]
-    } else {
-        sPartt[row_ctr][26] = sPartt[row_ctr + tempPL + 2][12]    // jump up 2
-    }
-    row_ctr = row_ctr + 11
-}
-
-// **********************************************************************************************************************************************************
-//   ACards/++NCa Needed Cards to go to PL + 2
-
-row_ctr = 0
-while row_ctr <= 461 {
-    tempPL = Int(sPartt[row_ctr][17])!
-    if (tempPL == 0) {
-        sPartt[row_ctr][28] = ".000001"  // assume PL = 0, set an initial value
-    } else if (tempPL > 9) {    // if PL is to big to jump up + 2
-        sPartt[row_ctr][28] = String(Double(sPartt[row_ctr][20])! / Double(sCardd[tempPL][1])!)
-    } else {
-        sPartt[row_ctr][28] = String(Double(sPartt[row_ctr][20])! / Double(sCardd[tempPL + 2][1])!)
-    }
-    if (Double(sPartt[row_ctr][28])! > 1) {
-        sPartt[row_ctr][28] = "1"
-    }
-    
-    row_ctr = row_ctr + 11
-}
-
-
-
-// **********************************************************************************************************************************************************
-// ACoins/+NCo Needed Coins to get to the PL + 2. Get cumul coins for PL+2 and subtract cumul coins for CL ie. from rows PL+1 to CL-1
-
-row_ctr = 0
-while row_ctr <= 461 {
-    tempCL = Int(sPartt[row_ctr][15])!
-    tempPL = Int(sPartt[row_ctr][17])!
-    sPartt[row_ctr][27] = "0.000001"  // assume PL = 0, set an initial value
-    if (tempPL > 9) {
-        tempPL = 9        // PL+2 maxes out at 11
-    } else {
-        tempPLplus2Coins = Int(sPartt[row_ctr + tempPL + 1][10])!    //get cumul coins for PL+2 ie. row PL+1
-    }
-    
-    if (tempCL > 0) {   //  otherwise[27] stays at .0000001
-        sPartt[row_ctr][27] =  String( ACo / (tempPLplus2Coins - Int(sPartt[row_ctr + tempCL - 1][10])!) )
-    }
-    if (Double(sPartt[row_ctr][24])! > 1) {
-        sPartt[row_ctr][25] = "1"
-    }
-    row_ctr = row_ctr + 11
-}
-
-// *****  DONE  ******************************************************************************************************************************************
-
-return sPartt
-}  //sPartCalc()
+        
+        // **********************************************************************************************************************************************************
+        // PR Possible Rating for current PL. Get the PL in [17]. Subtract 1 from PL value and add that to the row_ctr to get the PR ie. if PL=1, subtract 1 as a offset so when you add row_ctr, you get a proper PR.
+        
+        var tempPL = 0
+        row_ctr = 0
+        while row_ctr <= 461 {
+            tempPL = Int(sPartt[row_ctr][17])!     // get PL
+            if (tempPL == 0) {    // check to see if PL=0
+                sPartt[row_ctr][18] = "0"   // force PR=0
+            } else {
+                sPartt[row_ctr][18] = sPartt[row_ctr + tempPL - 1][12]
+            }
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        // MR Max Rating for current driver. Add 10 ie. level=11 to row_ctr and look up the normalized NR[12]
+        
+        row_ctr = 0
+        while row_ctr <= 461 {
+            sPartt[row_ctr][19] = sPartt[row_ctr + 10][12]
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        // NCo Needed Coins to get to the PL. First determine the number of coins needed to get to PL[17]. Save it temporarily in [22].Second subtract [22] from the number of coins already spent to get to CL[15]- take the CL[15] and look up its value in sCard to go from CL to CL+1
+        
+        row_ctr = 0
+        while row_ctr <= 461 {
+            tempCL = Int(sPartt[row_ctr][15])!
+            tempPL = Int(sPartt[row_ctr][17])!
+            sPartt[row_ctr][22] = "0"  // assume PL or CL = 0, set an initial value
+            if (tempPL > 1) {    // if PL>1
+                sPartt[row_ctr][22] = sPartt[row_ctr + tempPL - 1][10]  // get the PL cumul coins
+            }
+            if (tempCL > 1) {    // if CL>1
+                sPartt[row_ctr][22] = String(Int(sPartt[row_ctr][22])! - Int(sPartt[row_ctr + tempCL - 1][10])!)  // and subtract the CL cumul coins already spent
+            }
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        // +PR Possible Rating for current PL + 1
+        
+        row_ctr = 0
+        while row_ctr <= 461 {
+            tempPL = Int(sPartt[row_ctr][17])!
+            sPartt[row_ctr][23] = sPartt[row_ctr + tempPL][12]   //get the NR for at the PL row
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        //   ACards/+NCa Needed Cards to go to PL + 1
+        
+        row_ctr = 0
+        while row_ctr <= 461 {
+            tempPL = Int(sPartt[row_ctr][17])!
+            if (tempPL == 0) {
+                sPartt[row_ctr][25] = ".000001"  // assume PL = 0, set an initial value
+            } else if (tempPL > 10) {    // if PL is to big to jump up +1
+                sPartt[row_ctr][25] = String(Double(sPartt[row_ctr][20])! / Double(sCardd[tempPL][1])!)
+            } else {
+                sPartt[row_ctr][25] = String(Double(sPartt[row_ctr][20])! / Double(sCardd[tempPL + 1][1])!)
+            }
+            if (Double(sPartt[row_ctr][25])! > 1) {
+                sPartt[row_ctr][25] = "1"
+            }
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        // ACoins/+NCo Needed Coins to get to the PL+1. Get cumul coins for PL+1 and subtract cumul coins for CL ie. from rows PL to CL-1
+        
+        row_ctr = 0
+        while row_ctr <= 461 {
+            tempCL = Int(sPartt[row_ctr][15])!
+            tempPL = Int(sPartt[row_ctr][17])!
+            sPartt[row_ctr][24] = "0.000001"  // assume PL = 0, set an initial value
+            if (tempPL == 11) {
+                tempPL = 10        // PL+1 maxes out at 11
+            } else {
+                tempPLplus1Coins = Int(sPartt[row_ctr + tempPL][10])!    //get cumul coins for PL+1 ie. row PL
+            }
+            
+            if (tempCL > 0) {   //  otherwise[24] stays at .0000001
+                sPartt[row_ctr][24] =  String( ACo / (tempPLplus1Coins - Int(sPartt[row_ctr + tempCL - 1][10])!) )
+            }
+            if (Double(sPartt[row_ctr][24])! > 1) {
+                sPartt[row_ctr][24] = "1"
+            }
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        // ++PR Possible Rating for current PL + 2
+        
+        row_ctr = 0
+        while row_ctr <= 461 {
+            tempPL = Int(sPartt[row_ctr][17])!
+            if (tempPL > 9) {        // if PL > 9 then max out at 11
+                sPartt[row_ctr][26] = sPartt[row_ctr + 10][12]
+            } else {
+                sPartt[row_ctr][26] = sPartt[row_ctr + tempPL + 2][12]    // jump up 2
+            }
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        //   ACards/++NCa Needed Cards to go to PL + 2
+        
+        row_ctr = 0
+        while row_ctr <= 461 {
+            tempPL = Int(sPartt[row_ctr][17])!
+            if (tempPL == 0) {
+                sPartt[row_ctr][28] = ".000001"  // assume PL = 0, set an initial value
+            } else if (tempPL > 9) {    // if PL is to big to jump up + 2
+                sPartt[row_ctr][28] = String(Double(sPartt[row_ctr][20])! / Double(sCardd[tempPL][1])!)
+            } else {
+                sPartt[row_ctr][28] = String(Double(sPartt[row_ctr][20])! / Double(sCardd[tempPL + 2][1])!)
+            }
+            if (Double(sPartt[row_ctr][28])! > 1) {
+                sPartt[row_ctr][28] = "1"
+            }
+            
+            row_ctr = row_ctr + 11
+        }
+                
+        // **********************************************************************************************************************************************************
+        // ACoins/+NCo Needed Coins to get to the PL + 2. Get cumul coins for PL+2 and subtract cumul coins for CL ie. from rows PL+1 to CL-1
+        
+        row_ctr = 0
+        while row_ctr <= 461 {
+            tempCL = Int(sPartt[row_ctr][15])!
+            tempPL = Int(sPartt[row_ctr][17])!
+            sPartt[row_ctr][27] = "0.000001"  // assume PL = 0, set an initial value
+            if (tempPL > 9) {
+                tempPL = 9        // PL+2 maxes out at 11
+            } else {
+                tempPLplus2Coins = Int(sPartt[row_ctr + tempPL + 1][10])!    //get cumul coins for PL+2 ie. row PL+1
+            }
+            
+            if (tempCL > 0) {   //  otherwise[27] stays at .0000001
+                sPartt[row_ctr][27] =  String( ACo / (tempPLplus2Coins - Int(sPartt[row_ctr + tempCL - 1][10])!) )
+            }
+            if (Double(sPartt[row_ctr][24])! > 1) {
+                sPartt[row_ctr][25] = "1"
+            }
+            row_ctr = row_ctr + 11
+        }
+        
+        // **********************************************************************************************************************************************************
+        // fill in [31] and [32]= true PR when ACo>NCo. [31] is true PL, [32] is [31]'s PR.
+        let sMultStripped = sMultt[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
+        var ctrCL = 0
+        var ctrPL = 0
+        var ctrNCo = 0
+        var startNCo = 0
+        row_ctr = 0
+        
+        while row_ctr <= 461 {
+            if (sPartt[row_ctr][15] == sPartt[row_ctr][17]) {   // CL=PL so set [31 and [32] to same
+                //print("!!379 \(sPartt[0][15]) \(sPartt[0][31])")
+                sPartt[row_ctr][31] = sPartt[row_ctr][17]   // save PL(ACo>NCo) = PL
+                sPartt[row_ctr][32] = sPartt[row_ctr][18]   // save PR(ACo>NCo) = PR
+            } else if ((sPartt[row_ctr][15] < sPartt[row_ctr][17]) &&          // PR[18]
+                       (Double(sMultStripped)! > Double(sPartt[row_ctr][22])!)) {   // CL<PL and ACo > NCo
+                sPartt[row_ctr][31] = sPartt[row_ctr][17]   // save PL(ACo>NCo) = PL
+                sPartt[row_ctr][32] = sPartt[row_ctr][18]   // save PR(ACo>NCo) = PL
+            } else {      //  CL<PL but there aren't enough coins to get to PL, so figure out if a lower PL can br reached
+                let startCL = Int(sPartt[row_ctr][15])!    // CL   2
+                ctrPL = Int(sPartt[row_ctr][17])!    // PL   6
+                ctrCL = startCL   // counter for CL      2
+                if (startCL > 1) {
+                    startNCo = Int(sPartt[row_ctr + ctrCL - 2][10])!  // get the base cumul coins for starting CL
+                } else {
+                    startNCo = 0   // for low CLs, starting=0
+                }
+                while (ctrCL < ctrPL) {      // CL<PL
+                    // get the NCo for ctrCL. If ACo>NCo then save the PR  for that ctrCL.
+                    // add +1 to ctrCL and see if it still works
+                    ctrNCo = 0    //get the ctrNCo
+                    if (ctrPL >= 1) {    // if PL>=1   ie. CL<>0
+                        ctrNCo = Int(sPartt[row_ctr + ctrCL - 1][10])! - startNCo  // and subtract the CL cumul coins already spent
+                    }
+                    //print("!! Row: \(row_ctr). Start NCo= \(startNCo). To upgrade from \(startCL) to CL= \(ctrCL + 1) to PL= \(ctrPL); NCo= \(ctrNCo) and ACo= \(sMultStripped)")
+                    
+                    if (Int(Double(sMultStripped)!) >= ctrNCo ) {
+                        sPartt[row_ctr][31] = String(ctrCL + 1)   // save PL(ACo>NCo)
+                        sPartt[row_ctr][32] = sPartt[row_ctr + ctrCL - 1][12]   // save PR(ACo>NCo)
+                        print("!!DV419 Saving PR(ACo>NCo) for row= \(row_ctr) with PL= \(ctrCL + 1) and PR= \(sPartt[row_ctr + ctrCL][12])")
+                    } else {     //CL<PL but there aren't enough coins to do anything
+                        sPartt[row_ctr][31] = sPartt[row_ctr][15]   // save PL(ACo>NCo) = CL
+                        sPartt[row_ctr][32] = sPartt[row_ctr][16]   // save PR(ACo>NCo) = CR
+                    }
+                    
+                    ctrCL = ctrCL + 1   // next CL
+                }
+            }
+            row_ctr = row_ctr + 1
+        }   //  row_ctr
+        
+        // *****  DONE  ******************************************************************************************************************************************
+        
+        return sPartt
+    }  //sPartCalc()
     
     
     func updateIsDisplayed(sDriver: [[String]], isDisplayed: [Bool]) -> [[String]]  {
@@ -964,7 +1063,7 @@ return sPartt
         return sDriverr
     }  // end of func updateIsDisplayed
     
-
+    
     
     
 }           //end of DBHandler()

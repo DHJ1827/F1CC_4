@@ -25,9 +25,9 @@ struct DriverView: View {
     @State var isDriverUpdateViewShowing: Bool = false
     @State private var showingInfoSheet = false
     @State var errMsg = ""
-
+    
     @State var colorFont: Color = Color.black
-
+    
     var ctr = 0
     var ctr1 = 0
     @State var ctrCL: Int = 0
@@ -60,17 +60,17 @@ struct DriverView: View {
                             .offset(x: 5, y: 0)
                             .padding(20)
                         Spacer()
-
+                        
                         Button {
                             db.bFirstTimeLoad.toggle()
                         } label: {
                             Text("")
-                                }
+                        }
                         .offset(x: -40, y: 0)
                         .sheet(isPresented: $db.bFirstTimeLoad) {              // if its the first time running, show the intro view
                             FirstTimeInfoView()
                         }
-
+                        
                         Button {
                             print("Launch info")
                             showingInfoSheet.toggle()
@@ -222,15 +222,15 @@ struct DriverView: View {
                 //                        Capacidad para clima húmedo
                 
                 // start of driver
-
+                
                 ZStack {    // drivers with opaque button on top
-                     
+                    
                     VStack {    //drivers
                         ForEach(Array(stride(from: 0, to: 659, by: 33)), id: \.self) { index_v in
                             HStack{
-
+                                
                                 ForEach(Array(stride(from: 0, to: 32, by: 11)), id: \.self) { index_h in
-
+                                    
                                     let colorInt1: Int = Int(db.sDriver[index_h + index_v][13])!
                                     let colorBack = cmode[colorInt1]      //  get the level and apply the right background colour to it
                                     let colorInt2: Int = Int(db.sDriver[index_h + index_v][30])!
@@ -248,12 +248,12 @@ struct DriverView: View {
                                             .background(colorBack)
                                         
                                         Text(db.sDriver[(index_h + index_v)][1])     // DriverName
-                                                .font(.system(size: 16))
-                                                .fontWeight(.semibold)
-                                                .frame(width: 120)
-                                                .foregroundColor(colorFont)
-                                                .background(colorBack)
-
+                                            .font(.system(size: 16))
+                                            .fontWeight(.semibold)
+                                            .frame(width: 120)
+                                            .foregroundColor(colorFont)
+                                            .background(colorBack)
+                                        
                                         if (db.sSelectedMode == "detailMode") {
                                             VStack {
                                                 Text("resultsLine4D")    // CR MR PR
@@ -301,11 +301,11 @@ struct DriverView: View {
                                     
                                     
                                 }   //ForEach
-
+                                
                             }  //HStack
                         }  //ForEach
                     }  //VStack  of drivers
-                     
+                    
                     
                     
                     Button(action: {    // opaque button on top of drivers
@@ -344,7 +344,7 @@ struct DriverView: View {
                 errMsg = "Coins must be between 0 and 99,999,999"
                 showingAlert = true
             }
-                   
+            
             // check levels
             for ctr in stride(from: 0, to: 650, by: 11) {
                 if (!((0...Int(db.sDriver[ctr][29])! ~= Int(db.sDriver[ctr][15]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
@@ -353,7 +353,7 @@ struct DriverView: View {
                     showingAlert = true
                 }
             }
-                    
+            
             //check cards
             for ctr1 in stride(from: 0, to: 650, by: 11) {
                 if (!((0...99999 ~= Int(db.sDriver[ctr1][20]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
@@ -374,51 +374,6 @@ struct DriverView: View {
                     }
                 }   //  ctr
                 
-                //  update RecPL and RecPR when ACo > NCo. Loo pthrough all drivers, check if cl=pl or CL<PL, set [31] to PL and [32] to PR
-                                
-                //print("!!376 \(db.sDriver[0][15]) \(db.sDriver[0][20])")
-                let sMultStripped = db.sMult[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
-                
-                for ctr in stride(from: 0, to: 650, by: 11) {
-                    if (db.sDriver[ctr][15] == db.sDriver[ctr][17]) {   // CL=PL so set [31 and [32] to same
-                        //print("!!379 \(db.sDriver[0][15]) \(db.sDriver[0][31])")
-                        db.sDriver[ctr][31] = db.sDriver[ctr][17]   // save PL(ACo>NCo) = PL
-                        db.sDriver[ctr][32] = db.sDriver[ctr][18]   // save PR(ACo>NCo) = PR
-                    } else if ((db.sDriver[ctr][15] < db.sDriver[ctr][17]) &&          // PR[18]
-                                (Double(sMultStripped)! > Double(db.sDriver[ctr][22])!)) {   // CL<PL and ACo > NCo
-                        //printArrRow(arrName: db.sDriver, xRow: 11)
-                        db.sDriver[ctr][31] = db.sDriver[ctr][17]   // save PL(ACo>NCo) = PL
-                        db.sDriver[ctr][32] = db.sDriver[ctr][18]   // save PR(ACo>NCo) = PL
-                    } else {      //  CL<PL but there aren't enough coins to get to PL, so figure out if a lower PL can br reached
-                        let startCL = Int(db.sDriver[ctr][15])!    // CL   2
-                        ctrPL = Int(db.sDriver[ctr][17])!    // PL   6
-                        ctrCL = startCL   // counter for CL      2
-                        if (startCL > 1) {
-                            startNCo = Int(db.sDriver[ctr + ctrCL - 2][10])!  // get the base cumul coins for starting CL
-                        } else {
-                            startNCo = 0   // for low CLs, starting=0
-                        }
-                        while (ctrCL < ctrPL) {      // CL<PL
-                            // get the NCo for ctrCL. If ACo>NCo then save the PR  for that ctrCL.
-                            // add +1 to ctrCL and see if it still works
-                            ctrNCo = 0    //get the ctrNCo
-                            if (ctrPL >= 1) {    // if PL>=1   ie. CL<>0
-                                ctrNCo = Int(db.sDriver[ctr + ctrCL - 1][10])! - startNCo  // and subtract the CL cumul coins already spent
-                            }
-                            //print("!! Row: \(ctr). Start NCo= \(startNCo). To upgrade from \(startCL) to CL= \(ctrCL + 1) to PL= \(ctrPL); NCo= \(ctrNCo) and ACo= \(sMultStripped)")
-                            
-                            if (Int(Double(sMultStripped)!) >= ctrNCo ) {
-                                db.sDriver[ctr][31] = String(ctrCL + 1)   // save PL(ACo>NCo)
-                                db.sDriver[ctr][32] = db.sDriver[ctr + ctrCL - 1][12]   // save PR(ACo>NCo)
-                                print("!!DV419 Saving PR(ACo>NCo) with PL= \(ctrCL + 1) and PR= \(db.sDriver[ctr + ctrCL][12])")
-                            }
-
-                            ctrCL = ctrCL + 1   // next CL
-                        }
-                    }
-                }   //  ctr
-                print("!!DV420")
-                //printArrRow(arrName: db.sDriver, xRow: 11)
                 start()
                 
             } else {
@@ -426,17 +381,18 @@ struct DriverView: View {
                 showingAlert = true
             }
         })    // sheet
+        
         {
             DriverUpdateView(isDriverUpdateViewShowing: $isDriverUpdateViewShowing)
                 .environmentObject(db)
         }
-            .onAppear(perform: start)
+        .onAppear(perform: start)
         
     }   //end of body
     
     
     func start() {
-
+        
         print("!!! DV start()...")
         
         if (db.sDriver[0][29] == "1") {    // if max_lvl hasn't been set = db hasn't loaded into sDriver ie. it's the first time running
@@ -467,19 +423,19 @@ struct DriverView: View {
             multWet = Double(db.sMult[10][1])!
             print("db setup completed")
         }
-
-        db.sDriver = db.sDriverCalc(sDriver: db.sDriver, sMult: db.sMult, sCard: db.sCard, bDriverBoost: db.bDriverBoost)      //make changes based on new levels, cards and 10%
+        
+         db.sDriver = db.sDriverCalc(sDriver: db.sDriver, sMult: db.sMult, sCard: db.sCard, bDriverBoost: db.bDriverBoost)      //make changes based on new levels, cards and 10%
         db.sPart = db.sPartCalc(sPart: db.sPart, sMult: db.sMult, sCard: db.sCard)      //update calculations- first time though needed to prevent errors
         db.sDriver[0][0] = "2"    // set so that next run will not create new db.
-
+        
         do {
             db.sDriver = try db.updateDriver(sDriver: db.sDriver)  //update db with any calc changed
             try db.updateMult()
-
+            
         } catch {
             print("\nDriverUpdateView: db.updateDriver and/or db.updateMult failed")
         }
-
+        
         row_ctr = 0
         while row_ctr <= 659 {    // build the first row strings for each driver
             let result = displayCalc(a_ctr: row_ctr)      // get the formatted string
@@ -494,7 +450,7 @@ struct DriverView: View {
         
     }  // end of start
     
-
+    
     func displayCalc(a_ctr: Int)  -> (String, Int) {
         //print("dc= ",row_ctr)
         var built = ""
@@ -538,17 +494,17 @@ struct DriverView: View {
             print("!! [\(m)] = \(arrName[m][xRow])")
         }
     }
-   
- 
+    
+    
 }   //struct
 
 struct InfoSheetDriverView: View {
     var body: some View {
         ScrollView() {
             Text("info_contents_driver")
-            .font(.system(size: 12))
-            .frame(width: 300)
-            .padding()
+                .font(.system(size: 12))
+                .frame(width: 300)
+                .padding()
         }
     }
 }
@@ -557,16 +513,16 @@ struct FirstTimeInfoView: View {
     var body: some View {
         ScrollView() {
             Text("intro")
-            .font(.system(size: 12))
-            .frame(width: 300)
-            .padding()
+                .font(.system(size: 12))
+                .frame(width: 300)
+                .padding()
         }
     }
 }
 
 struct DriverView_Previews: PreviewProvider {
     static var previews: some View {
-//        DriverView(sDriver: .constant([["0", "Zhou", "1", "12", "7", "11", "9", "5", "3", "1000", "1000", "", "", "1", "0", "10", "", "", "", "", "6789", "", "", "", "", "", "", "", "", "11", ""]]),sPart: .constant([["Brakes", "The Clog", "1", "1", "3", "2", "6", "1", "0", "1000", "1000", "", "", "1", "0", "1", "", "", "", "", "8", "", "", "", "", "", "", "", "", "11", ""]]),sMult: .constant([["iPowerMult", "100"]]),sCard: .constant([["1", "4", "4"]]), bDriverBoost: .constant([false]), sSelectedMode: .constant("Basic"))
+        //        DriverView(sDriver: .constant([["0", "Zhou", "1", "12", "7", "11", "9", "5", "3", "1000", "1000", "", "", "1", "0", "10", "", "", "", "", "6789", "", "", "", "", "", "", "", "", "11", ""]]),sPart: .constant([["Brakes", "The Clog", "1", "1", "3", "2", "6", "1", "0", "1000", "1000", "", "", "1", "0", "1", "", "", "", "", "8", "", "", "", "", "", "", "", "", "11", ""]]),sMult: .constant([["iPowerMult", "100"]]),sCard: .constant([["1", "4", "4"]]), bDriverBoost: .constant([false]), sSelectedMode: .constant("Basic"))
         Text("Hello preview")
     }
 }

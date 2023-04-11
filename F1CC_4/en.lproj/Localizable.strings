@@ -19,8 +19,8 @@
 "availableCoins" = "Available Coins";
 "back_btn" = "Press back again to exit";
 "basicMode" = "Basic";
-"basicDrSelect %@ %@" = "You should select %@ and %@";
-"basicPaSelect %@" = "You should select %@";
+"basicDrSelect %@" = "You should select %@ ";
+"basicPaSelect %@" = "You should select %@ ";
 "basicPaUpgrade %@" = " and upgrade it to level %@";
 "basicOneUpgrade %@ %@" = " and upgrade %@ to level %@";
 "basicTwoUpgrade %@ %@ %@ %@" = " and upgrade %@ to level %@ and %@ to level %@";
@@ -93,6 +93,7 @@
 "ST_recs" = "ST: Short Term";
 "summary" = "Summary";
 "suspension" = "Suspension";
+"teamScore %lld" = "Team Score: %lld";
 "tireManagement" = "Tire Management";
 "title_name" = "F1 Clash Companion";
 "toLevel" = "to Level";

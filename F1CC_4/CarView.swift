@@ -374,7 +374,7 @@ struct CarView: View {
                     var sMultStripped = db.sMult[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
                     for ctr in stride(from: 0, to: 461, by: 11) {
                         if (db.sPart[ctr][15] == db.sPart[ctr][17]) {   // CL=PL so set [31 and [32] to same
-                            print("!!379 \(db.sPart[0][15]) \(db.sDriver[0][31])")
+                            //print("!!379 \(db.sPart[0][15]) \(db.sDriver[0][31])")
                             db.sPart[ctr][31] = db.sPart[ctr][17]
                             db.sPart[ctr][32] = db.sPart[ctr][18]
                         } else if ((db.sPart[ctr][15] < db.sPart[ctr][17]) &&          // PR[18]
@@ -382,7 +382,7 @@ struct CarView: View {
                             db.sPart[ctr][31] = db.sPart[ctr][17]
                             db.sPart[ctr][32] = db.sPart[ctr][18]
                         } else {      //  CL<PL but there aren't enoug cards to get to PL, so figure out if a lower PL can br reachewd
-                            print("!! blah")
+                            //print("!! blah")
                         }
                     }   //  ctr
                     

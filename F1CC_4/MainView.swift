@@ -68,7 +68,7 @@ struct MainView: View {
     }
     
     func start() {
-        //print("!! MV start()...")
+        print("!! MV start()...")
     }
 }
 
