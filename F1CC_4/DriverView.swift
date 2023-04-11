@@ -407,9 +407,9 @@ struct DriverView: View {
                 
                 for ctr in stride(from: 0, to: 650, by: 11) {   // set up bDriverBoost on initial run
                     if (db.sDriver[ctr][14] == "1.0") {
-                        db.bDriverBoost[ctr] = false
-                    } else {
                         db.bDriverBoost[ctr] = true
+                    } else {
+                        db.bDriverBoost[ctr] = false
                     }
                 }
             } catch {

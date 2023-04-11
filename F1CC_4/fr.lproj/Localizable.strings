@@ -19,8 +19,8 @@
 "availableCoins" = "Pièces disponibles";
 "back_btn" = "Appuyez à nouveau pour quitter";
 "basicMode" = "Simple";
-"basicDrSelect %@ %@" = "Vous devez sélectionner %@ et  %@";
-"basicPaSelect %@" = "Vous devez sélectionner %@";
+"basicDrSelect %@" = "Vous devez sélectionner %@ ";
+"basicPaSelect %@" = "Vous devez sélectionner %@ ";
 "basicPaUpgrade %@" = " et améliorez-le au niveau %@";
 "basicOneUpgrade %@ %@" = " et améliorez %@ au niveau %@";
 "basicTwoUpgrade %@ %@ %@ %@" = " et améliorez %@ au niveau %@ et %@ au niveau %@";
@@ -94,6 +94,7 @@
 "summary" = "Sommaire";
 "suspension" = "Suspension";
 "tireManagement" = "Gestion des pneus";
+"teamScore %lld" = "Note de l'équipe: %lld";
 "title_name" = "F1 Clash Companion";
 "toLevel" = "à niveau";
 "TL" = "NV";

@@ -144,8 +144,8 @@ struct RecsView: View {
     @State var maxRH = 0   // and its PL factor length
     @State var longestLength = 0
     @State var teamScore:Int = 0
-    @State var upgradeID:Int = -1     //dummy integer
-    @State var STPartRecID:Int = -1   // dummy integer
+    @State var upgradeID:Int = 0     //dummy integer
+    @State var STPartRecID:Int = 0   // dummy integer
     
     @State private var showingInfoSheet = false
     
@@ -1064,6 +1064,16 @@ struct RecsView: View {
             RecNumber = Int(Recs[rec_ctr][0])
             
             // build string 0
+            //Name starts at pos 1, CL at 13, CR at 17 PL at 23 ACa at 27, ACo at 33
+            
+            RecsDispDriver[row_ctr] = db.sDriver[RecNumber][1] + Spaces.prefix(12 - db.sDriver[RecNumber][1].count)   //Name + spaces
+            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sDriver[RecNumber][15] + Spaces.prefix(4 - db.sDriver[RecNumber][15].count)   // + CL + spaces
+            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sDriver[RecNumber][16] + Spaces.prefix(6 - db.sDriver[RecNumber][16].count)   // + CR + spaces
+            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sDriver[RecNumber][17] + Spaces.prefix(4 - db.sDriver[RecNumber][17].count)   // + PL + spaces
+            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sDriver[RecNumber][20] + Spaces.prefix(6 - db.sDriver[RecNumber][20].count)   // + ACa + spaces
+            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sMult[11][1]   // + ACo + spaces
+            /*
+            // being rebuilt above for better spacing approach- the following works fine
             var iSumStr = 0   //length of concatenated string of all string 0
             iSumStr = (db.sDriver[RecNumber][1] + db.sDriver[RecNumber][15] + db.sDriver[RecNumber][16] + db.sDriver[RecNumber][17] + db.sDriver[RecNumber][20] + db.sMult[11][1]).count
             var iLSpacer = 40 - (iSumStr + Int((40 - iSumStr) / 7) * 5)
@@ -1078,7 +1088,7 @@ struct RecsView: View {
             //print("!! iLeftSpacer= \(iSpacer)")
             
             RecsDispDriver[row_ctr] = db.sDriver[RecNumber][1] + Spaces.prefix(iSpacer + iDriverSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
-            
+             */
             
             // build string 1
             // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
@@ -1094,10 +1104,10 @@ struct RecsView: View {
                 xNCa = Int(db.sDriver[RecNumber][21])!  //Get NCa for RecNumber
                 xNCo = Int(db.sDriver[RecNumber][22])!  //Get NCo for RecNumber
                 
-                iSumStr = String(xPL).count + String(xPR).count + String(xMR).count + String(xNCa).count + String(xNCo).count
-                iLSpacer = 40 - (iSumStr + Int((40 - iSumStr) / 7) * 5)
-                iSpacer = Int((40 - iSumStr)/7)
-                iLeftSpacer = Int(iLSpacer/2)
+                var iSumStr = String(xPL).count + String(xPR).count + String(xMR).count + String(xNCa).count + String(xNCo).count
+                var iLSpacer = 40 - (iSumStr + Int((40 - iSumStr) / 7) * 5)
+                var iSpacer = Int((40 - iSumStr)/7)
+                var iLeftSpacer = Int(iLSpacer/2)
                 
                 //RecsDispDriver[row_ctr  + 1] = String(Spaces.prefix(iLeftSpacer)) + String(xPL) + String(Spaces.prefix(iSpacer)) + String(xPR) + String(Spaces.prefix(iSpacer)) + String(xMR) + String(Spaces.prefix(iSpacer)) + String(xNCa) + String(Spaces.prefix(iSpacer)) + String(xNCo)
                 
@@ -1116,10 +1126,10 @@ struct RecsView: View {
                     xNCa = Int(db.sCard[curr_ctr - 1][1])!  //Get NCa for curr_ctr
                     xNCo = Int(db.sDriver[RecNumber + curr_ctr - 1][10])!  //Get NCo for curr_ctr
                     
-                    iSumStr = String(xPL).count + String(xPR).count + String(xMR).count + String(xNCa).count + String(xNCo).count
-                    iLSpacer = 40 - (iSumStr + Int((40 - iSumStr) / 7) * 5)
-                    iSpacer = Int((40 - iSumStr)/7)
-                    iLeftSpacer = Int(iLSpacer/2)
+                    var iSumStr = String(xPL).count + String(xPR).count + String(xMR).count + String(xNCa).count + String(xNCo).count
+                    var iLSpacer = 40 - (iSumStr + Int((40 - iSumStr) / 7) * 5)
+                    var iSpacer = Int((40 - iSumStr)/7)
+                    var iLeftSpacer = Int(iLSpacer/2)
                     
                     // RecsDispDriver[row_ctr  + 1] = RecsDispDriver[row_ctr + 1] + String(Spaces.prefix(iLeftSpacer)) + String(xPL) + String(Spaces.prefix(iSpacer)) + String(xPR) + String(Spaces.prefix(iSpacer)) + String(xMR) + String(Spaces.prefix(iSpacer)) + String(xNCa) + String(Spaces.prefix(iSpacer)) + String(xNCo) + "\n"
                     

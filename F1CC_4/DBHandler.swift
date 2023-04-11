@@ -154,11 +154,6 @@ class DBHandler: ObservableObject {
             }
         } catch {
             print("!!!!   DB already exists with sDriver[0][29] = \(sDriver[0][29])   !!!!")
-            let we = 7
-            let rt = 1
-            if (((rt + we) % 8 == 0) && (rt != 0)) {
-                print ("!! Yes")
-            }
         }
         
         print("!!!! bFirstTimeLoad leaving dbHandler= \(bFirstTimeLoad)")
@@ -244,6 +239,7 @@ class DBHandler: ObservableObject {
                 arrReturned.append(arrRow)
                 row_ctr = row_ctr + 1
             }
+
             return(arrReturned)
         }
     }

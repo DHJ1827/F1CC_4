@@ -19,8 +19,8 @@
 "availableCoins" = "Monedas disponibles";
 "back_btn" = "Premi di nuovo indietro per uscire";
 "basicMode" = "Básico";
-"basicDrSelect %@ %@" = "Debes seleccionar %@ y  %@";
-"basicPaSelect %@" = "Debes seleccionar %@";
+"basicDrSelect %@" = "Debes seleccionar %@ ";
+"basicPaSelect %@" = "Debes seleccionar %@ ";
 "basicPaUpgrade %@" = " y actualízalo al nivel %@";
 "basicOneUpgrade %@ %@" = " y mejora a %@ al nivel %@";
 "basicTwoUpgrade %@ %@ %@ %@" = " y mejora a %@ al nivel %@ y %@ al nivel %@";
@@ -93,6 +93,7 @@
 "ST_recs" = "TC: Término Corto";
 "summary" = "Resumen";
 "suspension" = "Suspensión";
+"teamScore %lld" = "Puntuación del equipo: %lld";
 "tireManagement" = "Gestión de neumáticos";
 "title_name" = "F1 Clash Companion";
 "toLevel" = "a nivel";

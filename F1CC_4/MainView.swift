@@ -10,14 +10,12 @@
 // calcs, including teamScore are all mixed up!
 // Fix mid, min and max by changing 10% to 0, not 1
 // create app icon
-// 10% always set on new load
+// chjange in PartView ' / ' to '/'
 //
 // UI
 // fix string 1 for Driver and Part: line 42 and 54 for varied spacing depending on string lengths. Ok for min. Try with mid and max. NCo = 0?
 // fix Driver display when PC > CL rows. right justify NCa so that NCO is aligned
 // fix Part display spacing
-// add coloured driver fonts to basic recs to distinguish which driver
-// need consistent font and colours for headings and titles throughout
 //
 // Checks
 // Check on iPhone 13 and iPhone 8
