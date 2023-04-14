@@ -8,14 +8,11 @@
 //
 // Fix
 // calcs, including teamScore are all mixed up!
-// Fix mid, min and max by changing 10% to 0, not 1
-// create app icon
-// chjange in PartView ' / ' to '/'
+//
 //
 // UI
-// fix string 1 for Driver and Part: line 42 and 54 for varied spacing depending on string lengths. Ok for min. Try with mid and max. NCo = 0?
-// fix Driver display when PC > CL rows. right justify NCa so that NCO is aligned
-// fix Part display spacing
+// fix strings 0-2 with min, mid and max. NCo = 0?
+// spacing on parts string 3. rj alignment of PL column in German is offset, is Aero and Grip translated?
 //
 // Checks
 // Check on iPhone 13 and iPhone 8

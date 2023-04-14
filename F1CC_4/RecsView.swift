@@ -161,7 +161,7 @@ struct RecsView: View {
     //@State var CLMid: String = "22"
     //@State var CLEnd: String = "33"
     
-    let Spaces = "                                        "
+    @State var Spaces = "                                              "
     
     let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic]
     let factors = ["Power", "Aero", "Grip", "Reliability", "Pit Stop Time", "Overtaking", "Defending", "Consistency", "Fuel Management", "Tire Management", "Wet Weather Ability"]
@@ -779,7 +779,7 @@ struct RecsView: View {
         //                Recs[1][0] is the id of the 2nd highest CR or PR for drivers, [1[1] is the CR for that id
         //   Take a look at Rec[0] and [1]. Find the largest PR and recommend its upgraded first.
         // For parts, do the same ie. which part gives the largest PR boost
-       row_ctr = 0
+        row_ctr = 0
         Recs[0][0] = Double(row_ctr)    // clear array to start over
         Recs[0][1] = Double(row_ctr)
         Recs[1][0] = Double(row_ctr)
@@ -787,16 +787,10 @@ struct RecsView: View {
         //print("!!RV784 \(Recs[0][0]) \(Recs[0][1]) \(Recs[1][0]) \(Recs[1][1])")
         //printArrRow(arrName: db.sDriver, xRow: 253)
         while row_ctr < 659 {   // go through all drivers, 11 rows at a time
-            //print("!!RV787 PR: \(db.sDriver[row_ctr][32]) \(Recs[0][1]) \(db.sDriver[row_ctr][1]) \(db.sDriver[Int(Recs[0][0])][1])")
-            
-            print("!!RV787 new candidate: \(db.sDriver[row_ctr][32]) Recs[0][1]= \(Recs[0][1])")
+            //print("!!RV787 new candidate: \(db.sDriver[row_ctr][32]) Recs[0][1]= \(Recs[0][1])")
             //printArrRow(arrName: db.sDriver, xRow: 253)
-            print("!!790 \(row_ctr)")
-            print("!! \(Double(db.sDriver[row_ctr][32])!)")
-            print("!!   \(Recs[0][1])")
+
             if (Double(db.sDriver[row_ctr][32])! > Recs[0][1]) {   // PR > current Recs[0]
-                
-                print("!!RV790 candidate driver: \(db.sDriver[row_ctr][1]) Recs[0][0] driver= \(db.sDriver[Int(Recs[0][0])][1])")
                 if(db.sDriver[row_ctr][1] != db.sDriver[Int(Recs[0][0])][1]) {   //check to make sure drivers names are different
                     Recs[1][0] = Recs[0][0]   // push [0] down to [1]
                     Recs[1][1] = Recs[0][1]   // push value [0] down to [1]
@@ -807,25 +801,19 @@ struct RecsView: View {
                     Recs[0][1] = Double(db.sDriver[row_ctr][32])!  // value of new
                 }
             } else if (Double(db.sDriver[row_ctr][32])! > Recs[1][1]) {    // CR > Recs[1]
-                print("!!RV802 new candidate: \(db.sDriver[row_ctr][32]) Recs[1][1]= \(Recs[0][1])")
-
                 Recs[1][0] = Double(row_ctr)    // id of new
                 Recs[1][1] = Double(db.sDriver[row_ctr][32])!  // value of new
             }
-            print("!!RV 800 row=\(row_ctr)  Recs[0][0]=\(Recs[0][0])  [0][1]=\(Recs[0][1])  [1][0]=\(Recs[1][0])  [1][1]=\(Recs[1][1])\n\n")
 
             row_ctr = row_ctr + 11      //next driver
         }
         // now find out the id to be upgraded
-        print("!!RV 812 final: 00: \(Recs[0][0]) 01: \(Recs[0][1]) 10: \(Recs[1][0]) 11: \(Recs[1][1])")
         if ((Double(db.sDriver[Int(Recs[0][0])][32])! - Double(db.sDriver[Int(Recs[0][0])][16])!) >= (Double(db.sDriver[Int(Recs[1][0])][32])! - Double(db.sDriver[Int(Recs[1][0])][16])!)) {    // Recs0 PR > Recs1 PR
             upgradeID = Int(Recs[0][0])
         } else {
             upgradeID = Int(Recs[1][0])
         }
-        print("!!RV811 upgradeID= \(upgradeID)")
-        
-        
+
         
         // **********************************************************************************************
         // MT DRIVER
@@ -897,7 +885,7 @@ struct RecsView: View {
                 
             }
             //print("Recs[cat_ctr + 3][0]= ", Recs[cat_ctr + 3][0], " Recs[cat_ctr + 3][1]= ", Recs[cat_ctr + 3][1])
-
+            
             cat_ctr = cat_ctr + 3   // next category in Recs[]
             row_start = row_start + 77     // next category in sPart[[]]
         }
@@ -914,10 +902,10 @@ struct RecsView: View {
                 STPartRecPR = Double(db.sPart[row_ctr][32])!
                 STPartRecID = row_ctr
             }
-
-           row_ctr = row_ctr + 11
+            
+            row_ctr = row_ctr + 11
         }
-
+        
         
         // ************************************************************************************************************************
         // Calc pit stop time
@@ -1064,98 +1052,56 @@ struct RecsView: View {
             RecNumber = Int(Recs[rec_ctr][0])
             
             // build string 0
-            //Name starts at pos 1, CL at 13, CR at 17 PL at 23 ACa at 27, ACo at 33
+            //Name starts at pos 1, CL right justified back from 14, 2 spaces for CR starting at 17, PL right justified back from 23, ACa right justified back from 30, ACo right justified back from 38.
             
-            RecsDispDriver[row_ctr] = db.sDriver[RecNumber][1] + Spaces.prefix(12 - db.sDriver[RecNumber][1].count)   //Name + spaces
-            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sDriver[RecNumber][15] + Spaces.prefix(4 - db.sDriver[RecNumber][15].count)   // + CL + spaces
-            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sDriver[RecNumber][16] + Spaces.prefix(6 - db.sDriver[RecNumber][16].count)   // + CR + spaces
-            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sDriver[RecNumber][17] + Spaces.prefix(4 - db.sDriver[RecNumber][17].count)   // + PL + spaces
-            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sDriver[RecNumber][20] + Spaces.prefix(6 - db.sDriver[RecNumber][20].count)   // + ACa + spaces
-            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + db.sMult[11][1]   // + ACo + spaces
-            /*
-            // being rebuilt above for better spacing approach- the following works fine
-            var iSumStr = 0   //length of concatenated string of all string 0
-            iSumStr = (db.sDriver[RecNumber][1] + db.sDriver[RecNumber][15] + db.sDriver[RecNumber][16] + db.sDriver[RecNumber][17] + db.sDriver[RecNumber][20] + db.sMult[11][1]).count
-            var iLSpacer = 40 - (iSumStr + Int((40 - iSumStr) / 7) * 5)
-            var iSpacer = Int((40 - iSumStr) / 7 )
-            //var iLeftSpacer = Int(iLSpacer/2)
-            var iLeftSpacer = 0   // left justified
-            var iDriverSpacer = 0
-            iDriverSpacer = 9 - db.sDriver[RecNumber][1].count   //9 is perfect for Driver length. if its <9 then add spaces to iSpacer. if its >9 then remove spaces
-            
-            //print("!! iLSpacer= \(iLSpacer)")
-            //print("!! iSpacer= \(iSpacer)")
-            //print("!! iLeftSpacer= \(iSpacer)")
-            
-            RecsDispDriver[row_ctr] = db.sDriver[RecNumber][1] + Spaces.prefix(iSpacer + iDriverSpacer) + db.sDriver[RecNumber][15] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][16] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][17] + Spaces.prefix(iSpacer) + db.sDriver[RecNumber][20] + Spaces.prefix(iSpacer) + "\(db.sMult[11][1])"
-             */
+            RecsDispDriver[row_ctr] = db.sDriver[RecNumber][1] + Spaces.prefix(14 - db.sDriver[RecNumber][1].count - db.sDriver[RecNumber][15].count) + db.sDriver[RecNumber][15]     // Name, CL
+            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + Spaces.prefix(2) + db.sDriver[RecNumber][16]     // CR
+            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + Spaces.prefix(3 - db.sDriver[RecNumber][17].count) + db.sDriver[RecNumber][17]     // PL
+            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + Spaces.prefix(7 - db.sDriver[RecNumber][20].count) + db.sDriver[RecNumber][20]     // ACa
+            RecsDispDriver[row_ctr] = RecsDispDriver[row_ctr] + String(Spaces.prefix(9 - db.sMult[11][1].count)) + db.sMult[11][1]   // Name, CL, CR, PL, ACa, ACo
+
             
             // build string 1
             // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
             // for cl to pl (assume 1 and 3) and also try (4 and 4)
             // if pl=cl then just show pl in 1 row else do loop
             // if pl,cl <10 then add a space in front
+            
             RecsDispDriver[row_ctr + 1] = ""   //clear it
             
-            if (db.sDriver[RecNumber][15] == db.sDriver[RecNumber][17]) {
-                xMR = Int(Double(db.sDriver[RecNumber][19])!)  //Get MR for RecNumber
-                xPL = Int(db.sDriver[RecNumber][17])!  //Get PL for RecNumber
-                xPR = Int(Double(db.sDriver[RecNumber][18])!)  //Get PR for RecNumber
-                xNCa = Int(db.sDriver[RecNumber][21])!  //Get NCa for RecNumber
-                xNCo = Int(db.sDriver[RecNumber][22])!  //Get NCo for RecNumber
-                
-                var iSumStr = String(xPL).count + String(xPR).count + String(xMR).count + String(xNCa).count + String(xNCo).count
-                var iLSpacer = 40 - (iSumStr + Int((40 - iSumStr) / 7) * 5)
-                var iSpacer = Int((40 - iSumStr)/7)
-                var iLeftSpacer = Int(iLSpacer/2)
-                
-                //RecsDispDriver[row_ctr  + 1] = String(Spaces.prefix(iLeftSpacer)) + String(xPL) + String(Spaces.prefix(iSpacer)) + String(xPR) + String(Spaces.prefix(iSpacer)) + String(xMR) + String(Spaces.prefix(iSpacer)) + String(xNCa) + String(Spaces.prefix(iSpacer)) + String(xNCo)
-                
-                RecsDispDriver[row_ctr + 1] = Spaces.prefix(6) + String(xPL) + Spaces.prefix(4) + String(xPR) + Spaces.prefix(4) + String(xMR)
-                RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(7) + String(xNCa) + Spaces.prefix(3) + String(xNCo)      //PL, PR, MR, NCa, NCo
-                // *************** need to fix for long NCa and NCo
-            } else {
-                //do loop
-                var curr_ctr = Int(db.sDriver[RecNumber][15])!  // 1st line = CL
+            if (db.sDriver[RecNumber][15] == db.sDriver[RecNumber][17]) {     // CL = PL so 1 displayed line
+                RecsDispDriver[row_ctr + 1] = Spaces.prefix(4 - db.sDriver[RecNumber][17].count) + db.sDriver[RecNumber][17] + Spaces.prefix(4) + db.sDriver[RecNumber][18] + Spaces.prefix(8 - db.sDriver[RecNumber][19].count) + db.sDriver[RecNumber][19]
+                RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(7 - db.sDriver[RecNumber][21].count) + db.sDriver[RecNumber][21] + Spaces.prefix(10 - db.sDriver[RecNumber][22].count) + db.sDriver[RecNumber][22]      //PL, PR, MR, NCa, NCo
+            } else {     // CL < PL so display multiple lines
+                var curr_ctr = Int(db.sDriver[RecNumber][15])! + 1  // 1st line = CL + 1
                 
                 while curr_ctr <= Int(db.sDriver[RecNumber][17])! {  // loop until PL is reached
                     
-                    xPL = Int(db.sDriver[RecNumber + curr_ctr - 1][2])!  //Get level for curr_ctr
-                    xPR = Int(Double(db.sDriver[RecNumber + curr_ctr - 1][12])!)  //Get PR for curr_ctr
-                    xMR = Int(Double(db.sDriver[RecNumber][19])!)  //Get MR for curr_ctr
-                    xNCa = Int(db.sCard[curr_ctr - 1][1])!  //Get NCa for curr_ctr
-                    xNCo = Int(db.sDriver[RecNumber + curr_ctr - 1][10])!  //Get NCo for curr_ctr
-                    
-                    var iSumStr = String(xPL).count + String(xPR).count + String(xMR).count + String(xNCa).count + String(xNCo).count
-                    var iLSpacer = 40 - (iSumStr + Int((40 - iSumStr) / 7) * 5)
-                    var iSpacer = Int((40 - iSumStr)/7)
-                    var iLeftSpacer = Int(iLSpacer/2)
-                    
-                    // RecsDispDriver[row_ctr  + 1] = RecsDispDriver[row_ctr + 1] + String(Spaces.prefix(iLeftSpacer)) + String(xPL) + String(Spaces.prefix(iSpacer)) + String(xPR) + String(Spaces.prefix(iSpacer)) + String(xMR) + String(Spaces.prefix(iSpacer)) + String(xNCa) + String(Spaces.prefix(iSpacer)) + String(xNCo) + "\n"
-                    
-                    // RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(4) + String(xPL) + Spaces.prefix(4) + String(xPR)
-                    // RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(4) + String(xMR) + Spaces.prefix(2)
-                    // RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + String(xNCa) + Spaces.prefix(1) + String(xNCo) + "\n"
-                    
-                    RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(6) + String(xPL) + Spaces.prefix(4) + String(xPR) + Spaces.prefix(4) + String(xMR)    // PL, PR, MR
-                    RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1] + Spaces.prefix(7) + String(xNCa) + Spaces.prefix(3) + String(xNCo) + "\n"    // NCa, NCo, \n
+                    RecsDispDriver[row_ctr + 1] = RecsDispDriver[row_ctr + 1]
+                    + Spaces.prefix(4 - db.sDriver[RecNumber + curr_ctr - 1][2].count) + db.sDriver[RecNumber + curr_ctr - 1][2]
+                    + Spaces.prefix(8 - db.sDriver[RecNumber + curr_ctr - 1][12].count) + db.sDriver[RecNumber + curr_ctr - 1][12]
+                    + Spaces.prefix(3) + db.sDriver[RecNumber][19]
+                    + Spaces.prefix(9 - db.sCard[curr_ctr - 1][1].count) + db.sCard[curr_ctr - 1][1]
+                    + Spaces.prefix(10 - db.sDriver[RecNumber + curr_ctr - 1][9].count) + db.sDriver[RecNumber + curr_ctr - 1][9]
+                     + "\n"      //PL, PR, MR, NCa, NCo
                     
                     curr_ctr = curr_ctr + 1
                     // if curr cl is still less than pl, then + \n, next
                 }
-                //print("!!row_ctr: \(row_ctr)")
-                //println(RecsDispDriver)
-                //RecsDispDriver.forEach() { print("!!",$0) }        // print array
-                //dump(RecsDispDriver)
-                //print("!!RecsDispDriver: \(RecsDispDriver[row_ctr + 1].count)")
                 let subString = RecsDispDriver[row_ctr + 1].prefix((RecsDispDriver[row_ctr + 1].count) - 1)
                 RecsDispDriver[row_ctr + 1] = String(subString)  // remove last \n
             }
+                        
             
             // build string 2
             //
-            RecsDispDriver[row_ctr + 2] = Spaces.prefix(Int(Double(LStart) * 1.45)) + "CL=\(db.sDriver[RecNumber][15])" + Spaces.prefix(Int(Double(RStart - 2 - LStart) * 1.55)) + "PL=\(db.sDriver[RecNumber][17])"   // 1.45= big:little multiplier
+            let transCL = NSLocalizedString("CL", comment: "a test")
+            let transPL = NSLocalizedString("PL", comment: "another test")
             
+            RecsDispDriver[row_ctr + 2] = Spaces.prefix(Int(Double(LStart) * 1.3)) + transCL + "=\(db.sDriver[RecNumber][15])" + Spaces.prefix(Int(Double(RStart - 2 - LStart) * 1.6)) + transPL + "=\(db.sDriver[RecNumber][17])"   // 1.45= big:little multiplier
+            
+            
+           
             // build string 3
             //
             //        var maxDriverStat = 19     //  length of longest capability stat for emglish
@@ -1314,72 +1260,75 @@ struct RecsView: View {
         while row_ctr < 87 {
             
             RecNumber = Int(Recs[rec_ctr][0])
+            //print("!!1317 \(Recs[rec_ctr][0])")
             
             // build string 0
-            //RecsDispParts[row_ctr] = Spaces.prefix(6 - Int(db.sPart[RecNumber][1].count/2)) + db.sPart[RecNumber][1]     //Name
-            RecsDispParts[row_ctr] = db.sPart[RecNumber][1]     // Part Name, left justified
-            col = RecsDispParts[row_ctr].count
-            RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(13 - col) + db.sPart[RecNumber][15]    //CL
-            col = RecsDispParts[row_ctr].count
-            RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(19 - col - 3) + db.sPart[RecNumber][16]   //CR
-            col = RecsDispParts[row_ctr].count
-            RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(23 - col) + db.sPart[RecNumber][17]   //PL
-            col = RecsDispParts[row_ctr].count
-            RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(28 - col - 1) + db.sPart[RecNumber][20]   //ACa
-            col = RecsDispParts[row_ctr].count
-            RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(37 - col - 3) + "\(db.sMult[11][1])"   //ACo
+            //Name starts at pos 1, CL at 13, CR at 17 PL at 23 ACa at 27, ACo at 33
+            
+            
+            RecsDispParts[row_ctr] = db.sPart[RecNumber][1] + Spaces.prefix(14 - db.sPart[RecNumber][1].count - db.sPart[RecNumber][15].count) + db.sPart[RecNumber][15]     // Name, CL
+            RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(2) + db.sPart[RecNumber][16]     // CR
+            RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(3 - db.sPart[RecNumber][17].count) + db.sPart[RecNumber][17]     // PL
+            RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(7 - db.sPart[RecNumber][20].count) + db.sPart[RecNumber][20]     // ACa
+            RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + String(Spaces.prefix(9 - db.sMult[11][1].count)) + db.sMult[11][1]   // Name, CL, CR, PL, ACa, ACo
             
             // build parts string 1
             // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
             // for cl to pl (assume 1 and 3) and also try (4 and 4)
             // if pl=cl then just show pl in 1 row else do loop
+            // **********************************
+            
             RecsDispParts[row_ctr + 1] = ""   //clear it
             
-            if (db.sPart[RecNumber][15] == db.sPart[RecNumber][17]) {
-                RecsDispParts[row_ctr + 1] = Spaces.prefix(4) + db.sPart[RecNumber][17] + Spaces.prefix(4) + db.sPart[RecNumber][18] + Spaces.prefix(4) + db.sPart[RecNumber][19] + Spaces.prefix(5) + db.sPart[RecNumber][21] + Spaces.prefix(5) + db.sPart[RecNumber][22]      //PL, PR, MR, NCa, NCo
-                //print("!!RecsDisParts[row_ctr+1]if: \(RecsDispParts[row_ctr+1])")
-                // *************** need to fix for long NCa and NCo
-            } else {
-                //do loop
-                var curr_ctr = Int(db.sPart[RecNumber][15])!  // 1st line = CL
-                xMR = Int(Double(db.sPart[RecNumber][19])!)  //Get NR for curr_ctr
+            if (db.sPart[RecNumber][15] == db.sPart[RecNumber][17]) {     // CL = PL so 1 displayed line
+                RecsDispParts[row_ctr + 1] = Spaces.prefix(4 - db.sPart[RecNumber][17].count) + db.sPart[RecNumber][17] + Spaces.prefix(4) + db.sPart[RecNumber][18] + Spaces.prefix(8 - db.sPart[RecNumber][19].count) + db.sPart[RecNumber][19]
+                RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1] + Spaces.prefix(7 - db.sPart[RecNumber][21].count) + db.sPart[RecNumber][21] + Spaces.prefix(10 - db.sPart[RecNumber][22].count) + db.sPart[RecNumber][22]      //PL, PR, MR, NCa, NCo
+            } else {     // CL < PL so display multiple lines
+                var curr_ctr = Int(db.sPart[RecNumber][15])! + 1  // 1st line = CL + 1
+                
                 while curr_ctr <= Int(db.sPart[RecNumber][17])! {  // loop until PL is reached
                     
-                    xPL = Int(db.sPart[RecNumber + curr_ctr - 1][2])!  //Get level for curr_ctr
-                    xPR = Int(Double(db.sPart[RecNumber + curr_ctr - 1][12])!)  //Get PR for curr_ctr
-                    xNCa = Int(db.sCard[curr_ctr - 1][1])!  //Get NCa for curr_ctr
-                    xNCo = Int(db.sPart[RecNumber + curr_ctr - 1][10])!  //Get NCo for curr_ctr
+                    RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1]
+                    + Spaces.prefix(4 - db.sPart[RecNumber + curr_ctr - 1][2].count) + db.sPart[RecNumber + curr_ctr - 1][2]
+                    + Spaces.prefix(8 - db.sPart[RecNumber + curr_ctr - 1][12].count) + db.sPart[RecNumber + curr_ctr - 1][12]
+                    + Spaces.prefix(3) + db.sPart[RecNumber][19]
+                    + Spaces.prefix(9 - db.sCard[curr_ctr - 1][1].count) + db.sCard[curr_ctr - 1][1]
+                    + Spaces.prefix(10 - db.sPart[RecNumber + curr_ctr - 1][9].count) + db.sPart[RecNumber + curr_ctr - 1][9]
+                     + "\n"      //PL, PR, MR, NCa, NCo
                     
-                    RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1] + Spaces.prefix(4) + String(xPL) + Spaces.prefix(4) + String(xPR)
-                    if (xNCa < 10) {
-                        RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1] + Spaces.prefix(4) + String(xMR) + Spaces.prefix(3)    // add a single space for small xNCA for alignment
-                    } else {
-                        RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1] + Spaces.prefix(4) + String(xMR) + Spaces.prefix(2)
-                    }
-                    RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1] + String(xNCa) + Spaces.prefix(1) + String(xNCo) + "\n"
-                    //print("!!RecsDispParts[row_ctr+1]then: \(RecsDispParts[row_ctr+1])")
                     curr_ctr = curr_ctr + 1
                     // if curr cl is still less than pl, then + \n, next
                 }
-                //print("row_ctr: ", row_ctr)
                 let subString = RecsDispParts[row_ctr + 1].prefix((RecsDispParts[row_ctr + 1].count) - 1)
                 RecsDispParts[row_ctr + 1] = String(subString)  // remove last \n
             }
+
+            /*
+            RecsDispParts[row_ctr + 1] = ""   //clear it
             
+            if (db.sPart[RecNumber][15] == db.sPart[RecNumber][17]) {     // CL = PL so 1 displayed line
+                RecsDispParts[row_ctr + 1] = Spaces.prefix(4 - db.sPart[RecNumber][17].count) + db.sPart[RecNumber][17] + Spaces.prefix(4) + db.sPart[RecNumber][18] + Spaces.prefix(8 - db.sPart[RecNumber][19].count) + db.sPart[RecNumber][19]
+                RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1] + Spaces.prefix(7 - db.sPart[RecNumber][21].count) + db.sPart[RecNumber][21] + Spaces.prefix(10 - db.sPart[RecNumber][22].count) + db.sPart[RecNumber][22]      //PL, PR, MR, NCa, NCo
+            } else {     // CL < PL so display multiple lines
+                var curr_ctr = Int(db.sPart[RecNumber][15])! + 1  // 1st line = CL + 1
+                
+                while curr_ctr <= Int(db.sPart[RecNumber][17])! {  // loop until PL is reached
+                    
+                    RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1] + Spaces.prefix(4 - db.sPart[RecNumber + curr_ctr - 1][2].count) + db.sPart[RecNumber + curr_ctr - 1][2] + Spaces.prefix(8 - db.sPart[RecNumber + curr_ctr - 1][12].count) + db.sPart[RecNumber + curr_ctr - 1][12] + Spaces.prefix(4) + db.sPart[RecNumber][19] + Spaces.prefix(9 - db.sPart[RecNumber + curr_ctr - 1][9].count) + db.sPart[RecNumber + curr_ctr - 1][9] + Spaces.prefix(10 - db.sCard[curr_ctr - 1][1].count) + db.sCard[curr_ctr - 1][1] + "\n"      //PL, PR, MR, NCa, NCo
+                    
+                    curr_ctr = curr_ctr + 1
+                    // if curr cl is still less than pl, then + \n, next
+                }
+                let subString = RecsDispParts[row_ctr + 1].prefix((RecsDispParts[row_ctr + 1].count) - 1)
+                RecsDispParts[row_ctr + 1] = String(subString)  // remove last \n
+            }
+             */
             
             // build parts string 2
             let transCL = NSLocalizedString("CL", comment: "a test")
             let transPL = NSLocalizedString("PL", comment: "another test")
-            RecsDispParts[row_ctr + 2] = Spaces.prefix(LStart - 2) + transCL + "=\(db.sPart[RecNumber][15])" + Spaces.prefix(RStart - 2 - LStart) + transPL + "=\(db.sPart[RecNumber][17])"
+            RecsDispParts[row_ctr + 2] = Spaces.prefix(Int(Double(LStart) * 1.3)) + transCL + "=\(db.sPart[RecNumber][15])" + Spaces.prefix(Int(Double(LStart) * 1.8)) + transPL + "=\(db.sPart[RecNumber][17])"
             
-            
-            
-            //CLStart = "testing..."
-            //CLStart = String(Spaces.prefix(LStart - 2))   // to be transfered to SubView for localizable to work properly
-            //CLMid = "=" + db.sPart[RecNumber][15] + Spaces.prefix(RStart - 2 - LStart)
-            //CLEnd = "=" + db.sPart[RecNumber][17]
-            //print("!!CLMid: ", CLMid, RecNumber)
-            //print("!!CLEnd: ", CLEnd, RecNumber)
             
             // build parts string 3
             //
@@ -1464,25 +1413,10 @@ struct RecsView: View {
             //        print("!! sTemp, count=...\(sTemp)...\(sTemp.count)")
             RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + String(Spaces.prefix(pos1 - 1))  + sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[3] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + ""
             
-            
-            
-            
-            //        RecsDispParts[row_ctr + 3] = Spaces.prefix(3) + db.sPart[RecNumber + xCL - 1][3] + Spaces.prefix(3) + factors[0] + Spaces.prefix(3) + db.sPart[RecNumber + xPL - 1][3] + "\n"
-            //        RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + Spaces.prefix(3) + db.sPart[RecNumber + xCL - 1][4] + Spaces.prefix(3) + factors[1] + Spaces.prefix(3) + db.sPart[RecNumber + xPL - 1][4] + "\n"
-            //        + Spaces.prefix(3) + db.sPart[RecNumber + xCL - 1][5] + Spaces.prefix(3) + factors[2] + Spaces.prefix(3) + db.sPart[RecNumber + xPL - 1][5] + "\n"
-            //        RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + Spaces.prefix(3) + db.sPart[RecNumber + xCL - 1][6] + Spaces.prefix(3) + factors[8] + Spaces.prefix(3)
-            //        RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + db.sPart[RecNumber + xPL - 1][6]
-            
-            
-            //        var maxPartStat = 19     //  length of longest capability stat
-            //        var LStart = 20 - Int(maxPartStat/2) - 4   // left start column for capabilities
-            //        var RStart = 20 + Int(maxPartStat/2) + 2   // right start column for capabilities
-            
             row_ctr = row_ctr + 4
             rec_ctr = rec_ctr + 1
         }
         
-        // get the CL or CL+1 from the driver/part. Look up the CR.
         
         // **********************************************************************************
         // **********************************************************************************
@@ -1491,29 +1425,14 @@ struct RecsView: View {
         
         teamScore = 0    //clear old value
         
-
+        
         // PR= and PR1 = 0
         // so we have Rec0 and Rec1. If their CLs = PLs then choose both with no upgrades
         // if Rec0 Cl < PL then with the ACo how many levels up can you upgrade? Start at CL+1, determine PR, then repeat until you reach PL. Whatever PR0 you have wins. Record PLRec0.
         // Do the same for Rec1 to find PR1. Record PLRec1.
         // If PR0 >= PR1 then upgrade PR0 to level ? else upgrade  PR1 to level ??
         
-        //        var step3 = 0
-        //        var iFinal: Int = 0
-        //        var dFinal: Double = 0.0
-        
-        //        var step1: Int = Int(Recs[0][0])
-        //        var step2: Int = Int(db.sDriver[step1][15])!
-        //        var test345: String = db.sDriver[step1 + step2][12]   //works
-        //        test345 = db.sDriver[Int(Recs[0][0]) + step2][12]    //works
-        //        print(type(of: test345))
-        //        test345 = db.sDriver[Int(Recs[0][0]) + step2][12]    //works
-        //        dFinal = Double(test345)!   //works, must have !
-        //        iFinal = Int(dFinal)  // works
-        //        iFinal = Int(Double(test345)!)    // now combine, works
-        //        iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + step2][12])!)    // more combining, works
-        //        iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[step1][15])!][12])!)    // even more combining, works
-        //        iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)    // final combining, works
+        // iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)    // final combining, works
         
         // get the row number for the weighted rating for the current CL
         if (db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) {
@@ -1560,8 +1479,8 @@ struct RecsView: View {
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[19][0]) + 1 + Int(db.sPart[Int(Recs[19][0])][15])!][12])!)
         }
         
-        print("!! teamScore = \(teamScore)")
-        dump(Recs)
+        //print("!! teamScore = \(teamScore)")
+        //dump(Recs)
         
     }  // start()
     

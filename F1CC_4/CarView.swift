@@ -30,7 +30,7 @@ struct CarSubView: View {
                             .font(.system(size: 9))
                             .frame(width: 120)
                             .background(colorBack)
-                        Text("\(db.sPart[ctr + index_h][15])  \(db.sPart[ctr + index_h][20]) / \(db.sPart[ctr + index_h][21])  \(db.sPart[ctr + index_h][17])")
+                        Text("\(db.sPart[ctr + index_h][15])  \(db.sPart[ctr + index_h][20])/\(db.sPart[ctr + index_h][21])  \(db.sPart[ctr + index_h][17])")
                             .font(.system(size: CGFloat(fontSize[1]), design: .monospaced))
                             .fontWeight(.semibold)
                             .frame(width: 120, alignment: .leading)

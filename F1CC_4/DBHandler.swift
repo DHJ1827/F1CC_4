@@ -710,7 +710,7 @@ class DBHandler: ObservableObject {
                     if (Int(Double(sMultStripped)!) >= ctrNCo ) {
                         sDriverr[row_ctr][31] = String(ctrCL + 1)   // save PL(ACo>NCo)
                         sDriverr[row_ctr][32] = sDriverr[row_ctr + ctrCL - 1][12]   // save PR(ACo>NCo)
-                        print("!!DV419 Saving PR(ACo>NCo) for row= \(row_ctr) with PL= \(ctrCL + 1) and PR= \(sDriverr[row_ctr + ctrCL][12])")
+                        //print("!!DV419 Saving PR(ACo>NCo) for row= \(row_ctr) with PL= \(ctrCL + 1) and PR= \(sDriverr[row_ctr + ctrCL][12])")
                     } else {     //CL<PL but there aren't enough coins to do anything
                         sDriverr[row_ctr][31] = sDriverr[row_ctr][15]   // save PL(ACo>NCo) = CL
                         sDriverr[row_ctr][32] = sDriverr[row_ctr][16]   // save PR(ACo>NCo) = CR
@@ -1024,7 +1024,7 @@ class DBHandler: ObservableObject {
                     if (Int(Double(sMultStripped)!) >= ctrNCo ) {
                         sPartt[row_ctr][31] = String(ctrCL + 1)   // save PL(ACo>NCo)
                         sPartt[row_ctr][32] = sPartt[row_ctr + ctrCL - 1][12]   // save PR(ACo>NCo)
-                        print("!!DV419 Saving PR(ACo>NCo) for row= \(row_ctr) with PL= \(ctrCL + 1) and PR= \(sPartt[row_ctr + ctrCL][12])")
+                        //print("!!DV419 Saving PR(ACo>NCo) for row= \(row_ctr) with PL= \(ctrCL + 1) and PR= \(sPartt[row_ctr + ctrCL][12])")
                     } else {     //CL<PL but there aren't enough coins to do anything
                         sPartt[row_ctr][31] = sPartt[row_ctr][15]   // save PL(ACo>NCo) = CL
                         sPartt[row_ctr][32] = sPartt[row_ctr][16]   // save PR(ACo>NCo) = CR

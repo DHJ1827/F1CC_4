@@ -86,8 +86,8 @@
 "resultsLine1" = "CL       ACa / NCa       PL";
 "resultsLine4B" = "CR                 PR";
 "resultsLine4D" = "CR       MR      PR";
-"resultRecs1" = "      Name        CL     CR      PL    ACa      ACo";
-"resultRecs2" = "       PL      PR        MR         NCa       NCo";
+"resultRecs1" = "    Name          CL     CR     PL     ACa         ACo";
+"resultRecs2" = "    PL        PR        MR          NCa           NCo";
 "shortTerm" = "Short Term";
 "ST" = "ST";
 "ST_recs" = "ST: Short Term";
