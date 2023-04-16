@@ -144,7 +144,7 @@ struct RecsView: View {
     @State var maxRH = 0   // and its PL factor length
     @State var longestLength = 0
     @State var teamScore:Int = 0
-    @State var upgradeID:Int = 0     //dummy integer
+    @State var STDriverRecID:Int = 0     //dummy integer
     @State var STPartRecID:Int = 0   // dummy integer
     
     @State private var showingInfoSheet = false
@@ -633,7 +633,7 @@ struct RecsView: View {
                         if ((db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) && (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17])) {
                             Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")")
                         } else {
-                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")") + Text("basicOneUpgrade \(db.sDriver[upgradeID][1]) \(db.sDriver[upgradeID][31])")
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")") + Text("basicOneUpgrade \(db.sDriver[STDriverRecID][1]) \(db.sDriver[STDriverRecID][31])")
                         }
                         
                     }
@@ -699,8 +699,8 @@ struct RecsView: View {
                         .border(Color.colours.backgrd_blue, width: 4)
                         .multilineTextAlignment(.center)
                     
-                    Text("rememberRecs")
-                        .font(.system(size: 14, weight: .bold, design: .default))
+                    (Text(Image(systemName: "exclamationmark.octagon")) + Text("\n") + Text("rememberRecs"))
+                        .font(.system(size: 16, weight: .bold, design: .default))
                         .padding()
                         .border(Color.colours.backgrd_blue, width: 4)
                         .multilineTextAlignment(.center)
@@ -809,9 +809,9 @@ struct RecsView: View {
         }
         // now find out the id to be upgraded
         if ((Double(db.sDriver[Int(Recs[0][0])][32])! - Double(db.sDriver[Int(Recs[0][0])][16])!) >= (Double(db.sDriver[Int(Recs[1][0])][32])! - Double(db.sDriver[Int(Recs[1][0])][16])!)) {    // Recs0 PR > Recs1 PR
-            upgradeID = Int(Recs[0][0])
+            STDriverRecID = Int(Recs[0][0])
         } else {
-            upgradeID = Int(Recs[1][0])
+            STDriverRecID = Int(Recs[1][0])
         }
 
         
@@ -1356,12 +1356,13 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
+                        
+            //RecsDispParts[row_ctr + 3] = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[0] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + "\n"
             
-            //        var sTemp = Spaces.prefix(xLSpace + LStart) + db.sPart[RecNumber + xCL - 1][3] + "W"    //space is needed and CL
-            //        sTemp = sTemp + String(Spaces.prefix(Int(maxPartStat/2)-Int((factors[0].count)/2))) + factors[0] // spaces and Power
-            //var rSp = RStart - sTemp.count + xRSpace
-            //RecsDispParts[row_ctr + 3] = sTemp + String(Spaces.prefix(rSp)) + db.sPart[RecNumber + xPL - 1][3] + "\n"
-            RecsDispParts[row_ctr + 3] = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[0] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + "\n"
+            var sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[0]
+            RecsDispParts[row_ctr + 3] = sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
+            print("!!RV1369 \(pos4)")
+            print("!!RV1370 Parts Power sPL count= \(sPL.count)")
             
             //Aero
             pos2 = 20 - Int(factors[1].count/2)
@@ -1374,10 +1375,11 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-            //        sTemp = Spaces.prefix(xLSpace + LStart) + db.sPart[RecNumber + xCL - 1][4] + "W"     //space is needed and CL
-            //        sTemp = sTemp + String(Spaces.prefix(Int(maxPartStat/2)-Int((factors[1].count)/2))) + factors[1] // spaces and Aero
-            //rSp = RStart - sTemp.count + xRSpace
-            RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + String(Spaces.prefix(pos1 - 1))  + sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[1] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + "\n"
+            
+            sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[1]
+            RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
+            print("!!RV1389 \(pos4)")
+            print("!!RV1390 Parts Power sPL count= \(sPL.count)")
             
             //Grip
             pos2 = 20 - Int(factors[2].count/2)
@@ -1390,10 +1392,13 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-            //        sTemp = Spaces.prefix(xLSpace + LStart) + db.sPart[RecNumber + xCL - 1][5]     //space is needed and CL
-            //        sTemp = sTemp + String(Spaces.prefix(Int(maxPartStat/2)-Int((factors[2].count)/2))) + factors[2] // spaces and Grip
-            //        rSp = RStart - sTemp.count + xRSpace
-            RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + String(Spaces.prefix(pos1 - 1))  + sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[2] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + "\n"
+
+            //RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + String(Spaces.prefix(pos1 - 1))  + sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[2] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + "\n"
+            
+            sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[2]
+            RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
+            print("!!RV1410 \(pos4)")
+            print("!!RV1411 Parts Power sPL count= \(sPL.count)")
             
             //Reliability
             pos2 = 20 - Int(factors[3].count/2)
@@ -1406,12 +1411,21 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-            //        sTemp = Spaces.prefix(xLSpace + LStart) + db.sPart[RecNumber + xCL - 1][6]     //space is needed and CL
-            //        print("!! sTemp, count=...\(sTemp)...\(sTemp.count)")
-            //        sTemp = sTemp + String(Spaces.prefix(Int(maxPartStat/2)-Int((factors[3].count)/2))) + factors[3] // spaces and Overtaking
+
+            sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[3]
+            RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
+            print("!!RV1417 \(pos4)")
+            print("!!RV1418 Parts Power sPL count= \(sPL.count)")
+            
+            //Overtaking
             //        rSp = RStart - sTemp.count + xRSpace
             //        print("!! sTemp, count=...\(sTemp)...\(sTemp.count)")
-            RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + String(Spaces.prefix(pos1 - 1))  + sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[3] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + ""
+            //RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + String(Spaces.prefix(pos1 - 1))  + sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[3] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + ""
+            
+            //sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[3]
+            //RecsDispParts[row_ctr + 3] = sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
+            //print("!!RV1433 \(pos4)")
+            //print("!!RV1434 Parts Overtaking sPL count= \(sPL.count)")
             
             row_ctr = row_ctr + 4
             rec_ctr = rec_ctr + 1
@@ -1423,9 +1437,8 @@ struct RecsView: View {
         // Calculate teamScore
         //
         
-        teamScore = 0    //clear old value
-        
-        
+        // STDriverRecID and STPartRecID have the row numbers for the upgrades. Go through the RECs and get the [16] PRs. If Rec[x][0] = STDriverRecID or STPartRecID, use the [32]s upgraded PRs.
+        // Use Recs[][] 0,1,4,7,10,13,16,19
         // PR= and PR1 = 0
         // so we have Rec0 and Rec1. If their CLs = PLs then choose both with no upgrades
         // if Rec0 Cl < PL then with the ACo how many levels up can you upgrade? Start at CL+1, determine PR, then repeat until you reach PL. Whatever PR0 you have wins. Record PLRec0.
@@ -1434,12 +1447,48 @@ struct RecsView: View {
         
         // iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)    // final combining, works
         
-        // get the row number for the weighted rating for the current CL
+        // if RecCL=RecPL, then get RecCL and add that row to Rec[0][0] to get the offset value and look up the normalized rating for RecCL. Add it to the teamScore
+        print("!! RV1437 Recs00 \(Recs[0][0])")
+        print("!! RV1438 Recs00CL \(db.sDriver[Int(Recs[0][0])][15])")
+        print("!! RV1439 Recs00[32] \(db.sDriver[Int(Recs[0][0])][32])")
+        var tryu = db.sDriver[Int(Recs[0][0])][32]
+        print("!! 1441 \(tryu)")
+        print("!! RV1442 Recs00[32] \(Int(db.sDriver[Int(Recs[0][0])][32]))")
+        var jkdf = Int(tryu)
+        print("!! 1443 \(jkdf)")
+        var rewa = Int(Double(db.sDriver[Int(Recs[0][0])][32])!)
+        print("!! 1445 \(rewa)")
+
+        teamScore = 0    //clear
+        let recDrRange = [0,1]   // 2 driver recs
+        let recPaRange = [4,7,10,13,16,19]  // 6 category parts recs
+        
+        for row_ctr in recDrRange {
+            if (Recs[row_ctr][0] == Double(STDriverRecID)) {
+                teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[row_ctr][0])][32])!)
+            } else {
+                teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[row_ctr][0])][16])!)
+            }
+        }
+
+        for row_ctr in recPaRange {
+            if (Recs[row_ctr][0] == Double(STPartRecID)) {
+                teamScore = teamScore + Int(Double(db.sPart[Int(Recs[row_ctr][0])][32])!)
+            } else {
+                teamScore = teamScore + Int(Double(db.sPart[Int(Recs[row_ctr][0])][16])!)
+            }
+        }
+        
+        
+        
+        
+        /*
         if (db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)    //CL row
+            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!-1][12])!)  //CL row
             
         } else {        // Cl < PL
-            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[0][0]) + 1 + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!) // 1 more row after CL row *******************  if C < 10, 11, 12? logic needed
+            // if driverRecID = 00, then use [32] and add it to teamScore
+            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[0][0]) + 1 + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)
         }
         
         if (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17]) {
@@ -1478,7 +1527,7 @@ struct RecsView: View {
         } else {        // Cl < PL
             teamScore = teamScore + Int(Double(db.sPart[Int(Recs[19][0]) + 1 + Int(db.sPart[Int(Recs[19][0])][15])!][12])!)
         }
-        
+        */
         //print("!! teamScore = \(teamScore)")
         //dump(Recs)
         

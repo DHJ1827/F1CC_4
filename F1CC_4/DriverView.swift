@@ -41,6 +41,7 @@ struct DriverView: View {
     @State var fontSize: [Int] = Array(repeating: 13, count: 660)
     
     let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic, Color.black, Color.red]
+    let assetLevel = ["","","","","","","","","epic","rare","","common"]
     
     //******************************************************************
     
@@ -349,7 +350,7 @@ struct DriverView: View {
             for ctr in stride(from: 0, to: 650, by: 11) {
                 if (!((0...Int(db.sDriver[ctr][29])! ~= Int(db.sDriver[ctr][15]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
                     errCheck = false
-                    errMsg = "Levels must be between 0 and \(db.sDriver[ctr][29]) for \(db.sDriver[ctr][1])"
+                    errMsg = "Levels must be between 0 and \(db.sDriver[ctr][29]) for \(db.sDriver[ctr][1]) (\(assetLevel[Int(db.sDriver[ctr][29])!]))"
                     showingAlert = true
                 }
             }

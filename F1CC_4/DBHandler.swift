@@ -566,7 +566,11 @@ class DBHandler: ObservableObject {
         row_ctr = 0
         while row_ctr <= 659 {
             tempPL = Int(sDriverr[row_ctr][17])!
-            sDriverr[row_ctr][23] = sDriverr[row_ctr + tempPL][12]   //get the NR for at the PL row
+            if ((row_ctr + tempPL) <= 659) {   // check if [12] is maxed out
+                sDriverr[row_ctr][23] = sDriverr[row_ctr + tempPL][12]   //get the NR for at the PL row
+            } else {
+                sDriverr[row_ctr][23] = sDriverr[row_ctr][12]   //get the NR for at the PL row
+            }
             row_ctr = row_ctr + 11
         }
         
@@ -602,10 +606,13 @@ class DBHandler: ObservableObject {
             } else {
                 tempPLplus1Coins = Int(sDriverr[row_ctr + tempPL][10])!    //get cumul coins for PL+1 ie. row PL
             }
-            
+
             if (tempCL > 0) {   //  otherwise[24] stays at .0000001
-                sDriverr[row_ctr][24] =  String( ACo / (tempPLplus1Coins - Int(sDriverr[row_ctr + tempCL - 1][10])!) )
+                if (tempPLplus1Coins != Int(sDriverr[row_ctr + tempCL - 1][10])!) {    // handle divide by zero
+                    sDriverr[row_ctr][24] =  String( ACo / (tempPLplus1Coins - Int(sDriverr[row_ctr + tempCL - 1][10])!) )
+                }
             }
+            
             if (Double(sDriverr[row_ctr][24])! > 1) {
                 sDriverr[row_ctr][24] = "1"
             }
@@ -660,9 +667,13 @@ class DBHandler: ObservableObject {
             } else {
                 tempPLplus2Coins = Int(sDriverr[row_ctr + tempPL + 1][10])!    //get cumul coins for PL+2 ie. row PL+1
             }
-            
+
             if (tempCL > 0) {   //  otherwise[27] stays at .0000001
-                sDriverr[row_ctr][27] =  String( ACo / (tempPLplus2Coins - Int(sDriverr[row_ctr + tempCL - 1][10])!) )
+                var testtt = Int(sDriverr[row_ctr + tempCL - 1][10])!
+                if (tempPLplus2Coins != Int(sDriverr[row_ctr + tempCL - 1][10])!) {    // handle divide by 0
+                    sDriverr[row_ctr][27] =  String( ACo / (tempPLplus2Coins - Int(sDriverr[row_ctr + tempCL - 1][10])!) )
+                }
+
             }
             if (Double(sDriverr[row_ctr][27])! > 1) {
                 sDriverr[row_ctr][27] = "1"
@@ -920,7 +931,9 @@ class DBHandler: ObservableObject {
             }
             
             if (tempCL > 0) {   //  otherwise[24] stays at .0000001
-                sPartt[row_ctr][24] =  String( ACo / (tempPLplus1Coins - Int(sPartt[row_ctr + tempCL - 1][10])!) )
+                if (tempPLplus1Coins != Int(sPartt[row_ctr + tempCL - 1][10])!) {
+                    sPartt[row_ctr][24] =  String( ACo / (tempPLplus1Coins - Int(sPartt[row_ctr + tempCL - 1][10])!) )
+                }
             }
             if (Double(sPartt[row_ctr][24])! > 1) {
                 sPartt[row_ctr][24] = "1"
@@ -967,9 +980,9 @@ class DBHandler: ObservableObject {
         
         row_ctr = 0
         while row_ctr <= 461 {
-            tempCL = Int(sPartt[row_ctr][15])!
-            tempPL = Int(sPartt[row_ctr][17])!
-            sPartt[row_ctr][27] = "0.000001"  // assume PL = 0, set an initial value
+            tempCL = Int(sPartt[row_ctr][15])!     //CL
+            tempPL = Int(sPartt[row_ctr][17])!     //PL
+            sPartt[row_ctr][27] = "0.000001"  // assume PL = 0, set an initial value for ACoins/++NCumulCoins
             if (tempPL > 9) {
                 tempPL = 9        // PL+2 maxes out at 11
             } else {
@@ -977,7 +990,9 @@ class DBHandler: ObservableObject {
             }
             
             if (tempCL > 0) {   //  otherwise[27] stays at .0000001
-                sPartt[row_ctr][27] =  String( ACo / (tempPLplus2Coins - Int(sPartt[row_ctr + tempCL - 1][10])!) )
+                if (tempPLplus2Coins != Int(sPartt[row_ctr + tempCL - 1][10])!) {
+                    sPartt[row_ctr][27] =  String( ACo / (tempPLplus2Coins - Int(sPartt[row_ctr + tempCL - 1][10])!) )
+                }
             }
             if (Double(sPartt[row_ctr][24])! > 1) {
                 sPartt[row_ctr][25] = "1"
