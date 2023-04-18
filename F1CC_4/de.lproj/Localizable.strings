@@ -86,8 +86,8 @@
 "resultsLine1" = "AS       VKa / BKa       MS";
 "resultsLine4B" = "AB                 MB";
 "resultsLine4D" = "AB       Be       MB";
-"resultRecs1" = "     Name     AS     AB     MS     VKa     VMu";
-"resultRecs2" = "   MS     MB     Be     BKa     BMu";
+"resultRecs1" = "    Name          AS     AB     MS     VKa         VMu";
+"resultRecs2" = "    MS        MB        Be          BKa           BMu";
 "shortTerm" = "Kurz-Ziele";
 "ST" = "KZ";
 "ST_recs" = "KZ: Kurz-Ziele";

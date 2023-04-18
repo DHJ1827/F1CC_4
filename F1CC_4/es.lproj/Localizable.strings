@@ -86,8 +86,8 @@
 "resultsLine1" = "NA       TaD / TaN       NP";
 "resultsLine4B" = "VA                 CP";
 "resultsLine4D" = "VA       CM       CP";
-"resultRecs1" = "    Name  CL  CR  PL  ACa  ACo";
-"resultRecs2" = "  PL  PR  MR  NCa  NCo";
+"resultRecs1" = "    Nombre        NA     VA     NP     TaD         MoD";
+"resultRecs2" = "    NP        CP        CM          TaN           MoN";
 "shortTerm" = "Término Corto";
 "ST" = "TC";
 "ST_recs" = "TC: Término Corto";

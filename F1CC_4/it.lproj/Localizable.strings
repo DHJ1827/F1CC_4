@@ -86,8 +86,8 @@
 "resultsLine1" = "LA       CaD / CaN       LP";
 "resultsLine4B" = "VA                 VP";
 "resultsLine4D" = "VA       PM       VP";
-"resultRecs1" = "    Name  CL  CR  PL  ACa  ACo";
-"resultRecs2" = "  PL  PR  MR  NCa  NCo";
+"resultRecs1" = "    Nome          LA     VA     LP     CaD         MoD";
+"resultRecs2" = "    LP        VP        PM          CaN           MoN";
 "shortTerm" = "Breve Termine";
 "ST" = "BT";
 "ST_recs" = "BT: Breve Termine";

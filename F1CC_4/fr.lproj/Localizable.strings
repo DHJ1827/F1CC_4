@@ -30,13 +30,13 @@
 "cards" = "Cartes";
 "CL_error" = "Le Niveau Actuel doit être compris entre 0 et 11 pour ";
 "CL" = "NA";
-"coins %@" = "Pièces %@";
+"coins %@" = "Pièces: %@";
 "common" = "Commun";
 "components" = "Composants";
 "consistency" = "Régularité";
-"CR" = "NA";
+"CR" = "CA";
 "currentLevel" = "Niveau actuel";
-"currentRating" = "Note actuelle";
+"currentRating" = "Classement actuelle";
 "defending" = "Défense";
 "detailMode" = "Détail";
 "details" = "Détails";
@@ -86,8 +86,8 @@
 "resultsLine1" = "NA       CsD / CaN       NP";
 "resultsLine4B" = "CR                 ÉP";
 "resultsLine4D" = "NA       NM       ÉP";
-"resultRecs1" = "    Name  CL  CR  PL  ACa  ACo";
-"resultRecs2" = "  PL  PR  MR  NCa  NCo";
+"resultRecs1" = "    Nom           NA     CA     NP     CsD         PiD";
+"resultRecs2" = "    NP        ÉP        NM          CaN           PiN";
 "shortTerm" = "Court Terme";
 "ST" = "CT";
 "ST_recs" = "CT: Court Terme";

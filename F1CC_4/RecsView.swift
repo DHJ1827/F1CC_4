@@ -1014,6 +1014,7 @@ struct RecsView: View {
         
         let langCode = Bundle.main.preferredLocalizations[0]
         var maxDriverStat = 0     //  length of longest capability stat
+       
         
         if (langCode == "fr") {
             maxDriverStat = 24
@@ -1098,7 +1099,12 @@ struct RecsView: View {
             let transCL = NSLocalizedString("CL", comment: "a test")
             let transPL = NSLocalizedString("PL", comment: "another test")
             
-            RecsDispDriver[row_ctr + 2] = Spaces.prefix(Int(Double(LStart) * 1.3)) + transCL + "=\(db.sDriver[RecNumber][15])" + Spaces.prefix(Int(Double(RStart - 2 - LStart) * 1.6)) + transPL + "=\(db.sDriver[RecNumber][17])"   // 1.45= big:little multiplier
+            //RecsDispDriver[row_ctr + 2] = "driver test"
+            //var tempSp:Double = 0.0
+            //var tempSp = Int(Double(maxDriverStat) * 1.4 + 0.5)
+            //print("!! \(tempSp)")
+            
+            RecsDispDriver[row_ctr + 2] = Spaces.prefix(Int(Double(LStart) * 1.3)) + transCL + "=\(db.sDriver[RecNumber][15])" + Spaces.prefix(Int(Double(maxDriverStat) * 1.9 + 0.5)) + transPL + "=\(db.sDriver[RecNumber][17])"
             
             
            
@@ -1250,7 +1256,7 @@ struct RecsView: View {
             LStart = 20 - Int(maxPartStat/2) - 4   // left start column for capabilities
             RStart = 20 + Int(maxPartStat/2) + 3   // right start column for capabilities
         }
-        //print("!!************ \(LStart)")
+
         col = 0    // current column position
         RecNumber = 0  // 22 values of recommended drivers and parts
         
@@ -1262,9 +1268,8 @@ struct RecsView: View {
             RecNumber = Int(Recs[rec_ctr][0])
             //print("!!1317 \(Recs[rec_ctr][0])")
             
+            // **********************************
             // build string 0
-            //Name starts at pos 1, CL at 13, CR at 17 PL at 23 ACa at 27, ACo at 33
-            
             
             RecsDispParts[row_ctr] = db.sPart[RecNumber][1] + Spaces.prefix(14 - db.sPart[RecNumber][1].count - db.sPart[RecNumber][15].count) + db.sPart[RecNumber][15]     // Name, CL
             RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(2) + db.sPart[RecNumber][16]     // CR
@@ -1272,11 +1277,8 @@ struct RecsView: View {
             RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + Spaces.prefix(7 - db.sPart[RecNumber][20].count) + db.sPart[RecNumber][20]     // ACa
             RecsDispParts[row_ctr] = RecsDispParts[row_ctr] + String(Spaces.prefix(9 - db.sMult[11][1].count)) + db.sMult[11][1]   // Name, CL, CR, PL, ACa, ACo
             
-            // build parts string 1
-            // string 2- concatenate 5 strings. pos 5 + pos 12 + pos 20 + pos 28 + pos 37
-            // for cl to pl (assume 1 and 3) and also try (4 and 4)
-            // if pl=cl then just show pl in 1 row else do loop
             // **********************************
+            // build parts string 1
             
             RecsDispParts[row_ctr + 1] = ""   //clear it
             
@@ -1302,36 +1304,23 @@ struct RecsView: View {
                 let subString = RecsDispParts[row_ctr + 1].prefix((RecsDispParts[row_ctr + 1].count) - 1)
                 RecsDispParts[row_ctr + 1] = String(subString)  // remove last \n
             }
-
-            /*
-            RecsDispParts[row_ctr + 1] = ""   //clear it
             
-            if (db.sPart[RecNumber][15] == db.sPart[RecNumber][17]) {     // CL = PL so 1 displayed line
-                RecsDispParts[row_ctr + 1] = Spaces.prefix(4 - db.sPart[RecNumber][17].count) + db.sPart[RecNumber][17] + Spaces.prefix(4) + db.sPart[RecNumber][18] + Spaces.prefix(8 - db.sPart[RecNumber][19].count) + db.sPart[RecNumber][19]
-                RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1] + Spaces.prefix(7 - db.sPart[RecNumber][21].count) + db.sPart[RecNumber][21] + Spaces.prefix(10 - db.sPart[RecNumber][22].count) + db.sPart[RecNumber][22]      //PL, PR, MR, NCa, NCo
-            } else {     // CL < PL so display multiple lines
-                var curr_ctr = Int(db.sPart[RecNumber][15])! + 1  // 1st line = CL + 1
-                
-                while curr_ctr <= Int(db.sPart[RecNumber][17])! {  // loop until PL is reached
-                    
-                    RecsDispParts[row_ctr + 1] = RecsDispParts[row_ctr + 1] + Spaces.prefix(4 - db.sPart[RecNumber + curr_ctr - 1][2].count) + db.sPart[RecNumber + curr_ctr - 1][2] + Spaces.prefix(8 - db.sPart[RecNumber + curr_ctr - 1][12].count) + db.sPart[RecNumber + curr_ctr - 1][12] + Spaces.prefix(4) + db.sPart[RecNumber][19] + Spaces.prefix(9 - db.sPart[RecNumber + curr_ctr - 1][9].count) + db.sPart[RecNumber + curr_ctr - 1][9] + Spaces.prefix(10 - db.sCard[curr_ctr - 1][1].count) + db.sCard[curr_ctr - 1][1] + "\n"      //PL, PR, MR, NCa, NCo
-                    
-                    curr_ctr = curr_ctr + 1
-                    // if curr cl is still less than pl, then + \n, next
-                }
-                let subString = RecsDispParts[row_ctr + 1].prefix((RecsDispParts[row_ctr + 1].count) - 1)
-                RecsDispParts[row_ctr + 1] = String(subString)  // remove last \n
-            }
-             */
-            
+            // **********************************
             // build parts string 2
+            
             let transCL = NSLocalizedString("CL", comment: "a test")
             let transPL = NSLocalizedString("PL", comment: "another test")
-            RecsDispParts[row_ctr + 2] = Spaces.prefix(Int(Double(LStart) * 1.3)) + transCL + "=\(db.sPart[RecNumber][15])" + Spaces.prefix(Int(Double(LStart) * 1.8)) + transPL + "=\(db.sPart[RecNumber][17])"
+            
+            //RecsDispParts[row_ctr + 2] = "parts test"
+            //tempSp = maxPartStat * 1.4
+            //print("!! \(tempSp)")
+
+            RecsDispParts[row_ctr + 2] = Spaces.prefix(Int(Double(LStart) * 1.3)) + transCL + "=\(db.sPart[RecNumber][15])" + Spaces.prefix(Int(Double(maxPartStat) * 1.9 + 0.5)) + transPL + "=\(db.sPart[RecNumber][17])"
             
             
+            // **********************************
             // build parts string 3
-            //
+            
             let xCL = Int(db.sPart[RecNumber][15])!
             let xPL = Int(db.sPart[RecNumber][17])!
             var xLSpace = 0   //extra LH space needed for small CL
@@ -1344,7 +1333,6 @@ struct RecsView: View {
             var pos3 = 0   // end pos of capabilities
             let pos4 = RStart   // start pos of PL
             
-            
             //Power
             pos2 = 20 - Int(factors[0].count/2)
             pos3 = 20 + Int(factors[0].count/2)
@@ -1356,13 +1344,8 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-                        
-            //RecsDispParts[row_ctr + 3] = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[0] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + "\n"
-            
             var sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[0]
             RecsDispParts[row_ctr + 3] = sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
-            print("!!RV1369 \(pos4)")
-            print("!!RV1370 Parts Power sPL count= \(sPL.count)")
             
             //Aero
             pos2 = 20 - Int(factors[1].count/2)
@@ -1375,11 +1358,8 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-            
             sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[1]
             RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
-            print("!!RV1389 \(pos4)")
-            print("!!RV1390 Parts Power sPL count= \(sPL.count)")
             
             //Grip
             pos2 = 20 - Int(factors[2].count/2)
@@ -1392,13 +1372,8 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-
-            //RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + String(Spaces.prefix(pos1 - 1))  + sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[2] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + "\n"
-            
             sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[2]
             RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
-            print("!!RV1410 \(pos4)")
-            print("!!RV1411 Parts Power sPL count= \(sPL.count)")
             
             //Reliability
             pos2 = 20 - Int(factors[3].count/2)
@@ -1411,22 +1386,9 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-
             sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[3]
             RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
-            print("!!RV1417 \(pos4)")
-            print("!!RV1418 Parts Power sPL count= \(sPL.count)")
-            
-            //Overtaking
-            //        rSp = RStart - sTemp.count + xRSpace
-            //        print("!! sTemp, count=...\(sTemp)...\(sTemp.count)")
-            //RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + String(Spaces.prefix(pos1 - 1))  + sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[3] + String(Spaces.prefix(pos4 - pos3 - 1)) + sPL + ""
-            
-            //sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[3]
-            //RecsDispParts[row_ctr + 3] = sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
-            //print("!!RV1433 \(pos4)")
-            //print("!!RV1434 Parts Overtaking sPL count= \(sPL.count)")
-            
+
             row_ctr = row_ctr + 4
             rec_ctr = rec_ctr + 1
         }
@@ -1444,20 +1406,8 @@ struct RecsView: View {
         // if Rec0 Cl < PL then with the ACo how many levels up can you upgrade? Start at CL+1, determine PR, then repeat until you reach PL. Whatever PR0 you have wins. Record PLRec0.
         // Do the same for Rec1 to find PR1. Record PLRec1.
         // If PR0 >= PR1 then upgrade PR0 to level ? else upgrade  PR1 to level ??
-        
         // iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)    // final combining, works
-        
         // if RecCL=RecPL, then get RecCL and add that row to Rec[0][0] to get the offset value and look up the normalized rating for RecCL. Add it to the teamScore
-        print("!! RV1437 Recs00 \(Recs[0][0])")
-        print("!! RV1438 Recs00CL \(db.sDriver[Int(Recs[0][0])][15])")
-        print("!! RV1439 Recs00[32] \(db.sDriver[Int(Recs[0][0])][32])")
-        var tryu = db.sDriver[Int(Recs[0][0])][32]
-        print("!! 1441 \(tryu)")
-        print("!! RV1442 Recs00[32] \(Int(db.sDriver[Int(Recs[0][0])][32]))")
-        var jkdf = Int(tryu)
-        print("!! 1443 \(jkdf)")
-        var rewa = Int(Double(db.sDriver[Int(Recs[0][0])][32])!)
-        print("!! 1445 \(rewa)")
 
         teamScore = 0    //clear
         let recDrRange = [0,1]   // 2 driver recs
@@ -1478,57 +1428,6 @@ struct RecsView: View {
                 teamScore = teamScore + Int(Double(db.sPart[Int(Recs[row_ctr][0])][16])!)
             }
         }
-        
-        
-        
-        
-        /*
-        if (db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!-1][12])!)  //CL row
-            
-        } else {        // Cl < PL
-            // if driverRecID = 00, then use [32] and add it to teamScore
-            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[0][0]) + 1 + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)
-        }
-        
-        if (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[1][0]) + Int(db.sDriver[Int(Recs[1][0])][15])!][12])!)
-        } else {        // Cl < PL
-            teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[1][0]) + 1 + Int(db.sDriver[Int(Recs[1][0])][15])!][12])!)
-        }
-        
-        if (db.sPart[Int(Recs[4][0])][15] == db.sPart[Int(Recs[4][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[4][0]) + Int(db.sPart[Int(Recs[4][0])][15])!][12])!)
-        } else {        // Cl < PL
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[4][0]) + 1 + Int(db.sPart[Int(Recs[4][0])][15])!][12])!)
-        }
-        if (db.sPart[Int(Recs[7][0])][15] == db.sPart[Int(Recs[7][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[7][0]) + Int(db.sPart[Int(Recs[7][0])][15])!][12])!)
-        } else {        // Cl < PL
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[7][0]) + 1 + Int(db.sPart[Int(Recs[7][0])][15])!][12])!)
-        }
-        if (db.sPart[Int(Recs[10][0])][15] == db.sPart[Int(Recs[10][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[10][0]) + Int(db.sPart[Int(Recs[10][0])][4])!][12])!)
-        } else {        // Cl < PL
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[10][0]) + 1 + Int(db.sPart[Int(Recs[10][0])][15])!][12])!)
-        }
-        if (db.sPart[Int(Recs[13][0])][15] == db.sPart[Int(Recs[13][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[13][0]) + Int(db.sPart[Int(Recs[13][0])][15])!][12])!)
-        } else {        // Cl < PL
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[13][0]) + 1 + Int(db.sPart[Int(Recs[13][0])][15])!][12])!)
-        }
-        if (db.sPart[Int(Recs[16][0])][15] == db.sPart[Int(Recs[16][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[16][0]) + Int(db.sPart[Int(Recs[16][0])][15])!][12])!)
-        } else {        // Cl < PL
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[16][0]) + 1 + Int(db.sPart[Int(Recs[16][0])][15])!][12])!)
-        }
-        if (db.sPart[Int(Recs[19][0])][15] == db.sPart[Int(Recs[19][0])][17]) {
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[19][0]) + Int(db.sPart[Int(Recs[19][0])][15])!][12])!)
-        } else {        // Cl < PL
-            teamScore = teamScore + Int(Double(db.sPart[Int(Recs[19][0]) + 1 + Int(db.sPart[Int(Recs[19][0])][15])!][12])!)
-        }
-        */
-        //print("!! teamScore = \(teamScore)")
         //dump(Recs)
         
     }  // start()

@@ -7,13 +7,14 @@
 // TO DO
 //
 // Fix
-// When loading max, there's ACo+ and ++ errors in DBHandler lines 617ish
 // Analyze calcs, including teamScore.
+// On Recs, move basic/detail left and legend to right. divide legend for better readibility
+// add + and - to sliders// fill in ios icon
 //
 // UI
 // fix strings 0-2 with min, mid and max. NCo = 0?
-// spacing on parts string 3. rj alignment of PL column in German is offset, is Aero and Grip translated?, affidabilitia in IT, Fiabilidad in ES.
 // RecsDisp are messed up when translated (Name, CL, CR....ACo) and (PL, PR, MR...NCo)
+// add new picts
 //
 // Checks
 // Check on iPhone 13 and iPhone 8
@@ -21,6 +22,7 @@
 // Check calcs
 // Check min, max, mid text files
 // Check against Android version
+// Test: Check for errors and for UI changes for each language. 0 a driver, 0 a part, max a driver, max a part, 0 coins, 100M coins, 0 cards, 100M cards, max a driver/part with 0 cards, max a driver/part with 0 coins, all 0s, slide driver filters to see if CR changes,
 
 // Future
 // add commas (or . for localization) to Ca and Co for better readibility
@@ -43,20 +45,22 @@ struct MainView: View {
             DriverView()
                 .environmentObject(db)
                 .tabItem {
-                    Label("", systemImage: "steeringwheel")
-                        .foregroundColor(.black)
+                    Label("", systemImage: "person.3")
+                        .foregroundColor(.blue)
                 }
             
             CarView()
                 .environmentObject(db)
                 .tabItem {
-                    Label("", systemImage: "wrench.and.screwdriver")
+                    Label("", systemImage: "wrench.and.screwdriver.fill")
+                        .foregroundColor(.blue)
                 }
             
             RecsView()
                 .environmentObject(db)
                 .tabItem {
-                    Label("", systemImage: "flag.checkered")
+                    Label("", systemImage: "checkerboard.rectangle")
+                        .foregroundColor(.blue)
                 }
             
 //            TestView()
