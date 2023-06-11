@@ -6,28 +6,31 @@
 //
 // TO DO
 //
-// Fix
-// Analyze calcs, including teamScore.
-// On Recs, move basic/detail left and legend to right. divide legend for better readibility
-// add + and - to sliders// fill in ios icon
+// Code
+// Mid/max testing:
+// fix STPartRecID, STDriverRecID in teamScore calc in Recs
+// - Basic says upgrade Onyx, detail doesn't with CL=PL. Can't upgrade max!
 //
 // UI
-// fix strings 0-2 with min, mid and max. NCo = 0?
-// RecsDisp are messed up when translated (Name, CL, CR....ACo) and (PL, PR, MR...NCo)
-// add new picts
+// Driver screen has better spacing for sR2 and sR4
+// fill in ios icon
+// min driver spacing ok, parts not 0  1/0  0  spacing i bad
 //
-// Checks
+//Test
+// Try min, mid, max. Try driver update, part update, coins, extremes= "",0,9999999,2,345,etc. Slider extremes. Check translations with F1 Clash app.
+// Analyze calcs, including teamScore
 // Check on iPhone 13 and iPhone 8
 // Check AdMob
-// Check calcs
-// Check min, max, mid text files
 // Check against Android version
 // Test: Check for errors and for UI changes for each language. 0 a driver, 0 a part, max a driver, max a part, 0 coins, 100M coins, 0 cards, 100M cards, max a driver/part with 0 cards, max a driver/part with 0 coins, all 0s, slide driver filters to see if CR changes,
-
+//
 // Future
 // add commas (or . for localization) to Ca and Co for better readibility
+// add 10% to drivers when boosted and add up arrow to Recs Detailed drivers when upgrade needed
+// when a driver 10% is checked, need to check/unlock the other colours of that same driver- tough
 
-
+// To print array
+// db.sDriver.forEach{print($0)}
 
 import SwiftUI
 
@@ -70,6 +73,8 @@ struct MainView: View {
 //                }
         }
         .accentColor(.colours.backgrd_blue)
+        .ignoresSafeArea(edges: .top)
+        .statusBar(hidden: true)
         //.toolbarBackground(Color.white)
         .onAppear(perform: start)
     }
@@ -78,7 +83,6 @@ struct MainView: View {
         print("!! MV start()...")
     }
 }
-
 
 
 struct MainView_Previews: PreviewProvider {

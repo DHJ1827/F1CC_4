@@ -4,24 +4,26 @@
 //
 //  Created by David Joyce on 2023-03-16.
 //
+// rows 1047, 749 should be + 11?
 
 import Foundation
 import GRDB
 import SwiftUI
 
 var dbQueue: DatabaseQueue!
-var dbName = "/dbF1CC6.sqlite"
+var dbName = "/dbF1CC7.sqlite"
 
 
 class DBHandler: ObservableObject {
     
     @Published var sDriver: [[String]] = Array(repeating: [String](repeating: "1", count: 33), count: 661)
-    @Published var sPart: [[String]] = Array(repeating: [String](repeating: "1", count: 32), count: 463)
+    @Published var sPart: [[String]] = Array(repeating: [String](repeating: "1", count: 33), count: 463)
     @Published var sMult: [[String]] = Array(repeating: [String](repeating: "1", count: 2), count: 13)
     @Published var sCard: [[String]] = Array(repeating: [String](repeating: "1", count: 3), count: 13)
     @Published var bDriverBoost: [Bool] = Array(repeating: false, count: 661)
     @Published var sSelectedMode: String = "basicMode"
-    @Published var photoNum: String = "F11" + String(Int.random(in: 1...3))
+    @Published var photoNum: String = "F1" + String(Int.random(in: 11...20))
+    //@Published var photoNum: String = "F114"
     @Published var adMobCtr: Int = 3
     @Published var bFirstTimeLoad: Bool = false
     
@@ -45,12 +47,12 @@ class DBHandler: ObservableObject {
                                   driver_pk integer primary key autoincrement,
                                   driver_name text,
                                   driver_level text,
-                                  driver_over text,
+                                  driver_speed text,
                                   driver_defend text,
-                                  driver_consist text,
-                                  driver_fuel text,
+                                  driver_qualify text,
+                                  driver_start text,
                                   driver_tire text,
-                                  driver_wet text,
+                                  driver_dummy text,
                                   driver_upgrade_coin_cost text,
                                   driver_cumul_coin_cost text,
                                   driver_asset_level text,
@@ -60,7 +62,7 @@ class DBHandler: ObservableObject {
                                   driver_max_level text)
                                """)
             }
-            
+
             try dbQueue.write { db in
                 try db.execute(literal:"""
                                 create table part (
@@ -68,11 +70,11 @@ class DBHandler: ObservableObject {
                                 part_category text,
                                 part_name text,
                                 part_level text,
+                                part_speed text,
+                                part_corner text,
                                 part_power text,
-                                part_aero text,
-                                part_grip text,
                                 part_reliability text,
-                                part_pit_stop_time text,
+                                part_pit_time text,
                                 part_upgrade_coin_cost text,
                                 part_upgrade_cumul_coin_cost text,
                                 part_asset_level text,
@@ -110,12 +112,12 @@ class DBHandler: ObservableObject {
                 // text files rows: 1-660,661-1122,1123-1134,1135-1146  --> 0-659, 660-1121, 1122-1133, 1134-1145
                 for i in 0...659 {    // 660 rows in driver
                     fileArray = fileData[i].components(separatedBy: ",")
-                    print(fileArray[0], fileArray[1])
+                    //print(fileArray[0], fileArray[1])
                     try dbQueue.inDatabase { db in
                         try db.execute(literal:"""
-                            INSERT INTO driver (driver_name, driver_level, driver_over, driver_defend, driver_consist, driver_fuel , driver_tire, driver_wet, driver_upgrade_coin_cost, driver_cumul_coin_cost, driver_asset_level, driver_ten_percent,driver_current_level, driver_available_cards, driver_max_level) VALUES (\(fileArray[0]),\(fileArray[1]), \(fileArray[2]),\(fileArray[3]), \(fileArray[4]), \(fileArray[5]), \(fileArray[6]), \(fileArray[7]),\(fileArray[8]), \(fileArray[9]),\(fileArray[10]),\(fileArray[11]),\(fileArray[12]),\(fileArray[13]),\(fileArray[14]))
+                            INSERT INTO driver (driver_name, driver_level, driver_speed, driver_defend, driver_qualify, driver_start, driver_tire, driver_dummy, driver_upgrade_coin_cost, driver_cumul_coin_cost, driver_asset_level, driver_ten_percent,driver_current_level, driver_available_cards, driver_max_level) VALUES (\(fileArray[0]),\(fileArray[1]), \(fileArray[2]),\(fileArray[3]), \(fileArray[4]), \(fileArray[5]), \(fileArray[6]), \(fileArray[7]),\(fileArray[8]), \(fileArray[9]),\(fileArray[10]),\(fileArray[11]),\(fileArray[12]),\(fileArray[13]),\(fileArray[14]))
                             """)
-                        print("Inserted into driver: ", db.lastInsertedRowID)
+                        //print("Inserted into driver: ", db.lastInsertedRowID)
                     }   // end of db write/insert
                 }   // end of for driver loop
                 
@@ -123,7 +125,7 @@ class DBHandler: ObservableObject {
                     fileArray = fileData[i].components(separatedBy: ",")
                     try dbQueue.inDatabase { db in
                         try db.execute(literal:"""
-                            INSERT INTO part (part_category, part_name, part_level, part_power, part_aero, part_grip, part_reliability, part_pit_stop_time, part_upgrade_coin_cost, part_upgrade_cumul_coin_cost, part_asset_level, part_ten_percent, part_current_level, part_available_cards, part_max_level) VALUES (\(fileArray[0]),\(fileArray[1]), \(fileArray[2]),\(fileArray[3]), \(fileArray[4]), \(fileArray[5]), \(fileArray[6]), \(fileArray[7]),\(fileArray[8]), \(fileArray[9]),\(fileArray[10]),\(fileArray[11]),\(fileArray[12]),\(fileArray[13]),\(fileArray[14]))
+                            INSERT INTO part (part_category, part_name, part_level, part_speed, part_corner, part_power, part_reliability, part_pit_time, part_upgrade_coin_cost, part_upgrade_cumul_coin_cost, part_asset_level, part_ten_percent, part_current_level, part_available_cards, part_max_level) VALUES (\(fileArray[0]),\(fileArray[1]), \(fileArray[2]),\(fileArray[3]), \(fileArray[4]), \(fileArray[5]), \(fileArray[6]), \(fileArray[7]),\(fileArray[8]), \(fileArray[9]),\(fileArray[10]),\(fileArray[11]),\(fileArray[12]),\(fileArray[13]),\(fileArray[14]))
                             """)
                         //print("Inserted into part: ", db.lastInsertedRowID)
                     }   // end of db write/insert
@@ -188,6 +190,8 @@ class DBHandler: ObservableObject {
         return("Done")
     }
     
+    // ******************************************
+    // ******************************************
     
     func dbReadCards() throws -> [[String]]  {
         let dbQueue = try DatabaseQueue(path: path + dbName)
@@ -221,12 +225,12 @@ class DBHandler: ObservableObject {
                 arrRow[0] = "0"
                 arrRow[1] =  row["driver_name"]
                 arrRow[2] =  row["driver_level"]
-                arrRow[3] = row["driver_over"]
+                arrRow[3] = row["driver_speed"]
                 arrRow[4] = row["driver_defend"]
-                arrRow[5] = row["driver_consist"]
-                arrRow[6] = row["driver_fuel"]
+                arrRow[5] = row["driver_qualify"]
+                arrRow[6] = row["driver_start"]
                 arrRow[7] = row["driver_tire"]
-                arrRow[8] = row["driver_wet"]
+                arrRow[8] = row["driver_dummy"]
                 arrRow[9] = row["driver_upgrade_coin_cost"]
                 arrRow[10] = row["driver_cumul_coin_cost"]
                 arrRow[13] = row["driver_asset_level"]
@@ -259,11 +263,11 @@ class DBHandler: ObservableObject {
                 arrRow[0] = row["part_category"]
                 arrRow[1] =  row["part_name"]
                 arrRow[2] =  row["part_level"]
-                arrRow[3] = row["part_power"]
-                arrRow[4] = row["part_aero"]
-                arrRow[5] = row["part_grip"]
+                arrRow[3] = row["part_speed"]
+                arrRow[4] = row["part_corner"]
+                arrRow[5] = row["part_power"]
                 arrRow[6] = row["part_reliability"]
-                arrRow[7] = row["part_pit_stop_time"]
+                arrRow[7] = row["part_pit_time"]
                 arrRow[8] = "0"   // dummy
                 arrRow[9] = row["part_upgrade_coin_cost"]
                 arrRow[10] = row["part_upgrade_cumul_coin_cost"]
@@ -409,7 +413,7 @@ class DBHandler: ObservableObject {
         //print ("!!DBH 385: ", sDriverr[0][14], sDriverr[11][14], sDriverr[22][14], sDriverr[33][14],",", bDriverBoost[0], bDriverBoost[11], bDriverBoost[22], bDriverBoost[33],"\n\n**********\n********\n\n")
         
         
-        // **********************************************************************************************************************************************************
+        // *******************************************************************************************************************************
         // weighted rating and 10% font colours
         // sum of atributes x mult values
         // if [14] is 10% then change font to red
@@ -425,20 +429,14 @@ class DBHandler: ObservableObject {
             }
             
             // multiply the weighted ratings by any 10% boost
-            var dbl1 = Double(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])! + Int(sDriverr[row_ctr][8])! * Int(sMultt[10][1])!)
+            var dbl1 = Double(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])!)
             var dbl2 = Double(sDriverr[row_ctr][14])
             sDriverr[row_ctr][11] = String(format: "%.0f", dbl1 * dbl2!)
-            
-            
-            /*
-             sDriverr[row_ctr][11] = String(format: "%.0f", Double(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])! + Int(sDriverr[row_ctr][8])! * Int(sMultt[10][1])!) * Double(sDriverr[row_ctr][14]))
-             */
-            
-            //            sDriverr[row_ctr][11] = String(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])! + Int(sDriverr[row_ctr][8])! * Int(sMultt[10][1])!)
+
             row_ctr = row_ctr + 1
         }
         
-        // **********************************************************************************************************************************************************
+        // ************************************************************************************************************************************
         // NR normalized rating. normalize out of 100. Find max, in [11], for all drivers and use it to normalize all others.
         
         row_ctr = 0
@@ -560,7 +558,7 @@ class DBHandler: ObservableObject {
             row_ctr = row_ctr + 11
         }
         
-        // **********************************************************************************************************************************************************
+        // *******************************************************************************************************************************************
         // +PR Possible Rating for current PL + 1
         
         row_ctr = 0
@@ -574,7 +572,7 @@ class DBHandler: ObservableObject {
             row_ctr = row_ctr + 11
         }
         
-        // **********************************************************************************************************************************************************
+        // *********************************************************************************************************************************************
         //   ACards/+NCa Needed Cards to go to PL + 1
         
         row_ctr = 0
@@ -593,7 +591,7 @@ class DBHandler: ObservableObject {
             row_ctr = row_ctr + 11
         }
         
-        // **********************************************************************************************************************************************************
+        // *********************************************************************************************************************************************
         // ACoins/+NCo Needed Coins to get to the PL+1. Get cumul coins for PL+1 and subtract cumul coins for CL ie. from rows PL to CL-1
         
         row_ctr = 0
@@ -620,7 +618,7 @@ class DBHandler: ObservableObject {
         }
         
         
-        // **********************************************************************************************************************************************************
+        // **********************************************************************************************************************************************
         // ++PR Possible Rating for current PL + 2
         
         row_ctr = 0
@@ -634,7 +632,7 @@ class DBHandler: ObservableObject {
             row_ctr = row_ctr + 11
         }
         
-        // **********************************************************************************************************************************************************
+        // **********************************************************************************************************************************************
         //   ACards/++NCa Needed Cards to go to PL + 2
         
         row_ctr = 0
@@ -653,7 +651,7 @@ class DBHandler: ObservableObject {
             row_ctr = row_ctr + 11
         }
         
-        // **********************************************************************************************************************************************************
+        // ********************************************************************************************************************************************
         // ACoins/+NCo Needed Coins to get to the PL + 2. Get cumul coins for PL+2 and subtract cumul coins for CL ie. from rows PL+1 to CL-1
 
         
@@ -681,8 +679,12 @@ class DBHandler: ObservableObject {
             row_ctr = row_ctr + 11
         }
         
-        // **********************************************************************************************************************************************************
-        // fill in [31] and [32]= true PR when ACo>NCo. [31] is true PL, [32] is [31]'s PR.
+        // *****************************************************************************************************************************************
+        // Recommended upgrades [31] and [32]
+        // Reset font colour for upgraded Driver and Part in [8]
+        
+        // fill in Recommended PL and correspondong PR: [31] and [32] depending on CR, PR, ACa and ACo
+        
         let sMultStripped = sMultt[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
         var ctrCL = 0
         var ctrPL = 0
@@ -696,11 +698,11 @@ class DBHandler: ObservableObject {
                 sDriverr[row_ctr][31] = sDriverr[row_ctr][17]   // save PL(ACo>NCo) = PL
                 sDriverr[row_ctr][32] = sDriverr[row_ctr][18]   // save PR(ACo>NCo) = PR
             } else if ((sDriverr[row_ctr][15] < sDriverr[row_ctr][17]) &&          // PR[18]
-                       (Double(sMultStripped)! > Double(sDriverr[row_ctr][22])!)) {   // CL<PL and ACo > NCo
+                       (Double(sMultStripped)! > Double(sDriverr[row_ctr][22])!)) {   // PL > CL and ACo > NCo
                 //printArrRow(arrName: sDriverr, xRow: 11)
                 sDriverr[row_ctr][31] = sDriverr[row_ctr][17]   // save PL(ACo>NCo) = PL
-                sDriverr[row_ctr][32] = sDriverr[row_ctr][18]   // save PR(ACo>NCo) = PL
-            } else {      //  CL<PL but there aren't enough coins to get to PL, so figure out if a lower PL can br reached
+                sDriverr[row_ctr][32] = sDriverr[row_ctr][18]   // save PR(ACo>NCo) = PR
+            } else {      //  PL>CL but there aren't enough coins to get to PL, so figure out if a lower PL can be reached. If so, save it in [31 and [32]
                 let startCL = Int(sDriverr[row_ctr][15])!    // CL   2
                 ctrPL = Int(sDriverr[row_ctr][17])!    // PL   6
                 ctrCL = startCL   // counter for CL      2
@@ -730,7 +732,8 @@ class DBHandler: ObservableObject {
                     ctrCL = ctrCL + 1   // next CL
                 }
             }
-            row_ctr = row_ctr + 1
+            sDriverr[row_ctr][8] = "4"    //set upgrade font to black in cmode[]
+            row_ctr = row_ctr + 11
         }   //  row_ctr
         
         // *****  DONE  ******************************************************************************************************************************
@@ -1048,7 +1051,9 @@ class DBHandler: ObservableObject {
                     ctrCL = ctrCL + 1   // next CL
                 }
             }
-            row_ctr = row_ctr + 1
+            sPartt[row_ctr][8] = "4"    //set upgrade font to black in cmode[]
+
+            row_ctr = row_ctr + 11
         }   //  row_ctr
         
         // *****  DONE  ******************************************************************************************************************************************

@@ -83,7 +83,7 @@ struct DriverUpdateView: View {
                             ForEach(Array(stride(from: 0, to: 12, by: 11)), id: \.self) { index_h in     // 2 columns wide
                                 
                                 VStack {
-                                    let ctr: Int = index_v + index_h
+                                    var ctr: Int = index_v + index_h
                                     
                                     HStack {
                                         Text(db.sDriver[ctr][1])
@@ -100,13 +100,35 @@ struct DriverUpdateView: View {
                                             .offset(x:-5,y:0)
                                         Toggle("", isOn: $db.bDriverBoost[ctr])
                                             .onChange(of: db.bDriverBoost[ctr]) { value in     //when toggle changes update 10% multiplier and font colour
-                                               //print ("!!ctr changed: ",ctr)
+                                                
+                                               // toggle on/off driver at common/rare/epic as well
+                                                var currDrBoost = db.bDriverBoost[ctr]
+                                                var ctr1 = ctr
+                                                if (ctr >= 220) {
+                                                    ctr1 = ctr - 220
+                                                } else if (ctr >= 440) {
+                                                    ctr1 = ctr - 440
+                                                }
+                                                print ("!!ctr changed: ",ctr, db.bDriverBoost[ctr], ctr1)
+//                                                db.bDriverBoost[ctr1] = currDrBoost
+//                                                db.bDriverBoost[ctr1 + 220] = currDrBoost
+//                                                db.bDriverBoost[ctr1 + 440] = currDrBoost
+
+                                                
                                                 if (db.bDriverBoost[ctr] && db.sDriver[0][0] == "2") {       // don't change bDriverBoost on initial set-up
-                                                    db.sDriver[ctr][14] = "1.1"
-                                                    db.sDriver[ctr][30] = "5"   //red
+                                                    db.sDriver[ctr1][14] = "1.1"    //boost
+                                                    db.sDriver[ctr1][30] = "5"   //red
+                                                    db.sDriver[ctr1 + 220][14] = "1.1"    // change all same drivers in common, rare and epic
+                                                    db.sDriver[ctr1 + 220][30] = "5"   //red
+                                                    db.sDriver[ctr1 + 440][14] = "1.1"    // change all same drivers in common, rare and epic
+                                                    db.sDriver[ctr1 + 440][30] = "5"   //red
                                                } else {
-                                                   db.sDriver[ctr][14] = "1.0"
-                                                   db.sDriver[ctr][30] = "4"   //black
+                                                   db.sDriver[ctr1][14] = "1.0"   // no boost
+                                                   db.sDriver[ctr1][30] = "4"   //black
+                                                   db.sDriver[ctr1 + 220][14] = "1.0"    // change all same drivers in common, rare and epic
+                                                   db.sDriver[ctr1 + 220][30] = "4"   //black
+                                                   db.sDriver[ctr1 + 440][14] = "1.0"    // change all same drivers in common, rare and epic
+                                                   db.sDriver[ctr1 + 440][30] = "4"   //black
                                                }
                                            }
                                            .offset(x:-15,y:0)

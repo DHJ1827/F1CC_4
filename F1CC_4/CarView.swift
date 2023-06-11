@@ -30,7 +30,7 @@ struct CarSubView: View {
                             .font(.system(size: 9))
                             .frame(width: 120)
                             .background(colorBack)
-                        Text("\(db.sPart[ctr + index_h][15])  \(db.sPart[ctr + index_h][20])/\(db.sPart[ctr + index_h][21])  \(db.sPart[ctr + index_h][17])")
+                        Text("\(db.sPart[ctr + index_h][15])  \(db.sPart[ctr + index_h][20])/\(db.sPart[ctr + index_h][21])  \(db.sPart[ctr + index_h][17])")      // CL ACa NCa  PL
                             .font(.system(size: CGFloat(fontSize[1]), design: .monospaced))
                             .fontWeight(.semibold)
                             .frame(width: 120, alignment: .leading)
@@ -41,28 +41,43 @@ struct CarSubView: View {
                             .frame(width: 120)
                             .background(colorBack)
                         
-                        VStack{
-                            Text("resultsLine4D")
-                                .font(.system(size: 9))
-                                .frame(width: 120)
-                                .background(colorBack)
-                            Text("\(db.sPart[ctr + index_h][16]) \(db.sPart[ctr + index_h][19]) \(db.sPart[ctr + index_h][18])")
-                            //Text("\(sPart[ctr + index_h][16])     \(sPart[0][19])    \(sPart[0][18])")
-                                .font(.system(size: 13, design: .monospaced))
-                                .fontWeight(.semibold)
-                                .frame(width: 120)
-                                .background(colorBack)
-                            Text("NCo")
-                                .font(.system(size: 9, design: .monospaced))
-                                .frame(width: 120, alignment: .center)
-                                .background(colorBack)
-                            Text("\(db.sPart[ctr + index_h][22])")
-                                .font(.system(size: 13, design: .monospaced))
-                                .fontWeight(.semibold)
-                                .frame(width: 120)
-                                .background(colorBack)
-                        } // VStack
-                        
+                        if (db.sSelectedMode == "detailMode") {
+                            VStack{
+                                Text("resultsLine4D")
+                                    .font(.system(size: 9))
+                                    .frame(width: 120)
+                                    .background(colorBack)
+                                Text("\(db.sPart[ctr + index_h][16]) \(db.sPart[ctr + index_h][19]) \(db.sPart[ctr + index_h][18])")
+                                //Text("\(sPart[ctr + index_h][16])     \(sPart[0][19])    \(sPart[0][18])")
+                                    .font(.system(size: 13, design: .monospaced))
+                                    .fontWeight(.semibold)
+                                    .frame(width: 120)
+                                    .background(colorBack)
+                                Text("NCo")
+                                    .font(.system(size: 9, design: .monospaced))
+                                    .frame(width: 120, alignment: .center)
+                                    .background(colorBack)
+                                Text("\(db.sPart[ctr + index_h][22])")
+                                    .font(.system(size: 13, design: .monospaced))
+                                    .fontWeight(.semibold)
+                                    .frame(width: 120)
+                                    .background(colorBack)
+                            } // VStack
+                        } else {      //Basic mode
+                            VStack{
+                                Text("resultsLine4B")
+                                    .font(.system(size: 9))
+                                    .frame(width: 120)
+                                    .background(colorBack)
+                                Text("\(db.sPart[ctr + index_h][16]) \(db.sPart[ctr + index_h][18])")
+                                //Text("\(sPart[ctr + index_h][16])     \(sPart[0][19])    \(sPart[0][18])")
+                                    .font(.system(size: 13, design: .monospaced))
+                                    .fontWeight(.semibold)
+                                    .frame(width: 120)
+                                    .background(colorBack)
+
+                            } // VStack
+                        }
                     }  //VStack
                     .padding(.bottom, 6)
                     
@@ -79,9 +94,9 @@ struct CarView: View {
     
     @EnvironmentObject var db: DBHandler
     
-    @State  var multPower: Double = 100
-    @State  var multAero: Double = 100
-    @State  var multGrip: Double = 100
+    @State  var multSpeed: Double = 100
+    @State  var multCorner: Double = 100
+    @State  var multPowerUnit: Double = 100
     @State  var multReliability: Double = 100
     @State var pitStopTime: Double = 100        // ???????????????????????? where is this pitstop needed, Recs?
     
@@ -148,6 +163,7 @@ struct CarView: View {
                             }
                             .pickerStyle(SegmentedPickerStyle())
                             .frame(width: 165)
+                            .offset(x:20, y:0)
                             
                             Image(db.photoNum)
                                 .resizable()
@@ -170,15 +186,15 @@ struct CarView: View {
                         
                         if (db.sSelectedMode == "detailMode") {
                             VStack(alignment: .trailing, spacing: 5) {      //slder text
-                                
-                                Text ("power")
+
+                                Text ("speed")
                                     .font(.system(size: 11, design: .monospaced))
                                     .frame(maxWidth: 150, alignment: .trailing)
                                     .padding(.bottom, 20)
-                                Text ("aero")
+                                Text ("cornering")
                                     .font(.system(size: 11, design: .monospaced))
                                     .padding(.bottom, 20)
-                                Text ("grip")
+                                Text ("powerUnit")
                                     .font(.system(size: 11, design: .monospaced))
                                     .padding(.bottom, 20)
                                 Text ("reliability")
@@ -188,8 +204,18 @@ struct CarView: View {
                             .offset(x: -5, y:40)
                             
                             VStack(alignment: .leading) {          //sliders
-                                Slider(value: $multPower, in: 0...200,step: 1,onEditingChanged: { data in
-                                    self.alphaToShow = String(Character(UnicodeScalar(Int(self.multPower))!))
+                                HStack {
+                                    Text("+")
+                                        .font(.system(size: 11, design: .monospaced))
+                                        .frame(maxWidth: 30, alignment: .leading)
+                                    Text("-")
+                                        .font(.system(size: 11, design: .monospaced))
+                                        .frame(maxWidth: 30, alignment: .trailing)
+                                        .offset(x:15, y: 0)
+                                }
+                                .offset(x: 0, y: 10)
+                                Slider(value: $multSpeed, in: 0...200,step: 1,onEditingChanged: { data in
+                                    self.alphaToShow = String(Character(UnicodeScalar(Int(self.multSpeed))!))
                                     sliderCalc()
                                 }) {
                                     EmptyView()
@@ -198,8 +224,8 @@ struct CarView: View {
                                 .frame(width: 100)
                                 .offset(x: -5, y: 0)
                                 
-                                Slider(value: $multAero, in: 0...200,step: 1,onEditingChanged: { data in
-                                    self.alphaToShow = String(Character(UnicodeScalar(Int(self.multAero))!))
+                                Slider(value: $multCorner, in: 0...200,step: 1,onEditingChanged: { data in
+                                    self.alphaToShow = String(Character(UnicodeScalar(Int(self.multCorner))!))
                                     sliderCalc()
                                 }) {
                                     EmptyView()
@@ -208,8 +234,8 @@ struct CarView: View {
                                 .frame(width: 100)
                                 .offset(x: -5, y: 0)
                                 
-                                Slider(value: $multGrip, in: 0...200,step: 1,onEditingChanged: { data in
-                                    self.alphaToShow = String(Character(UnicodeScalar(Int(self.multGrip))!))
+                                Slider(value: $multPowerUnit, in: 0...200,step: 1,onEditingChanged: { data in
+                                    self.alphaToShow = String(Character(UnicodeScalar(Int(self.multPowerUnit))!))
                                     sliderCalc()
                                 }) {
                                     EmptyView()
@@ -229,7 +255,7 @@ struct CarView: View {
                                 .offset(x: -5, y: 0)
                                 
                             }  //VStack of sliders
-                            .offset(x:-5, y:30)
+                            .offset(x:-5, y:10)
                         }
                         
                     }  //HStack
@@ -341,17 +367,17 @@ struct CarView: View {
                 print("Child is dismissed")
                 var errCheck = true
                 errMsg = ""
-                if db.sMult[11][1].isEmpty {    //check for empty string
+                if db.sMult[11][1].isEmpty {    //check for empty ACo string
                     db.sMult[11][1] = "0"
                 }
-                // check Coins
+                // check Coins value
                 if (Int(db.sMult[11][1].replacingOccurrences(of: ",", with: ""))! < 0 || Int(db.sMult[11][1].replacingOccurrences(of: ",", with: ""))! > 99999999) {
                     errCheck = false
                     errMsg = "Coins must be between 0 and 99,999,999"
                     showingAlert = true
                 }
                 
-                // check levels
+                // check levels value
                 for ctr in stride(from: 0, to: 461, by: 11) {
                     if (!((0...Int(db.sPart[ctr][29])! ~= Int(db.sPart[ctr][15]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
                         errCheck = false
@@ -360,7 +386,7 @@ struct CarView: View {
                     }
                 }
                 
-                //check cards
+                //check cards value
                 for ctr1 in stride(from: 0, to: 461, by: 11) {
                     if (!((0...99999 ~= Int(db.sPart[ctr1][20]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
                         errCheck = false
@@ -408,9 +434,9 @@ struct CarView: View {
     func start() {
         
         print("CV start()...")
-        multPower = Double(db.sMult[0][1])!
-        multAero = Double(db.sMult[1][1])!
-        multGrip = Double(db.sMult[2][1])!
+        multSpeed = Double(db.sMult[0][1])!
+        multCorner = Double(db.sMult[1][1])!
+        multPowerUnit = Double(db.sMult[2][1])!
         multReliability = Double(db.sMult[3][1])!
         
         db.sPart = db.sPartCalc(sPart: db.sPart, sMult: db.sMult, sCard: db.sCard)      //update calculations
@@ -450,9 +476,9 @@ struct CarView: View {
     
     func sliderCalc() {
         //print("Slider works: ", multPower, multAero)
-        db.sMult[0][1] = String(format: "%.0f", multPower)
-        db.sMult[1][1] = String(format: "%.0f", multAero)
-        db.sMult[2][1] = String(format: "%.0f", multGrip)
+        db.sMult[0][1] = String(format: "%.0f", multSpeed)
+        db.sMult[1][1] = String(format: "%.0f", multCorner)
+        db.sMult[2][1] = String(format: "%.0f", multPowerUnit)
         db.sMult[3][1] = String(format: "%.0f", multReliability)
         do {
             try db.updateMult()
@@ -466,16 +492,23 @@ struct CarView: View {
 
 struct InfoSheetCarView: View {
     var body: some View {
-        ScrollView() {
-            Text("info_contents_part")
-                .font(.system(size: 12))
+        VStack {
+            Text("componentsScreen")
+                .font(.title3)
+                .foregroundColor(.white)
                 .frame(width: 300)
-                .padding()
-        }
+            }
+            .frame(maxWidth: .infinity, maxHeight: 50) // 1
+            .accentColor(Color.black)
+            .background(Color.colours.backgrd_blue)
+            .padding(.bottom, 20)
+        VStack {
+            Text("info_contents_part")
+                .font(.system(size: 14))
+                .frame(width: 300)
+            }
     }
 }
-
-
 
 struct CarView_Previews: PreviewProvider {
     static var previews: some View {

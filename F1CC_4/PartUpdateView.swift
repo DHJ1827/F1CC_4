@@ -119,10 +119,17 @@ struct PartUpdateView: View {
 
 
 
+//struct PartUpdateView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        PartUpdateView(isPartUpdateViewShowing: .constant(true), sDriver: .constant([["0", "Zhou", "1", "12", "7", "11", "9", "5", "3", "1000", "1000", "", "", "1", "0", "10", "", "", "", "", "6789", "", "", "", "", "", "", "", "", "11", ""]]),sPart: .constant([["Brakes", "The Clog", "1", "1", "3", "2", "6", "1", "0", "1000", "1000", "", "", "1", "0", "1", "", "", "", "", "8", "", "", "", "", "", "", "", "", "11", ""]]),sMult: .constant([["iPowerMult", "100"]]),sCard: .constant([["1", "4", "4"]]))
+//    }
+//}
+
 struct PartUpdateView_Previews: PreviewProvider {
     static var previews: some View {
-        PartUpdateView(isPartUpdateViewShowing: .constant(true), sDriver: .constant([["0", "Zhou", "1", "12", "7", "11", "9", "5", "3", "1000", "1000", "", "", "1", "0", "10", "", "", "", "", "6789", "", "", "", "", "", "", "", "", "11", ""]]),sPart: .constant([["Brakes", "The Clog", "1", "1", "3", "2", "6", "1", "0", "1000", "1000", "", "", "1", "0", "1", "", "", "", "", "8", "", "", "", "", "", "", "", "", "11", ""]]),sMult: .constant([["iPowerMult", "100"]]),sCard: .constant([["1", "4", "4"]]))
+        Text("Hello preview")
     }
-}
+    
+}   // struct()
 
 

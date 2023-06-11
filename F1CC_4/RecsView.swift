@@ -13,7 +13,7 @@ import GoogleMobileAds
 struct RecsSubView: View {
     
     @EnvironmentObject var db: DBHandler
-    let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic]
+    let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic, Color.black, Color.red]
     @State var fontSize: [Int] = Array(repeating: 13, count: 461)
     var ctr_start: Int
     var ctr_stop: Int
@@ -53,15 +53,18 @@ struct RecsSubView: View {
                         //Text("\(CLStart) \(CLMid) CL \(CLEnd)")
                         //Text("CL\(CLMidd)")
                         
+                        //Text(String(RecNumber))  // Translated(Name CL CR PL ACa NCo)
+                        
                         Text("resultRecs1")  // Translated(Name CL CR PL ACa NCo)
                             .font(.system(size: 9, design: .monospaced))
                             .fontWeight(.regular)
                             .frame(width: 320, alignment: .leading)
                             .background(cmode[Int(db.sPart[RecNumber][13])!])
-                        Text(RecsDispParts[index_v/11 * 4])     // string 0
+                        Text(RecsDispParts[index_v/11 * 4])     // string 0  Part Name and stats
                             .font(.system(size: 13, design: .monospaced))
                             .fontWeight(.semibold)
                             .frame(width: 320, alignment: .leading)
+                            .foregroundColor(cmode[Int(db.sPart[RecNumber ][8])!])
                             .background(cmode[Int(db.sPart[RecNumber][13])!])
                     }
                     .border(.black)
@@ -143,9 +146,12 @@ struct RecsView: View {
     @State var maxLH = 0   // and its CL factor length
     @State var maxRH = 0   // and its PL factor length
     @State var longestLength = 0
-    @State var teamScore:Int = 0
+    @State var iTeamScore:Int = 0
     @State var STDriverRecID:Int = 0     //dummy integer
     @State var STPartRecID:Int = 0   // dummy integer
+    @State var sMultStripped = "0"
+    @State var DrRecCase = 0   //driver recommendation case 1-5
+    @State var PaRecCase = 0  //parts recommendation case 1-2
     
     @State private var showingInfoSheet = false
     
@@ -163,9 +169,11 @@ struct RecsView: View {
     
     @State var Spaces = "                                              "
     
-    let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic]
-    let factors = ["Power", "Aero", "Grip", "Reliability", "Pit Stop Time", "Overtaking", "Defending", "Consistency", "Fuel Management", "Tire Management", "Wet Weather Ability"]
+    let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic, Color.black, Color.red]
+    let factors = ["Speed", "Cornering", "Power Unit", "Reliability", "Pit Stop Time", "Overtaking", "Defending", "Qualifying", "Race Start", "Tire Management", "Wet Weather Ability"]
     let assetLevel = ["","common", "rare", "epic"]
+    let maxLevel = [0,11,9,8]
+    
     
     @State var RecsDisp: [[String]]  = Array(repeating: Array(repeating: "", count: 9), count: 22)     //Detailed strings for 22 drivers and parts, each with 1st line, 2nd line, 3rd line and 4th-9th for Driver details or 4th-7th for Parts details
     @State var RecsDispDriver: [String]  = Array(repeating: "", count: 36)
@@ -206,50 +214,48 @@ struct RecsView: View {
                 }    //ZStack
                 
             }    //VStack
-            VStack(alignment: .center) {     //  picker, image, button
-                
-                Picker(selection: $db.sSelectedMode, label: Text("Mode:")) {
-                    Text("basicMode").tag("basicMode")
-                    Text("detailMode").tag("detailMode")
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .frame(width: 150)
-                
-            }   //VStack
+            
             
             Spacer(minLength: 15)
             
-            if (db.sSelectedMode == "detailMode") {
+            if (db.sSelectedMode == "detailMode") {     // detail mode
                 
-                VStack {
-                    Text("legend")
-                        .font(.system(size: 11))
-                        .frame(width: 100)
-                    HStack(spacing: 0) {
-                        /*
-                         Image(db.photoNum)
-                         .resizable()
-                         .frame(width: 150, height: 150)
-                         .offset(x: 5, y: 0)
-                         */
+                HStack(alignment: .top) {
+                        
+                        Picker(selection: $db.sSelectedMode, label: Text("Mode:")) {
+                            Text("basicMode").tag("basicMode")
+                            Text("detailMode").tag("detailMode")
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .frame(width: 150)
+                        .offset(x:-40, y:0)
+                        
+                    
+                    
+                    VStack {     // legends together for colours and acronyms
+                        Text("legend")
+                            .font(.system(size: 13))
+                            .frame(width: 100)
+                        
                         VStack {
                             Text("common")
                                 .font(.system(size: 11))
-                                .frame(width: 100)
+                                .frame(width: 130)
                                 .background(cmode[1])
                             
                             Text("rare")
                                 .font(.system(size: 11))
-                                .frame(width: 100)
+                                .frame(width: 130)
                                 .background(cmode[2])
                             
                             Text("epic")
                                 .font(.system(size: 11))
-                                .frame(width: 100)
+                                .frame(width: 130)
                                 .background(cmode[3])
                             
                         }
-                        
+                        .border(.black)
+                        Spacer(minLength: 3)
                         VStack {
                             Text("ST_recs")
                                 .font(.system(size: 11))
@@ -264,52 +270,63 @@ struct RecsView: View {
                                 .frame(width: 130)
                             
                         }
-                        
+                        .border(.black)
                     }
-                    .border(.black)
-                    
-                    Spacer(minLength: 35)
-                    Text("recommendations")
-                        .font(.system(size: 16, weight: .bold, design: .default))
-                    Spacer(minLength: 15)
-                    
-                    HStack(spacing: 0) {
-                        Text("ST")   //ST Driver Rec1
-                            .font(.system(size: 12))
-                            .frame(width: 20)
-                        Text(db.sDriver[Int(Recs[0][0])][1])   //ST Driver Rec1
-                            .font(.system(size: 16))
-                            .fontWeight(.semibold)
-                            .frame(width: 120)
-                            .background(cmode[Int(db.sDriver[Int(Recs[0][0])][13])!])
-                        Text(db.sDriver[Int(Recs[1][0])][1])   //ST Driver Rec2
-                            .font(.system(size: 16))
-                            .fontWeight(.semibold)
-                            .frame(width: 120)
-                            .background(cmode[Int(db.sDriver[Int(Recs[1][0])][13])!])
-                    }
-                    HStack(spacing: 0) {
-                        Text("MT")   //MT Driver Rec
-                            .font(.system(size: 12))
-                            .frame(width: 20)
-                        Text(db.sDriver[Int(Recs[2][0])][1])   //MT Driver Rec
-                            .font(.system(size: 16))
-                            .fontWeight(.semibold)
-                            .frame(width: 240)
-                            .background(cmode[Int(db.sDriver[Int(Recs[2][0])][13])!])
-                    }
-                    HStack(spacing: 0) {
-                        Text("LT")   //LT Driver Rec
-                            .font(.system(size: 12))
-                            .frame(width: 20)
-                        
-                        Text(db.sDriver[Int(Recs[3][0])][1])   //LT Driver Rec
-                            .font(.system(size: 16))
-                            .fontWeight(.semibold)
-                            .frame(width: 240)
-                            .background(cmode[Int(db.sDriver[Int(Recs[3][0])][13])!])
-                    }
+                    .offset(x:20, y:0)
                 }
+                
+                Spacer(minLength: 35)
+                
+// ************************************************************************************************************************************
+// ******    Top of Details Tables- Driver  and Parts tables
+// ************************************************************************************************************************************
+                
+                VStack{
+                    Text("recommendations")
+                    .font(.system(size: 16, weight: .bold, design: .default))
+                Spacer(minLength: 15)
+                
+                HStack(spacing: 0) {
+                    Text("ST")   //ST Driver Rec1
+                        .font(.system(size: 12))
+                        .frame(width: 20)
+                    Text(db.sDriver[Int(Recs[0][0])][1])   //ST Driver Rec1
+                        .font(.system(size: 14))
+                        .fontWeight(.semibold)
+                        .frame(width: 120)
+                        .foregroundColor(cmode[Int(db.sDriver[Int(Recs[0][0])][8])!])
+                        .background(cmode[Int(db.sDriver[Int(Recs[0][0])][13])!])
+                    Text(db.sDriver[Int(Recs[1][0])][1])   //ST Driver Rec2
+                        .font(.system(size: 14))
+                        .fontWeight(.semibold)
+                        .frame(width: 120)
+                        .foregroundColor(cmode[Int(db.sDriver[Int(Recs[1][0])][8])!])
+                        .background(cmode[Int(db.sDriver[Int(Recs[1][0])][13])!])
+                }
+                HStack(spacing: 0) {
+                    Text("MT")   //MT Driver Rec
+                        .font(.system(size: 12))
+                        .frame(width: 20)
+                    Text(db.sDriver[Int(Recs[2][0])][1])   //MT Driver Rec
+                        .font(.system(size: 14))
+                        .fontWeight(.semibold)
+                        .frame(width: 240)
+                        .background(cmode[Int(db.sDriver[Int(Recs[2][0])][13])!])
+                }
+                HStack(spacing: 0) {
+                    Text("LT")   //LT Driver Rec
+                        .font(.system(size: 12))
+                        .frame(width: 20)
+                    
+                    Text(db.sDriver[Int(Recs[3][0])][1])   //LT Driver Rec
+                        .font(.system(size: 14))
+                        .fontWeight(.semibold)
+                        .frame(width: 240)
+                        .background(cmode[Int(db.sDriver[Int(Recs[3][0])][13])!])
+                }
+                
+            }
+            
                 Spacer(minLength: 25)
                 VStack{                                   // ST, MT and LT Parts Recs Block 1
                     HStack {
@@ -317,60 +334,63 @@ struct RecsView: View {
                             .font(.system(size: 12))
                             .frame(width: 20)
                         Text(db.sPart[Int(Recs[4][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[4][0])][13])!])
+                            .foregroundColor(cmode[Int(db.sPart[Int(Recs[4][0])][8])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[4][0])][13])!])
                         Text(db.sPart[Int(Recs[7][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[5][0])][13])!])
+                            .foregroundColor(cmode[Int(db.sPart[Int(Recs[7][0])][8])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[7][0])][13])!])
                         Text(db.sPart[Int(Recs[10][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[6][0])][13])!])
+                            .foregroundColor(cmode[Int(db.sPart[Int(Recs[10][0])][8])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[10][0])][13])!])
                     }
                     HStack {
                         Text("MT")   //MT Parts Rec
                             .font(.system(size: 12))
                             .frame(width: 20)
                         Text(db.sPart[Int(Recs[5][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[7][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[5][0])][13])!])
                         Text(db.sPart[Int(Recs[8][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[8][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[8][0])][13])!])
                         Text(db.sPart[Int(Recs[11][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[9][0])][13])!])
+                            .background(cmode[Int(db.sDriver[Int(Recs[11][0])][13])!])
                     }
                     HStack {
                         Text("LT")   //LT Parts Rec
                             .font(.system(size: 12))
                             .frame(width: 20)
                         Text(db.sPart[Int(Recs[6][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[10][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[6][0])][13])!])
                         Text(db.sPart[Int(Recs[9][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[11][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[9][0])][13])!])
                         Text(db.sPart[Int(Recs[12][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[12][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[12][0])][13])!])
                     }
                 }   //VStack
                 Spacer(minLength: 25)
@@ -380,20 +400,23 @@ struct RecsView: View {
                             .font(.system(size: 12))
                             .frame(width: 20)
                         Text(db.sPart[Int(Recs[13][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[13][0])][13])!])
+                            .foregroundColor(cmode[Int(db.sPart[Int(Recs[13][0])][8])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[13][0])][13])!])
                         Text(db.sPart[Int(Recs[16][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[14][0])][13])!])
+                            .foregroundColor(cmode[Int(db.sPart[Int(Recs[16][0])][8])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[16][0])][13])!])
                         Text(db.sPart[Int(Recs[19][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[15][0])][13])!])
+                            .foregroundColor(cmode[Int(db.sPart[Int(Recs[19][0])][8])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[19][0])][13])!])
                     }
                     
                     HStack {
@@ -401,49 +424,53 @@ struct RecsView: View {
                             .font(.system(size: 12))
                             .frame(width: 20)
                         Text(db.sPart[Int(Recs[14][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[16][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[14][0])][13])!])
                         Text(db.sPart[Int(Recs[17][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[17][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[17][0])][13])!])
                         Text(db.sPart[Int(Recs[20][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[18][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[20][0])][13])!])
                     }
                     HStack {
                         Text("LT")   //LT Parts Rec
                             .font(.system(size: 12))
                             .frame(width: 20)
                         Text(db.sPart[Int(Recs[15][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[19][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[15][0])][13])!])
                         Text(db.sPart[Int(Recs[18][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[20][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[18][0])][13])!])
                         Text(db.sPart[Int(Recs[21][0])][1])
-                            .font(.system(size: 16))
+                            .font(.system(size: 14))
                             .fontWeight(.semibold)
                             .frame(width: 110)
-                            .background(cmode[Int(db.sDriver[Int(Recs[21][0])][13])!])
+                            .background(cmode[Int(db.sPart[Int(Recs[21][0])][13])!])
                     }
                     
                     Spacer(minLength: 15)
                     
+// ************************************************************************************************************************************
+// ******    Middle of Details- Coins, Pit Stop Time, Team Score
+// ************************************************************************************************************************************
+
                     VStack(alignment: .center) {
                         HStack{
                             Text("coins \(db.sMult[11][1])")       // Coins display
                                 .font(.system(size: 14, weight: .bold, design: .default))
-                                .frame(minWidth: 100, minHeight: 30, alignment: .center)
+                                .frame(minWidth: 175, minHeight: 30, alignment: .center)
                                 .padding(.horizontal, 10)
                                 .foregroundColor(Color.white)
                                 .background(Color.colours.backgrd_blue)
@@ -455,7 +482,7 @@ struct RecsView: View {
                             let pitString: String = String(Double(Int(pitStopTime * 100))/100) + " s."
                             Text("pitStopTime \(pitString)")
                                 .font(.system(size: 14, weight: .bold, design: .default))
-                                .frame(minWidth: 100, minHeight: 30, alignment: .center)
+                                .frame(minWidth: 250, minHeight: 30, alignment: .center)
                                 .padding(.horizontal, 10)
                                 .foregroundColor(Color.white)
                                 .background(Color.colours.backgrd_blue)
@@ -464,9 +491,10 @@ struct RecsView: View {
                         Spacer(minLength: 15)
                         
                         VStack(alignment: .center) {
-                            Text("teamScore \(teamScore)")
+                            //Text("teamScore \(iTeamScore)")
+                            Text("teamScore \(String(iTeamScore))")
                                 .font(.system(size: 14, weight: .bold, design: .default))
-                                .frame(minWidth: 100, minHeight: 30, alignment: .center)
+                                .frame(minWidth: 250, minHeight: 30, alignment: .center)
                                 .padding(.horizontal, 10)
                                 .foregroundColor(Color.white)
                                 .background(Color.colours.backgrd_blue)
@@ -478,6 +506,10 @@ struct RecsView: View {
                 }
                 
                 Spacer(minLength: 15)
+
+// ************************************************************************************************************************************
+// ******    Bottom of Details- Driver and parts statistics
+// ************************************************************************************************************************************
                 
                 VStack(alignment: .leading) {
                     Text("driver")
@@ -488,63 +520,120 @@ struct RecsView: View {
                     ForEach(Array(stride(from: 0, to: 34, by: 11)), id: \.self) { index_v in
                         
                         let sDriverList: [String] = ["ST", "ST", "MT", "LT"]
-                        let iDriverTerm = Int(index_v)/11      // index_v is not an Int- needs to be cast first !!!!!!!
+                        var iDriverTerm = Int(index_v)/11      // index_v is not an Int- needs to be cast first !!!!!!!
                         let transDriverString = LocalizedStringKey(sDriverList[iDriverTerm]) // works
+                        let colorInt2: Int = Int(db.sDriver[index_v][30])!
+                        let colorFont = cmode[colorInt2]      //  get the level and apply the right background colour to it
                         
                         HStack(alignment: .top) {
                             
-                            Text(transDriverString)   //  choose ST, ST, MT and then LT for the 4 drivers recs
-                                .font(.system(size: 12))
-                                .frame(width: 20)
-                            VStack {
-                                let RecNumber: Int = Int(Recs[index_v/11][0])
+                            if (iDriverTerm <= 1) {   // ST Drivers, highlight immediate upgrade recommendations with red font
+                                
+                                Text(transDriverString)   //  choose ST, ST, MT and then LT for the 4 drivers recs
+                                    .font(.system(size: 12))
+                                    .frame(width: 20)
                                 VStack {
-                                    //Text("1234567890123456789012345678901234567890123456789012345")  // to be commented
-                                    Text("resultRecs1")  // Translated(Name CL CR PL ACa NCo)
-                                        .font(.system(size: 9, design: .monospaced))
-                                        .fontWeight(.regular)
-                                        .frame(width: 320, alignment: .leading)
-                                        .background(cmode[Int(db.sDriver[RecNumber][13])!])
+                                    let RecNumber: Int = Int(Recs[index_v/11][0])
                                     
-                                    Text(RecsDispDriver[index_v/11 * 4])     // string 0
-                                        .font(.system(size: 13, design: .monospaced))
-                                        .fontWeight(.semibold)
-                                        .frame(width: 320, alignment: .leading)
-                                        .background(cmode[Int(db.sDriver[RecNumber][13])!])
-                                }
-                                .border(.black)
+                                    VStack {
+                                        //Text("1234567890123456789012345678901234567890123456789012345")  // to be commented
+                                        Text("resultRecs1")  // Translated(Name CL CR PL ACa NCo)
+                                            .font(.system(size: 9, design: .monospaced))
+                                            .fontWeight(.regular)
+                                            .frame(width: 320, alignment: .leading)
+                                            .background(cmode[Int(db.sDriver[RecNumber][13])!])
+                                        
+                                        Text(RecsDispDriver[index_v/11 * 4])     // string 0, 4, 8, 12   Driver name and stats
+                                            .font(.system(size: 13, design: .monospaced))
+                                            .fontWeight(.semibold)
+                                            .frame(width: 320, alignment: .leading)
+                                            .foregroundColor(cmode[Int(db.sDriver[RecNumber][8])!])      //66, 0, 66, 66
+                                            .background(cmode[Int(db.sDriver[RecNumber][13])!])
+                                    }
+                                    .border(.black)
+                                    
+                                    VStack {
+                                        Text("resultRecs2")    //  Translated(PL PR MR NCa NCo)
+                                            .font(.system(size: 9, design: .monospaced))
+                                            .fontWeight(.regular)
+                                            .frame(width: 320, alignment: .leading)
+                                        Text(RecsDispDriver[index_v/11 * 4 + 1])     // string 1, can be multi-line
+                                            .font(.system(size: 13, design: .monospaced))
+                                            .fontWeight(.semibold)
+                                            .frame(width: 320, alignment: .leading)
+                                    }
+                                    .border(.black)
+                                    VStack {
+                                        Text(RecsDispDriver[index_v/11 * 4 + 2])     // string 2, CL=x  PL=y
+                                            .font(.system(size: 9, design: .monospaced))
+                                            .fontWeight(.regular)
+                                            .frame(width: 320, alignment: .leading)
+
+                                        Text(RecsDispDriver[index_v/11 * 4 + 3])     // string 3, can be multi-line
+                                            .font(.system(size: 13, design: .monospaced))
+                                            .fontWeight(.semibold)
+                                            .frame(width: 320, alignment: .leading)
+                                    }
+                                    .border(.black)
+                                }   //VStack
+                                
+                            } else {      // MT, LT Drivers so no immediate upgrade recommendations
+                                Text(transDriverString)   //  choose ST, ST, MT and then LT for the 4 drivers recs
+                                    .font(.system(size: 12))
+                                    .frame(width: 20)
                                 VStack {
-                                    Text("resultRecs2")    //  Translated(PL PR MR NCa NCo)
-                                        .font(.system(size: 9, design: .monospaced))
-                                        .fontWeight(.regular)
-                                        .frame(width: 320, alignment: .leading)
-                                    Text(RecsDispDriver[index_v/11 * 4 + 1])     // string 1, can be multi-line
-                                        .font(.system(size: 13, design: .monospaced))
-                                        .fontWeight(.semibold)
-                                        .frame(width: 320, alignment: .leading)
-                                }
-                                .border(.black)
-                                VStack {
-                                    Text(RecsDispDriver[index_v/11 * 4 + 2])     // string 2, CL=x  PL=y
-                                        .font(.system(size: 9, design: .monospaced))
-                                        .fontWeight(.regular)
-                                        .frame(width: 320, alignment: .leading)
-                                    //.background(cmode[Int(db.sDriver[ctr][13])!])
-                                    // Text("123456789012345678901234567890123456789")
-                                    // .font(.system(size: 13, design: .monospaced))
-                                    // .fontWeight(.semibold)
-                                    // .frame(width: 320, alignment: .center)
-                                    Text(RecsDispDriver[index_v/11 * 4 + 3])     // string 3, can be multi-line
-                                        .font(.system(size: 13, design: .monospaced))
-                                        .fontWeight(.semibold)
-                                        .frame(width: 320, alignment: .leading)
-                                }
-                                .border(.black)
+                                    let RecNumber: Int = Int(Recs[index_v/11][0])
+                                    
+                                    VStack {
+                                        //Text("1234567890123456789012345678901234567890123456789012345")  // to be commented
+                                        Text("resultRecs1")  // Translated(Name CL CR PL ACa NCo)
+                                            .font(.system(size: 9, design: .monospaced))
+                                            .fontWeight(.regular)
+                                            .frame(width: 320, alignment: .leading)
+                                            .background(cmode[Int(db.sDriver[RecNumber][13])!])
+                                        
+                                        Text(RecsDispDriver[index_v/11 * 4])     // string 0, 4, 8, 12   Driver name and stats
+                                            .font(.system(size: 13, design: .monospaced))
+                                            .fontWeight(.semibold)
+                                            .frame(width: 320, alignment: .leading)
+                                            .foregroundColor(Color.black)      //66, 0, 66, 66
+                                            .background(cmode[Int(db.sDriver[RecNumber][13])!])
+                                    }
+                                    .border(.black)
+                                    
+                                    VStack {
+                                        Text("resultRecs2")    //  Translated(PL PR MR NCa NCo)
+                                            .font(.system(size: 9, design: .monospaced))
+                                            .fontWeight(.regular)
+                                            .frame(width: 320, alignment: .leading)
+                                        Text(RecsDispDriver[index_v/11 * 4 + 1])     // string 1, can be multi-line
+                                            .font(.system(size: 13, design: .monospaced))
+                                            .fontWeight(.semibold)
+                                            .frame(width: 320, alignment: .leading)
+                                    }
+                                    .border(.black)
+                                    VStack {
+                                        Text(RecsDispDriver[index_v/11 * 4 + 2])     // string 2, CL=x  PL=y
+                                            .font(.system(size: 9, design: .monospaced))
+                                            .fontWeight(.regular)
+                                            .frame(width: 320, alignment: .leading)
+
+                                        Text(RecsDispDriver[index_v/11 * 4 + 3])     // string 3, can be multi-line
+                                            .font(.system(size: 13, design: .monospaced))
+                                            .fontWeight(.semibold)
+                                            .frame(width: 320, alignment: .leading)
+                                    }
+                                    .border(.black)
+                                }   //VStack
                             }
-                        }
+                            
+                            
+                            
+                            
+                        }  //HStack
                         Spacer(minLength: 15)
                     }
-                    
+                    // *******  Detail Parts lower details
                     //  44 55 66, 77 88 99, 110 121 132, 143 154 165, 176 187 198, 209 220 231
                     
                     VStack(alignment: .leading) {
@@ -600,7 +689,12 @@ struct RecsView: View {
                     
                 }  //VStack
             } else {
-                VStack {    //    Basic
+            
+// ************************************************************************************************************************************
+// ******    Top of Basic- Driver recommendations
+// ************************************************************************************************************************************
+                
+                VStack {    //    Basic mode
                     
                     // WORKING Text("driver") + Text(": ") + Text(CLStart) + Text("cancel") + Text(" lol, \(CLMid) the end")
                     
@@ -619,21 +713,41 @@ struct RecsView: View {
                     
                     // You should select A.
                     // You should select A after upgrading A to level 4.
-                    
+                    VStack(alignment: .center) {     //  picker
+                        
+                        Picker(selection: $db.sSelectedMode, label: Text("Mode:")) {
+                            Text("basicMode").tag("basicMode")
+                            Text("detailMode").tag("detailMode")
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .frame(width: 150)
+                        
+                    }   //VStack
                     Spacer(minLength: 20)
                     
-                    Text("driver")
+                    Text("driverSummary")
                         .font(.system(size: 14, weight: .bold, design: .default))
                         .frame(minWidth: 100, minHeight: 30, alignment: .center)
                         .padding(.horizontal, 10)
                         .foregroundColor(Color.white)
                         .background(Color.colours.backgrd_blue)
                     
+                    
                     VStack {
-                        if ((db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) && (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17])) {
+                        if (DrRecCase == 1) {   // no upgrades possible, select 2 drivers
                             Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")")
-                        } else {
-                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")") + Text("basicOneUpgrade \(db.sDriver[STDriverRecID][1]) \(db.sDriver[STDriverRecID][31])")
+                            
+                        } else if (DrRecCase == 2) {   // upgrade D0 immediately
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[0][0])][31])").foregroundColor(.red) + Text("immediate")
+                        
+                        } else if (DrRecCase == 3) {   // upgrade D1 immediately
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[1][0])][1]) \(db.sDriver[Int(Recs[1][0])][31])").foregroundColor(.red) + Text("immediate")
+                        
+                        } else if (DrRecCase == 4) {    // upgrade D0 as soon as possible
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[0][0])][1]) \(db.sDriver[Int(Recs[0][0])][31])") + Text("asSoon")
+                            
+                        } else if (DrRecCase == 5) {   // upgrade D1 as soon as possible
+                            Text("basicDrSelect \(db.sDriver[Int(Recs[0][0])][1])") + Text("(") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) + Text(") ") + Text("and") + Text(" ") + Text(db.sDriver[Int(Recs[1][0])][1]) + Text(" (") + Text(LocalizedStringKey(assetLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) + Text(")") + Text("basicOneUpgrade \(db.sDriver[Int(Recs[1][0])][1]) \(db.sDriver[Int(Recs[1][0])][31])") + Text("asSoon")
                         }
                         
                     }
@@ -642,7 +756,11 @@ struct RecsView: View {
                     
                     Spacer(minLength: 20)
                     
-                    Text("components")
+// ************************************************************************************************************************************
+// ******    Top of Basic- Parts recommendations
+// ************************************************************************************************************************************
+                    
+                    Text("componentsSummary")
                         .font(.system(size: 14, weight: .bold, design: .default))
                         .frame(minWidth: 100, minHeight: 30, alignment: .center)
                         .padding(.horizontal, 10)
@@ -651,20 +769,33 @@ struct RecsView: View {
                     
                     VStack(alignment: .leading) {
                         Group {
-                            //if (db.sPart[Int(Recs[4][0])][15] == db.sPart[Int(Recs[4][0])][17]) {
-                            if (STPartRecID <=  76 ) {
-                                Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[4][0])][31])") + Text(" \n")
-                            } else {
-                                Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text(" \n")
+                            if (STPartRecID <=  76) {
+                                switch PaRecCase {
+                                case 1:
+                                    Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[4][0])][31])").foregroundColor(.red) + Text("immediate") + Text(" \n")
+                                case 2:
+                                    Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[4][0])][31])") + Text("asSoon") + Text(" \n")
+                                default:
+                                    Text("brakes") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[4][0])][1])") + Text(" \n")
+                                }
                             }
                             
                             if (STPartRecID >  76 && STPartRecID <=  153 ) {
-                                Text("gearbox") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[7][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[7][0])][31])") + Text(" \n")
+                                if (PaRecCase == 1) {
+                                    Text("gearbox") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[7][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[7][0])][31])").foregroundColor(.red) + Text("immediate") + Text(" \n")
+                                } else {
+                                    Text("gearbox") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[7][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[7][0])][31])") + Text("asSoon") + Text(" \n")
+                                }
                             } else {
                                 Text("gearbox") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[7][0])][1])") + Text(" \n")
                             }
+                            
                             if (STPartRecID >  153 && STPartRecID <=  230 ) {
-                                Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[10][0])][31])") + Text(" \n")
+                                if (PaRecCase == 1) {
+                                    Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[10][0])][31])").foregroundColor(.red) + Text("immediate") + Text(" \n")
+                                } else {
+                                    Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[10][0])][31])") + Text("asSoon") + Text(" \n")
+                                }
                             } else {
                                 Text("rearwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[10][0])][1])") + Text(" \n")
                             }
@@ -673,17 +804,31 @@ struct RecsView: View {
                         
                         Group {
                             if (STPartRecID >  230 && STPartRecID <= 307 ) {
-                                Text("frontwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[13][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[13][0])][31])") + Text(" \n")
+                                if (PaRecCase == 1) {
+                                    Text("frontwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[13][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[13][0])][31])").foregroundColor(.red) + Text("immediate") + Text(" \n")
+                                } else {
+                                    Text("frontwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[13][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[13][0])][31])") + Text("asSoon") + Text(" \n")
+                                }
                             } else {
                                 Text("frontwing") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[13][0])][1])") + Text(" \n")
                             }
+                            
                             if (STPartRecID >  307 && STPartRecID <=  384 ) {
-                                Text("suspension") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[16][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[16][0])][31])") + Text(" \n")
+                                if (PaRecCase == 1) {
+                                    Text("suspension") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[16][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[16][0])][31])").foregroundColor(.red) + Text("immediate") + Text(" \n")
+                                } else {
+                                    Text("suspension") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[16][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[16][0])][31])") + Text("asSoon") + Text(" \n")
+                                }
                             } else {
                                 Text("suspension") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[16][0])][1])") + Text(" \n")
                             }
+                            
                             if (STPartRecID > 384 ) {
-                                Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[19][0])][31])") + Text(" \n")
+                                if (PaRecCase == 1) {
+                                    Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[19][0])][31])").foregroundColor(.red) + Text("immediate") + Text(" \n")
+                                } else {
+                                    Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])") + Text("basicPaUpgrade \(db.sPart[Int(Recs[19][0])][31])") + Text("asSoon") + Text(" \n")
+                                }
                             } else {
                                 Text("engine") + Text(": ") + Text("basicPaSelect \(db.sPart[Int(Recs[19][0])][1])")
                             }
@@ -693,13 +838,13 @@ struct RecsView: View {
                     
                     Spacer(minLength: 20)
                     
-                    Text("teamScore \(teamScore)")
+                    Text("teamScore \(String(iTeamScore))")
                         .font(.system(size: 14, weight: .bold, design: .default))
                         .padding()
                         .border(Color.colours.backgrd_blue, width: 4)
                         .multilineTextAlignment(.center)
                     
-                    (Text(Image(systemName: "exclamationmark.octagon")) + Text("\n") + Text("rememberRecs"))
+                    (Text(Image(systemName: "exclamationmark.octagon")) + Text("rememberRecs"))
                         .font(.system(size: 16, weight: .bold, design: .default))
                         .padding()
                         .border(Color.colours.backgrd_blue, width: 4)
@@ -756,8 +901,9 @@ struct RecsView: View {
         commFormatter.locale = .current
         commFormatter.numberStyle = .decimal
         //print("!!1", db.sMult[11][1])
-        //db.sMult[11][1] = commFormatter.string(from: Int(db.sMult[11][1].replacingOccurrences(of: ",", with: ""))! as NSNumber)!   //update format for coins
-        let sMultStripped = db.sMult[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
+
+        sMultStripped = db.sMult[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
+        
         //print("!!2", db.sMult[11][1])
         //print("!!", sMultStripped)
         
@@ -774,11 +920,16 @@ struct RecsView: View {
         }
         
         print("!!adMobCtr= ",db.adMobCtr)
+        
+        
         //*********************************************************************************************************
         //  ST Driver     Recs[0][0] is the id of the highest CR or PR for drivers, [0][1] is the CR for that id
         //                Recs[1][0] is the id of the 2nd highest CR or PR for drivers, [1[1] is the CR for that id
         //   Take a look at Rec[0] and [1]. Find the largest PR and recommend its upgraded first.
         // For parts, do the same ie. which part gives the largest PR boost
+        
+        // STDriverRecId is the best driver id to be upgraded
+        
         row_ctr = 0
         Recs[0][0] = Double(row_ctr)    // clear array to start over
         Recs[0][1] = Double(row_ctr)
@@ -807,14 +958,35 @@ struct RecsView: View {
 
             row_ctr = row_ctr + 11      //next driver
         }
-        // now find out the id to be upgraded
-        if ((Double(db.sDriver[Int(Recs[0][0])][32])! - Double(db.sDriver[Int(Recs[0][0])][16])!) >= (Double(db.sDriver[Int(Recs[1][0])][32])! - Double(db.sDriver[Int(Recs[1][0])][16])!)) {    // Recs0 PR > Recs1 PR
-            STDriverRecID = Int(Recs[0][0])
-        } else {
-            STDriverRecID = Int(Recs[1][0])
-        }
-
         
+        //  Five Cases for Driver Upgrades
+        // 1. All levels equal: if D0 CL=PL and D1 CL=PL then no upgrade. msg: Select D0 and D1
+        // 2. is D0 upgradeable: else if (ACa>NCa and ACo>NCo and D0 CL is not max), D0 font red,  msg: Select D1 and D0 and upgrade D0 immediately
+        // 3. else is D1 upgradeable: else if (ACa>NCa and ACo>NCo and D1 CL is not max), D1 font red,  msg: Select D0 and D1 and upgrade D1 immediately
+        // 4. otherwise: else if (RecPR0-PR0 > RecPR1-PR1) and D0 is not max. msg: Select D0 and D1 and upgrade D0 ASAP
+        // 5. else if (RecPR1-PR1 > RecPR0-PR0) and D1 is not max.  msg: Select D0 and D1 and upgrade D0 ASAP
+        
+        if ((db.sDriver[Int(Recs[0][0])][15] == db.sDriver[Int(Recs[0][0])][17]) && (db.sDriver[Int(Recs[1][0])][15] == db.sDriver[Int(Recs[1][0])][17])) {
+            DrRecCase = 1;
+        } else if ((Double(sMultStripped)! > Double(db.sDriver[Int(Recs[0][0])][22])!) &&                            // ACo > NCo
+            (Double(db.sDriver[Int(Recs[0][0])][20])! > Double(db.sDriver[Int(Recs[0][0])][21])!) &&         // ACa > NCa
+            ((Int(db.sDriver[Int(Recs[0][0])][15])!) != maxLevel[Int(db.sDriver[Int(Recs[0][0])][13])!])) {  // CL is not maxLvl
+            DrRecCase = 2;
+            db.sDriver[Int(Recs[0][0])][8] = "5"    // set the immediate upgrade font to red
+        } else if ((Double(sMultStripped)! > Double(db.sDriver[Int(Recs[1][0])][22])!) &&                            // ACo > NCo
+            (Double(db.sDriver[Int(Recs[1][0])][20])! > Double(db.sDriver[Int(Recs[1][0])][21])!) &&         // ACa > NCa
+            ((Int(db.sDriver[Int(Recs[1][0])][15])!) != maxLevel[Int(db.sDriver[Int(Recs[1][0])][13])!])) {  // CL is not maxLvl
+            DrRecCase = 3;
+            db.sDriver[Int(Recs[1][0])][8] = "5"    // set the immediate upgrade font to red
+        } else if ((Double(db.sDriver[Int(Recs[0][0])][32])! - Double(db.sDriver[Int(Recs[0][0])][16])!) >= (Double(db.sDriver[Int(Recs[1][0])][32])! - Double(db.sDriver[Int(Recs[1][0])][16])!)) {    // delta Recs0 PR > delta Recs1 PR
+            DrRecCase = 4;
+        } else if ((Double(db.sDriver[Int(Recs[1][0])][32])! - Double(db.sDriver[Int(Recs[1][0])][16])!) >= (Double(db.sDriver[Int(Recs[0][0])][32])! - Double(db.sDriver[Int(Recs[0][0])][16])!)) {    // delta Recs1 PR > delta Recs0 PR
+            DrRecCase = 5;
+        }
+        
+        
+   
+        //db.sDriver.forEach{print($0)}
         // **********************************************************************************************
         // MT DRIVER
         
@@ -828,9 +1000,9 @@ struct RecsView: View {
             row_ctr = row_ctr + 11
         }
         var dSorted = dToSort.sorted(by: {
-            ($0[3],$0[1],$0[2]) > ($1[3],$1[1],$1[2])
+            ($0[3],$0[1],$0[2]) > ($1[3],$1[1],$1[2])    // sort 0 and 1 strings by col 3 then 1 then 2
         })
-        Recs[2][0] = dSorted[0][0]
+        Recs[2][0] = dSorted[0][0]     //  get the driver id of the sorted result
         //print("Recs (Driver)= ", Recs)
         
         
@@ -862,6 +1034,14 @@ struct RecsView: View {
         maxPart = 0
         
         // ***********************************************************************************************
+        //  Five Cases for Parts Upgrades
+        // go through each category
+        // 1. All levels equal: if D0 CL=PL and D1 CL=PL then no upgrade. msg: Select D0 and D1
+        // 2. is D0 upgradeable: else if (ACa>NCa and ACo>NCo and D0 CL is not max), D0 font red,  msg: Select D1 and D0 and upgrade D0 immediately
+        // 3. else is D1 upgradeable: else if (ACa>NCa and ACo>NCo and D1 CL is not max), D1 font red,  msg: Select D0 and D1 and upgrade D1 immediately
+        // 4. otherwise: else if (RecPR0-PR0 > RecPR1-PR1) and D0 is not max. msg: Select D0 and D1 and upgrade D0 ASAP
+        // 5. else if (RecPR1-PR1 > RecPR0-PR0) and D1 is not max.  msg: Select D0 and D1 and upgrade D0 ASAP
+        
         // find for each category
         
         while row_start <= 461  { // < 461
@@ -872,12 +1052,16 @@ struct RecsView: View {
                 //print("!!row_ctr= ", row_ctr, "row_start= ",row_start, " cat_ctr= ", cat_ctr+3)
                 //print("!!Recs[cat_ctr + 3][0]= ", Recs[cat_ctr + 3][0], " Recs[cat_ctr + 3][1]= ", Recs[cat_ctr + 3][1])
                 //print( cat_ctr, Recs[cat_ctr + 3][0], Recs[cat_ctr + 3][1])
-                if (Double(db.sPart[row_ctr][16])! > Recs[cat_ctr + 3][1]) {      // CR > current highest CR
+                
+                // loop through each part category. If CR > current Rec part then dump the old Rec and put the id and CR in as the new Rec
+                if (Double(db.sPart[row_ctr][16])! > Recs[cat_ctr + 3][1]) {      // if CR > current highest CR
                     Recs[cat_ctr + 3][0] = Double(row_ctr) //  id of new
                     Recs[cat_ctr + 3][1] = Double(db.sPart[row_ctr][16])!     // CR of new
-                } else if ((Double(db.sPart[row_ctr][18])! > Recs[cat_ctr + 3][1]) &&          // PR > [0][1]
-                           (Double(sMultStripped)! > Double(db.sPart[row_ctr][22])!) &&          // ACo > NC0
-                           (Double(db.sPart[row_ctr][21])! > Double(db.sPart[row_ctr][20])!)) {          // ACa > NCa
+                
+                    // If PR > current Rec and ACo abnd ACa are large enough then put the id and CR in as the new Rec
+                } else if ((Double(db.sPart[row_ctr][18])! > Recs[cat_ctr + 3][1]) &&          // if PR > [0][1]
+                           (Double(sMultStripped)! > Double(db.sPart[row_ctr][22])!) &&          // ACo > NCo
+                           (Double(db.sPart[row_ctr][20])! > Double(db.sPart[row_ctr][21])!)) {          // ACa > NCa
                     Recs[cat_ctr + 3][0] = Double(row_ctr)    // id of new
                     Recs[cat_ctr + 3][1] = Double(db.sPart[row_ctr][16])!     // CR of new
                 }
@@ -886,14 +1070,18 @@ struct RecsView: View {
             }
             //print("Recs[cat_ctr + 3][0]= ", Recs[cat_ctr + 3][0], " Recs[cat_ctr + 3][1]= ", Recs[cat_ctr + 3][1])
             
-            cat_ctr = cat_ctr + 3   // next category in Recs[]
+            cat_ctr = cat_ctr + 3   // next category in Recs[] for ST
             row_start = row_start + 77     // next category in sPart[[]]
         }
         
         //print("!!ST Recs (Final)= ", Recs)
         // ************************************************************************************************************************
-        // Find best ST Part for Basic Recs for all categories
-        // loop through the Parts Recs[x][1]s and find the highest
+        // Find best ST Part for Basic Recs in all part categories
+        // loop through the Parts Recs[x][1]s and find the highest value and set it as the one to upgrade first
+        // STPartRecId is the best part id to be upgraded
+        
+        // find which ones are immediate upgrade- pick the highest PR. If no immediates,
+        
         row_ctr = 0
         
         var STPartRecPR: Double = 0.0
@@ -902,13 +1090,34 @@ struct RecsView: View {
                 STPartRecPR = Double(db.sPart[row_ctr][32])!
                 STPartRecID = row_ctr
             }
-            
-            row_ctr = row_ctr + 11
+                row_ctr = row_ctr + 11
         }
         
         
+        // 1: immediate upgrade: if (ACa>NCa and ACo>NCo and STPartRecID is not max), STPartRecID font red,  msg: Select STPartRecID and upgrade immediately
+        // 2: ASAP upgrade, msg: Select STPartRecID and upgrade ASAP
+        
+        // test to see if it's an immediate upgrade
+        PaRecCase = 2    // ASAP upgrade to start
+        if ((Double(sMultStripped)! > Double(db.sPart[STPartRecID][22])!) &&          // ACo > NCo
+            (Double(db.sPart[STPartRecID][20])! > Double(db.sPart[STPartRecID][21])!) &&
+            ((Int(db.sPart[STPartRecID][15])!) < maxLevel[Int(db.sPart[STPartRecID][13])!])) {          // CL is not maxLevel
+            PaRecCase = 1
+            db.sPart[STPartRecID][8] = "5"    // set the immediate upgrade font to red
+        }
+        
+        if ((Int(db.sPart[STPartRecID][15])!) >= maxLevel[Int(db.sPart[STPartRecID][13])!]) {
+            PaRecCase = 3         // no upgrade allowed if CL= maxLevel
+        }
+        //db.sDriver.forEach{print($0)}
+        //db.sPart.forEach{print($0)}
+       // print("**************************", db.sPart[132][1])
+        //print("**************************", db.sPart[132][8])
+        
         // ************************************************************************************************************************
         // Calc pit stop time
+        // ************************************************************************************************************************
+        
         row_ctr = 4     // 0-3 = drivers, 4-21 are parts
         pitStopTime = 0
         while row_ctr <= 7  { // < 461
@@ -950,8 +1159,6 @@ struct RecsView: View {
                 
             })
             //print("!! MT Sort done: ", dSorted)
-            var dfg: Double = 0.0
-            dfg = dSorted[0][0]
             Recs[cat_ctr + 3][0] = dSorted[0][0]
             //print("!! MT Recs[cat_ctr + 3][0]= ", cat_ctr + 3, Recs[cat_ctr + 4][0])
             dToSort.removeAll()
@@ -1011,26 +1218,40 @@ struct RecsView: View {
         
         // big:little mapping. 10:14, 20:28+, 30:43, 39:56+. So mult factor = 1.4+, try 1.45
         
+        // Speed    Cornering    PowerUnit    Reliability |   PitTime  |  Overtaking    Defending    Qualifying    RaceStart    Tire
+        // en de es fr it
+        
+        
+        // "Speed"; "Tempo"; "Velocidad";  "Vitesse";  "Velocità";
+        // "Cornering"; "Kurenverhalten"; "Curvas"; "Courbe";  "Sterzata";
+        //  "Power Unit"; "Triebwerk"; "Unidad de Potencia";"Unité de puissance"; "Check F1 Clash!";
+        // "Reliability"; "Kuverlässignkeit";  "Fiabilidad"; "Fiabilité"; "Affidabilità";
+        //
+        // "Overtaking"; "Überholen"; "Adelantamiento"; "Dépassement"; "Sorpasso";
+        // "Defending"; "Verterdigen";  "Defensa"; "Défense"; "Defesa";
+        // "Qualifying"; "Qualifikation"; "Clasificación"; ="Qualification"; "Qualifiche";
+        // "Race Start"; "Rennstart";  "Incio de Carrera"; "Début de course"; "Partenza";
+        // "Tire Management"; "Reifen-Management"; "Gestión de neumáticos"; "Gestion des pneus";  "Gestione delle gomme";
         
         let langCode = Bundle.main.preferredLocalizations[0]
         var maxDriverStat = 0     //  length of longest capability stat
        
         
         if (langCode == "fr") {
-            maxDriverStat = 24
-            factors = ["Puissance", "Aérodynamique", "Adhérence", "Fiabilité", "Durée moyenne d\'un Pit Stop", "Dépassement", "Défense", "Régularité", "Économie d\'essence", "Gestion des pneus", "Performance sous la pluie"]
+            maxDriverStat = 17
+            factors = ["Dépassement", "Défense", "Qualification", "Début de course", "Gestion des pneus", "Vitesse", "Courbe", "Unité de puissance", "Fiabilité"]
         } else if (langCode == "es") {
-            maxDriverStat = 27
-            factors = ["Potecia", "Aero", "Agarre", "Fiabilidad", "Tiempo de parada en boxes", "Adelantamiento", "Defender", "Consistencia", "Gestión de combustible", "Gestión de neumáticos", "Capacidad para clima húmedo"]
+            maxDriverStat = 21
+            factors = ["Adelantamiento", "Defensa", "Clasificación", "Incio de Carrera", "Gestión de neumáticos", "Velocidad", "Curvas", "Unidad de Potencia", "Fiabilidad"]
         } else if (langCode == "it") {
-            maxDriverStat = 27
-            factors = ["Potenza", "Aerodinamica", "Aderenza", "Affidabilità", "Tempo media del pit stop", "Sorpasso", "Defesa", "Constanza", "Gestione del carburate", "Gestione delle gomme", "Abilità in caso di pioggia"]
+            maxDriverStat = 20
+            factors = ["Sorpasso", "Defesa", "Qualifiche", "Partenza", "Gestione delle gomme", "Velocità", "Sterzata", "Check F1 Clash!", "Affidabilità"]
         } else if (langCode == "de") {
-            maxDriverStat = 16
-            factors = ["Leistung", "Aero", "Grip", "Zuverlässigker", "Durchschnittliche Zeit für PS", "Überholvorgang", "Verterdigen", "Konstanz", "Sprit-Management", "Reifen-Management", "Können bei Nässe"]
+            maxDriverStat = 17
+            factors = ["Überholen", "Verterdigen", "Qualifikation", "Rennstart", "Reifen-Management", "Tempo", "Kurenverhalten", "Triebwerk", "Kuverlässignkeit"]
         } else {    // "en" is default
-            maxDriverStat = 19           //always even
-            factors = ["Power", "Aero", "Grip", "Reliability", "Pit Stop Time", "Overtaking", "Defending", "Consistency", "Fuel Management", "Tire Management", "Wet Weather Ability"]
+            maxDriverStat = 15           //always even
+            factors = ["Overtaking", "Defending", "Qualifying", "Race Start", "Tire Management", "Speed", "Cornering", "Power Unit", "Reliability"]
         }
         //            1         2         3
         //   123456789012345678901234567890123456789
@@ -1041,10 +1262,8 @@ struct RecsView: View {
         //    print("!!! Lstart: \(LStart)")
         //    print("!!! Rstart: \(RStart)")
         //    print("!!! maxDriverStat: \(maxDriverStat)")
-        var col = 0    // current column position
         var RecNumber = 0  // 22 values of recommended drivers and parts
-        var sTemp = ""   // to be removed whenever
-        var rSp = ""   // to be removed whenever
+        var sTemp = ""
         
         row_ctr = 0    // 4 drivers x 4 strings
         var rec_ctr = 0   // 4 drivers (0 to 3) in Recs[]
@@ -1131,11 +1350,10 @@ struct RecsView: View {
             if (Int(db.sDriver[RecNumber + xPL - 1][3])! < 10) {
                 xRSpace = 1
             }
-            
-            var sSpaceleft = RStart - LStart + 1 - factors[5].count     //space between left and right columns and Overtaking
+            var sSpaceleft = RStart - LStart + 1 - factors[0].count     //space between left and right columns and Overtaking
             var LHSpace = Int(Double(sSpaceleft)/2)   //LH is smaller if odd
             var RHSpace = Int(Double(sSpaceleft)/2 + 0.5)  //RH is bigger if odd
-            RecsDispDriver[row_ctr + 3] = String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][3] + String(Spaces.prefix(LHSpace)) + factors[5] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][3] + "\n"  // left of Overtaking spaces and Overtaking CL value and right of Overtaking CL spaces and transl(Overtaking) and right of Overtaking spaces and Overtaking PL value
+            RecsDispDriver[row_ctr + 3] = String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][3] + String(Spaces.prefix(LHSpace)) + factors[0] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][3] + "\n"  // left of Overtaking spaces and Overtaking CL value and right of Overtaking CL spaces and transl(Overtaking) and right of Overtaking spaces and Overtaking PL value
             
             //Defending
             xLSpace = 0   //extra LH space needed for small values
@@ -1146,13 +1364,12 @@ struct RecsView: View {
             if (Int(db.sDriver[RecNumber + xPL - 1][4])! < 10) {
                 xRSpace = 1
             }
-            
-            sSpaceleft = RStart - LStart + 1 - factors[6].count     //space between left and right columns and Overtaking
+            sSpaceleft = RStart - LStart + 1 - factors[1].count     //space between left and right columns and Overtaking
             LHSpace = Int(Double(sSpaceleft)/2)   //LH is smaller if odd
             RHSpace = Int(Double(sSpaceleft)/2 + 0.5)  //RH is bigger if odd
-            RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][4] + String(Spaces.prefix(LHSpace)) + factors[6] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][4] + "\n"  // see Overtaking comment above for details
+            RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][4] + String(Spaces.prefix(LHSpace)) + factors[1] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][4] + "\n"  // see Overtaking comment above for details
             
-            //Consistency
+            //Qualifying
             xLSpace = 0   //extra LH space needed for small values
             xRSpace = 0   //extra RH space needed for small values
             if (Int(db.sDriver[RecNumber + xCL - 1][5])! < 10) {
@@ -1161,13 +1378,12 @@ struct RecsView: View {
             if (Int(db.sDriver[RecNumber + xPL - 1][5])! < 10) {
                 xRSpace = 1
             }
-            
-            sSpaceleft = RStart - LStart + 1 - factors[7].count     //space between left and right columns and Overtaking
+            sSpaceleft = RStart - LStart + 1 - factors[2].count     //space between left and right columns and Overtaking
             LHSpace = Int(Double(sSpaceleft)/2)   //LH is smaller if odd
             RHSpace = Int(Double(sSpaceleft)/2 + 0.5)  //RH is bigger if odd
-            RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][5] + String(Spaces.prefix(LHSpace)) + factors[7] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][5] + "\n"  // see Overtaking comment above for details
+            RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][5] + String(Spaces.prefix(LHSpace)) + factors[2] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][5] + "\n"  // see Overtaking comment above for details
             
-            //Fuel Management
+            //Race Start
             xLSpace = 0   //extra LH space needed for small values
             xRSpace = 0   //extra RH space needed for small values
             if (Int(db.sDriver[RecNumber + xCL - 1][6])! < 10) {
@@ -1176,11 +1392,10 @@ struct RecsView: View {
             if (Int(db.sDriver[RecNumber + xPL - 1][6])! < 10) {
                 xRSpace = 1
             }
-            
-            sSpaceleft = RStart - LStart + 1 - factors[8].count     //space between left and right columns and Overtaking
+            sSpaceleft = RStart - LStart + 1 - factors[3].count     //space between left and right columns and Overtaking
             LHSpace = Int(Double(sSpaceleft)/2)   //LH is smaller if odd
             RHSpace = Int(Double(sSpaceleft)/2 + 0.5)  //RH is bigger if odd
-            RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][6] + String(Spaces.prefix(LHSpace)) + factors[8] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][6] + "\n"  // see Overtaking comment above for details
+            RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][6] + String(Spaces.prefix(LHSpace)) + factors[3] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][6] + "\n"  // see Overtaking comment above for details
             
             //Tire Management
             xLSpace = 0   //extra LH space needed for small values
@@ -1191,28 +1406,19 @@ struct RecsView: View {
             if (Int(db.sDriver[RecNumber + xPL - 1][7])! < 10) {
                 xRSpace = 1
             }
-            
-            sSpaceleft = RStart - LStart + 1 - factors[9].count     //space between left and right columns and Overtaking
+            sSpaceleft = RStart - LStart + 1 - factors[4].count     //space between left and right columns and Overtaking
             LHSpace = Int(Double(sSpaceleft)/2)   //LH is smaller if odd
             RHSpace = Int(Double(sSpaceleft)/2 + 0.5)  //RH is bigger if odd
-            RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][7] + String(Spaces.prefix(LHSpace)) + factors[9] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][7] + "\n"  // see Overtaking comment above for details
+            RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][7] + String(Spaces.prefix(LHSpace)) + factors[4] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][7]  // see Overtaking comment above for details
             
-            //Wet Weather
-            xLSpace = 0   //extra LH space needed for small values
-            xRSpace = 0   //extra RH space needed for small values
-            if (Int(db.sDriver[RecNumber + xCL - 1][8])! < 10) {
-                xLSpace = 1
-            }
-            if (Int(db.sDriver[RecNumber + xPL - 1][8])! < 10) {
-                xRSpace = 1
-            }
             
-            sSpaceleft = RStart - LStart + 1 - factors[10].count     //space between left and right columns and Overtaking
-            LHSpace = Int(Double(sSpaceleft)/2)   //LH is smaller if odd
-            RHSpace = Int(Double(sSpaceleft)/2 + 0.5)  //RH is bigger if odd
+            //sSpaceleft = RStart - LStart + 1 - factors[10].count     //space between left and right columns and Overtaking
+            //LHSpace = Int(Double(sSpaceleft)/2)   //LH is smaller if odd
+            //RHSpace = Int(Double(sSpaceleft)/2 + 0.5)  //RH is bigger if odd
             //sTemp = String(Spaces.prefix(xLSpace + LStart) + db.sDriver[RecNumber + xCL - 1][8] + String(Spaces.prefix(LHSpace)) + factors[10])
             //sTemp = sTemp + String(Spaces.prefix(RHSpace)) + db.sDriver[RecNumber + xPL - 1][8]
-            RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][8] + String(Spaces.prefix(LHSpace)) + factors[10] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][8]  // see Overtaking comment above for details
+            //RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) + db.sDriver[RecNumber + xCL - 1][8] + String(Spaces.prefix(LHSpace)) + factors[10] + String(Spaces.prefix(RHSpace + xRSpace)) + db.sDriver[RecNumber + xPL - 1][8]  // see Overtaking comment above for details
+            //RecsDispDriver[row_ctr + 3] = RecsDispDriver[row_ctr + 3] + String(Spaces.prefix(xLSpace + LStart)) +  String(Spaces.prefix(LHSpace)) + factors[10] + String(Spaces.prefix(RHSpace + xRSpace))   // see Overtaking comment above for details
             
             row_ctr = row_ctr + 4
             rec_ctr = rec_ctr + 1
@@ -1241,13 +1447,13 @@ struct RecsView: View {
         if (langCode == "en") {
             maxPartStat = 11   // length of longest capability stat- Reliability
         } else if (langCode == "fr") {
-            maxPartStat = 13
+            maxPartStat = 18
         } else if (langCode == "es") {
-            maxPartStat = 10
+            maxPartStat = 18
         } else if (langCode == "it") {
-            maxPartStat = 12
+            maxPartStat = 15
         } else if (langCode == "de") {
-            maxPartStat = 13
+            maxPartStat = 16
         }
         if (maxPartStat%2 == 0) {   //even
             LStart = 20 - Int(maxPartStat/2) - 4   // left start column for even capabilities
@@ -1257,9 +1463,7 @@ struct RecsView: View {
             RStart = 20 + Int(maxPartStat/2) + 3   // right start column for capabilities
         }
 
-        col = 0    // current column position
         RecNumber = 0  // 22 values of recommended drivers and parts
-        
         
         row_ctr = 16    // 18 parts x 4 strings
         rec_ctr = 4   // 18 parts (0 to 3 are Drivers, 4-22 are Parts) in Recs[]
@@ -1333,9 +1537,9 @@ struct RecsView: View {
             var pos3 = 0   // end pos of capabilities
             let pos4 = RStart   // start pos of PL
             
-            //Power
-            pos2 = 20 - Int(factors[0].count/2)
-            pos3 = 20 + Int(factors[0].count/2)
+            //Speed
+            pos2 = 20 - Int(factors[5].count/2)
+            pos3 = 20 + Int(factors[5].count/2)
             var sCL = db.sPart[RecNumber + xCL - 1][3]
             var sPL = db.sPart[RecNumber + xPL - 1][3]
             if (Int(sCL)! < 10) {
@@ -1344,12 +1548,12 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-            var sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[0]
+            var sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[5]
             RecsDispParts[row_ctr + 3] = sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
             
-            //Aero
-            pos2 = 20 - Int(factors[1].count/2)
-            pos3 = 19 + Int(factors[1].count/2)    //shifted because Aero is even
+            //Cornering
+            pos2 = 20 - Int(factors[6].count/2)
+            pos3 = 19 + Int(factors[6].count/2)    //shifted because Aero is even
             sCL = db.sPart[RecNumber + xCL - 1][4]
             sPL = db.sPart[RecNumber + xPL - 1][4]
             if (Int(sCL)! < 10) {
@@ -1358,12 +1562,12 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-            sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[1]
+            sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[6]
             RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
             
-            //Grip
-            pos2 = 20 - Int(factors[2].count/2)
-            pos3 = 19 + Int(factors[2].count/2)    //shifted because Grip is even
+            //Power unit
+            pos2 = 20 - Int(factors[7].count/2)
+            pos3 = 19 + Int(factors[7].count/2)    //shifted because Grip is even
             sCL = db.sPart[RecNumber + xCL - 1][5]
             sPL = db.sPart[RecNumber + xPL - 1][5]
             if (Int(sCL)! < 10) {
@@ -1372,12 +1576,12 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-            sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[2]
+            sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[7]
             RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
-            
+             
             //Reliability
-            pos2 = 20 - Int(factors[3].count/2)
-            pos3 = 20 + Int(factors[3].count/2)
+            pos2 = 20 - Int(factors[8].count/2)
+            pos3 = 20 + Int(factors[8].count/2)
             sCL = db.sPart[RecNumber + xCL - 1][6]
             sPL = db.sPart[RecNumber + xPL - 1][6]
             if (Int(sCL)! < 10) {
@@ -1386,8 +1590,8 @@ struct RecsView: View {
             if (Int(sPL)! < 10) {
                 sPL = " " + sPL
             }
-            sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[3]
-            RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL + "\n"
+            sTemp = String(Spaces.prefix(pos1 - 1)) +  sCL + String(Spaces.prefix(pos2 - pos1 - 2)) + factors[8]
+            RecsDispParts[row_ctr + 3] = RecsDispParts[row_ctr + 3] + sTemp + String(Spaces.prefix(pos4 - sTemp.count)) + sPL
 
             row_ctr = row_ctr + 4
             rec_ctr = rec_ctr + 1
@@ -1409,23 +1613,24 @@ struct RecsView: View {
         // iFinal = Int(Double(db.sDriver[Int(Recs[0][0]) + Int(db.sDriver[Int(Recs[0][0])][15])!][12])!)    // final combining, works
         // if RecCL=RecPL, then get RecCL and add that row to Rec[0][0] to get the offset value and look up the normalized rating for RecCL. Add it to the teamScore
 
-        teamScore = 0    //clear
+        iTeamScore = 0    //clear
         let recDrRange = [0,1]   // 2 driver recs
         let recPaRange = [4,7,10,13,16,19]  // 6 category parts recs
-        
+        let STDriverRecID = db.sDriver[Int(Recs[0][0])][1]
+        let STPartRecID = db.sDriver[Int(Recs[0][0])][1]
         for row_ctr in recDrRange {
             if (Recs[row_ctr][0] == Double(STDriverRecID)) {
-                teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[row_ctr][0])][32])!)
+                iTeamScore = iTeamScore + Int(Double(db.sDriver[Int(Recs[row_ctr][0])][32])!)
             } else {
-                teamScore = teamScore + Int(Double(db.sDriver[Int(Recs[row_ctr][0])][16])!)
+                iTeamScore = iTeamScore + Int(Double(db.sDriver[Int(Recs[row_ctr][0])][16])!)
             }
         }
 
         for row_ctr in recPaRange {
             if (Recs[row_ctr][0] == Double(STPartRecID)) {
-                teamScore = teamScore + Int(Double(db.sPart[Int(Recs[row_ctr][0])][32])!)
+                iTeamScore = iTeamScore + Int(Double(db.sPart[Int(Recs[row_ctr][0])][32])!)
             } else {
-                teamScore = teamScore + Int(Double(db.sPart[Int(Recs[row_ctr][0])][16])!)
+                iTeamScore = iTeamScore + Int(Double(db.sPart[Int(Recs[row_ctr][0])][16])!)
             }
         }
         //dump(Recs)
@@ -1460,32 +1665,26 @@ struct RecsView: View {
         }
     }
     
-    func printRecs(Recs: [[Double]]) {
-        
-        /*       print("!!Driver: ", Recs[0][0], Recs[1][0], Recs[2][0], Recs[3][0], db.sPart[Int(Recs[0][0])][1], db.sPart[Int(Recs[1][0])][1], db.sPart[Int(Recs[2][0])][1], db.sPart[Int(Recs[3][0])][1])
-         print("!!Brakes: ", Recs[4][0], Recs[5][0], Recs[6][0], db.sPart[Int(Recs[4][0])][1], db.sPart[Int(Recs[5][0])][1], db.sPart[Int(Recs[6][0])][1])
-         print("!!Driver: ", Recs[0][0], Recs[1][0], Recs[2][0], Recs[3][0], db.sDriver[Int(Recs[0][0])][1], db.sDriver[Int(Recs[1][0])][1], db.sDriver[Int(Recs[2][0])][1], db.sDriver[Int(Recs[3][0])][1])
-         print("!!Brakes: ", Recs[4][0], Recs[5][0], Recs[6][0], db.sPart[Int(Recs[4][0])][1], db.sPart[Int(Recs[5][0])][1], db.sPart[Int(Recs[6][0])][1])
-         print("!!Gearbox: ", Recs[7][0], Recs[8][0], Recs[9][0], db.sPart[Int(Recs[7][0])][1], db.sPart[Int(Recs[8][0])][1], db.sPart[Int(Recs[9][0])][1])
-         print("!!RearWing: ", Recs[10][0], Recs[11][0], Recs[12][0], db.sPart[Int(Recs[10][0])][1], db.sPart[Int(Recs[11][0])][1], db.sPart[Int(Recs[12][0])][1])
-         print("!!FrontWing: ", Recs[13][0], Recs[14][0], Recs[15][0], db.sPart[Int(Recs[13][0])][1], db.sPart[Int(Recs[14][0])][1], db.sPart[Int(Recs[15][0])][1])
-         print("!!Suspension: ", Recs[16][0] ,Recs[17][0], Recs[18][0], db.sPart[Int(Recs[16][0])][1], db.sPart[Int(Recs[17][0])][1], db.sPart[Int(Recs[18][0])][1])
-         print("!!Engine: ", Recs[19][0], Recs[20][0], Recs[21][0], db.sPart[Int(Recs[19][0])][1], db.sPart[Int(Recs[20][0])][1], db.sPart[Int(Recs[21][0])][1])
-         
-         */
-    }
-    
 }   // struct
 
 
 struct InfoSheetRecsView: View {
     var body: some View {
-        ScrollView() {
-            Text("info_contents_recs")
-                .font(.system(size: 12))
+        VStack {
+            Text("recommendationsScreen")
+                .font(.title3)
+                .foregroundColor(.white)
                 .frame(width: 300)
-                .padding()
-        }
+            }
+            .frame(maxWidth: .infinity, maxHeight: 50) // 1
+            .accentColor(Color.black)
+            .background(Color.colours.backgrd_blue)
+            .padding(.bottom, 20)
+        VStack {
+            Text("info_contents_recs")
+                .font(.system(size: 14))
+                .frame(width: 300)
+            }
     }
 }
 

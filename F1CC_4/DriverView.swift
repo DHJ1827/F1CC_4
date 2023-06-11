@@ -14,9 +14,8 @@ struct DriverView: View {
     @State var multOver: Double = 100
     @State var multDefend: Double = 100
     @State var multConsist: Double = 100
-    @State var multFuel: Double = 100
+    @State var multStart: Double = 100
     @State var multTire: Double = 100
-    @State var multWet: Double = 100
     //@State var isDisplayed: [Bool] = Array(repeating: false, count: 661)    //661         REMOVE
     
     
@@ -85,6 +84,8 @@ struct DriverView: View {
                         }
                     }
                 }
+                
+
             }  //VStack
             
             VStack {
@@ -99,6 +100,7 @@ struct DriverView: View {
                             }
                             .pickerStyle(SegmentedPickerStyle())
                             .frame(width: 165)
+                            .offset(x:20, y:0)
                             
                             Image(db.photoNum)
                                 .resizable()
@@ -119,7 +121,8 @@ struct DriverView: View {
                             
                         }
                         
-                        if (db.sSelectedMode == "detailMode") {
+                        if (db.sSelectedMode == "detailMode") {    //show sliders if Detail view
+                            
                             VStack(alignment: .trailing, spacing: 5) {      //slder text
                                 
                                 Text ("overtaking")
@@ -129,22 +132,32 @@ struct DriverView: View {
                                 Text ("defending")
                                     .font(.system(size: 11, design: .monospaced))
                                     .padding(.bottom, 20)
-                                Text ("consistency")
+                                Text ("qualifying")
                                     .font(.system(size: 11, design: .monospaced))
                                     .padding(.bottom, 22)
-                                Text ("fuelManagement")
-                                    .font(.system(size: 9, design: .monospaced))
+                                Text ("raceStart")
+                                    .font(.system(size: 11, design: .monospaced))
                                     .padding(.bottom, 22)
                                 Text ("tireManagement")
-                                    .font(.system(size: 9, design: .monospaced))
+                                    .font(.system(size: 11, design: .monospaced))
                                     .padding(.bottom, 22)
-                                Text ("wetWeatherAbility")
-                                    .font(.system(size: 9, design: .monospaced))
-                                    .padding(.bottom, 25)
                             }
                             .offset(x: -5, y:20)
                             
                             VStack(alignment: .leading) {          //sliders
+                                HStack {
+                                    Text("+")
+                                        .font(.system(size: 11, design: .monospaced))
+                                        .frame(maxWidth: 30, alignment: .leading)
+                                        
+                                    Text("-")
+                                        .font(.system(size: 11, design: .monospaced))
+                                        .frame(maxWidth: 30, alignment: .trailing)
+                                        .offset(x:15, y: 0)
+                                        
+                                }
+                                .offset(x: 0, y: 10)
+                                
                                 Slider(value: $multOver, in: 0...200,step: 1,onEditingChanged: { data in
                                     self.alphaToShow = String(Character(UnicodeScalar(Int(self.multOver))!))
                                     sliderCalc()
@@ -176,8 +189,8 @@ struct DriverView: View {
                                 .offset(x: -5, y: 0)
                                 
                                 
-                                Slider(value: $multFuel, in: 0...200,step: 1,onEditingChanged: { data in
-                                    self.alphaToShow = String(Character(UnicodeScalar(Int(self.multFuel))!))
+                                Slider(value: $multStart, in: 0...200,step: 1,onEditingChanged: { data in
+                                    self.alphaToShow = String(Character(UnicodeScalar(Int(self.multStart))!))
                                     sliderCalc()
                                 }) {
                                     EmptyView()
@@ -196,35 +209,19 @@ struct DriverView: View {
                                 .frame(width: 100)
                                 .offset(x: -5, y: 0)
                                 
-                                Slider(value: $multWet, in: 0...200,step: 1,onEditingChanged: { data in
-                                    self.alphaToShow = String(Character(UnicodeScalar(Int(self.multWet))!))
-                                    sliderCalc()
-                                }) {
-                                    EmptyView()
-                                }
-                                .accentColor(Color.colours.backgrd_blue)
-                                .frame(width: 100)
-                                .offset(x: -5, y: 0)
-                                
                             }  //VStack of sliders
-                            .offset(x:-5, y:10)
+                            .offset(x:-5, y: -10)
                         }
+                        
                         
                     }  //HStack
                 }            //VStack title and images/sliders- all upto drivers
                 Spacer(minLength: 30)
                 //*******************************************************************
-                //                        Fuel Management
-                //                        Wet weather ability
-                //                        Performance sous la pluie
-                //                        Abilità in caso di pioggia
-                //                        Durchschnittiliche zeit fur PS
-                //                        Tempo media del pit stop
-                //                        Capacidad para clima húmedo
                 
                 // start of driver
                 
-                ZStack {    // drivers with opaque button on top
+                ZStack {    // drivers with opaque button on top which hides all if basic view is selected
                     
                     VStack {    //drivers
                         ForEach(Array(stride(from: 0, to: 659, by: 33)), id: \.self) { index_v in
@@ -236,6 +233,7 @@ struct DriverView: View {
                                     let colorBack = cmode[colorInt1]      //  get the level and apply the right background colour to it
                                     let colorInt2: Int = Int(db.sDriver[index_h + index_v][30])!
                                     let colorFont = cmode[colorInt2]      //  get the level and apply the right background colour to it
+                                    let sDriverName = db.sDriver[(index_h + index_v)][1]
                                     
                                     VStack {
                                         Text("resultsLine1")    // CL ACa/NCa PL
@@ -247,14 +245,27 @@ struct DriverView: View {
                                             .fontWeight(.semibold)
                                             .frame(width: 120, alignment: .leading)
                                             .background(colorBack)
-                                        
-                                        Text(db.sDriver[(index_h + index_v)][1])     // DriverName
-                                            .font(.system(size: 16))
-                                            .fontWeight(.semibold)
-                                            .frame(width: 120)
-                                            .foregroundColor(colorFont)
-                                            .background(colorBack)
-                                        
+                                        Text(sDriverName)     // DriverName
+                                                .font(.system(size: 16))
+                                                .fontWeight(.semibold)
+                                                .frame(width: 120)
+                                                .foregroundColor(colorFont)
+                                                .background(colorBack)
+                                        // ************************************************************
+                                        /*
+                                         Group {
+                                                 Text("I am an ")
+                                                 .font(.system(size: 16))
+                                                 .fontWeight(.semibold) +
+                                                 Text("iOS ")
+                                                     .foregroundColor(Color.black)
+                                                     .fontWeight(.heavy) +
+                                                 Text("Developer:")
+                                                     .foregroundColor(Color.blue)
+                                                     .fontWeight(.bold)
+                                             }
+                                        */
+                                        // *************************************************************
                                         if (db.sSelectedMode == "detailMode") {
                                             VStack {
                                                 Text("resultsLine4D")    // CR MR PR
@@ -295,11 +306,8 @@ struct DriverView: View {
                                             }   //VStack
                                             .padding(.bottom, 6)
                                         }
-                                        
-                                        
-                                        
+                                                                                
                                     }  //VStack
-                                    
                                     
                                 }   //ForEach
                                 
@@ -336,17 +344,17 @@ struct DriverView: View {
             print("Child is dismissed")
             var errCheck = true
             errMsg = ""
-            if db.sMult[11][1].isEmpty {    //check for empty string
+            if db.sMult[11][1].isEmpty {    //check for empty ACo string
                 db.sMult[11][1] = "0"
             }
-            // check Coins
+            // check Coins value
             if (Int(db.sMult[11][1].replacingOccurrences(of: ",", with: ""))! > 99999999) {
                 errCheck = false
                 errMsg = "Coins must be between 0 and 99,999,999"
                 showingAlert = true
             }
             
-            // check levels
+            // check levels value
             for ctr in stride(from: 0, to: 650, by: 11) {
                 if (!((0...Int(db.sDriver[ctr][29])! ~= Int(db.sDriver[ctr][15]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
                     errCheck = false
@@ -355,7 +363,7 @@ struct DriverView: View {
                 }
             }
             
-            //check cards
+            //check cards levels
             for ctr1 in stride(from: 0, to: 650, by: 11) {
                 if (!((0...99999 ~= Int(db.sDriver[ctr1][20]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
                     errCheck = false
@@ -365,15 +373,15 @@ struct DriverView: View {
             if (errCheck) {
                 print("Good")
                 isDriverUpdateViewShowing = false
-                for ctr in stride(from: 0, to: 650, by: 11) {
-                    if (db.bDriverBoost[ctr]) {
-                        db.sDriver[ctr][14] = "1.1"
-                        db.sDriver[ctr][30] = "5"   //red
-                    } else {
-                        db.sDriver[ctr][14] = "1.0"
-                        db.sDriver[ctr][30] = "4"  //black
-                    }
-                }   //  ctr
+//                for ctr in stride(from: 0, to: 650, by: 11) {
+//                    if (db.bDriverBoost[ctr]) {
+//                        db.sDriver[ctr][14] = "1.1"   // boosted multiplier
+//                        db.sDriver[ctr][30] = "5"   //red font
+//                    } else {
+//                        db.sDriver[ctr][14] = "1.0"   // boosted multiplier
+//                        db.sDriver[ctr][30] = "4"  //black font
+//                    }
+//                }   //  ctr
                 
                 start()
                 
@@ -383,8 +391,7 @@ struct DriverView: View {
             }
         })    // sheet
         
-        {
-            DriverUpdateView(isDriverUpdateViewShowing: $isDriverUpdateViewShowing)
+        {DriverUpdateView(isDriverUpdateViewShowing: $isDriverUpdateViewShowing)
                 .environmentObject(db)
         }
         .onAppear(perform: start)
@@ -407,7 +414,7 @@ struct DriverView: View {
                 //print("!!! db.sDriver= \(db.sDriver)")
                 
                 for ctr in stride(from: 0, to: 650, by: 11) {   // set up bDriverBoost on initial run
-                    if (db.sDriver[ctr][14] == "1.0") {
+                    if (db.sDriver[ctr][14] == "1.1") {
                         db.bDriverBoost[ctr] = true
                     } else {
                         db.bDriverBoost[ctr] = false
@@ -419,13 +426,12 @@ struct DriverView: View {
             multOver = Double(db.sMult[5][1])!
             multDefend = Double(db.sMult[6][1])!
             multConsist = Double(db.sMult[7][1])!
-            multFuel = Double(db.sMult[8][1])!
+            multStart = Double(db.sMult[8][1])!
             multTire = Double(db.sMult[9][1])!
-            multWet = Double(db.sMult[10][1])!
             print("db setup completed")
         }
         
-         db.sDriver = db.sDriverCalc(sDriver: db.sDriver, sMult: db.sMult, sCard: db.sCard, bDriverBoost: db.bDriverBoost)      //make changes based on new levels, cards and 10%
+        db.sDriver = db.sDriverCalc(sDriver: db.sDriver, sMult: db.sMult, sCard: db.sCard, bDriverBoost: db.bDriverBoost)      //make changes based on new levels, cards and 10%
         db.sPart = db.sPartCalc(sPart: db.sPart, sMult: db.sMult, sCard: db.sCard)      //update calculations- first time though needed to prevent errors
         db.sDriver[0][0] = "2"    // set so that next run will not create new db.
         
@@ -473,9 +479,8 @@ struct DriverView: View {
         db.sMult[5][1] = String(format: "%.0f", multOver)
         db.sMult[6][1] = String(format: "%.0f", multDefend)
         db.sMult[7][1] = String(format: "%.0f", multConsist)
-        db.sMult[8][1] = String(format: "%.0f", multFuel)
+        db.sMult[8][1] = String(format: "%.0f", multStart)
         db.sMult[9][1] = String(format: "%.0f", multTire)
-        db.sMult[10][1] = String(format: "%.0f", multWet)
         do {
             try db.updateMult()
             db.sDriver = try db.sDriverCalc(sDriver: db.sDriver, sMult: db.sMult, sCard: db.sCard, bDriverBoost: db.bDriverBoost)
@@ -501,30 +506,55 @@ struct DriverView: View {
 
 struct InfoSheetDriverView: View {
     var body: some View {
-        ScrollView() {
-            Text("info_contents_driver")
-                .font(.system(size: 12))
+        VStack {
+            Text("driverScreen")
+                .font(.title3)
+                .foregroundColor(.white)
                 .frame(width: 300)
-                .padding()
+            }
+            .frame(maxWidth: .infinity, maxHeight: 50) // 1
+            .accentColor(Color.black)
+            .background(Color.colours.backgrd_blue)
+            .padding(.bottom, 20)
+        VStack {
+            Text("info_contents_driver")
+                .font(.system(size: 14))
+                .frame(width: 300)
+            }
         }
-    }
 }
 
 struct FirstTimeInfoView: View {
     var body: some View {
-        ScrollView() {
-            Text("intro")
-                .font(.system(size: 12))
+        VStack {
+            Text("F1 Clash Companion")
+                .font(.title3)
+                .foregroundColor(.white)
                 .frame(width: 300)
-                .padding()
-        }
+            }
+            .frame(maxWidth: .infinity, maxHeight: 50) // 1
+            .accentColor(Color.black)
+            .background(Color.colours.backgrd_blue)
+            .padding(.bottom, 20)
+        VStack {
+            Text("intro")
+                .font(.system(size: 14))
+                .frame(width: 300)
+            }
     }
 }
 
+//struct DriverView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        //        DriverView(sDriver: .constant([["0", "Zhou", "1", "12", "7", "11", "9", "5", "3", "1000", "1000", "", "", "1", "0", "10", "", "", "", "", "6789", "", "", "", "", "", "", "", "", "11", ""]]),sPart: .constant([["Brakes", "The Clog", "1", "1", "3", "2", "6", "1", "0", "1000", "1000", "", "", "1", "0", "1", "", "", "", "", "8", "", "", "", "", "", "", "", "", "11", ""]]),sMult: .constant([["iPowerMult", "100"]]),sCard: .constant([["1", "4", "4"]]), bDriverBoost: .constant([false]), sSelectedMode: .constant("Basic"))
+//        Text("Hello preview")
+//    }
+//}
+
 struct DriverView_Previews: PreviewProvider {
     static var previews: some View {
-        //        DriverView(sDriver: .constant([["0", "Zhou", "1", "12", "7", "11", "9", "5", "3", "1000", "1000", "", "", "1", "0", "10", "", "", "", "", "6789", "", "", "", "", "", "", "", "", "11", ""]]),sPart: .constant([["Brakes", "The Clog", "1", "1", "3", "2", "6", "1", "0", "1000", "1000", "", "", "1", "0", "1", "", "", "", "", "8", "", "", "", "", "", "", "", "", "11", ""]]),sMult: .constant([["iPowerMult", "100"]]),sCard: .constant([["1", "4", "4"]]), bDriverBoost: .constant([false]), sSelectedMode: .constant("Basic"))
         Text("Hello preview")
     }
-}
+    
+}   // struct()
 
