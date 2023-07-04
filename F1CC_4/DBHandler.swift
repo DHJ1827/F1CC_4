@@ -399,7 +399,7 @@ class DBHandler: ObservableObject {
             while (row_ctr <= 10) {
                 //print(driver_start/11)
                 if (bDriverBoost[driver_start]) {
-                    sDriverr[row_ctr + driver_start][14] = "1.1"
+                    sDriverr[row_ctr + driver_start][14] = "1.25"
                     sDriverr[row_ctr + driver_start][30] = "5"   //red
                 } else {
                     sDriverr[row_ctr + driver_start][14] = "1.0"
@@ -414,21 +414,21 @@ class DBHandler: ObservableObject {
         
         
         // *******************************************************************************************************************************
-        // weighted rating and 10% font colours
+        // weighted rating and 25% font colours
         // sum of atributes x mult values
-        // if [14] is 10% then change font to red
+        // if [14] is 25% then change font to red
         
         row_ctr = 0
         while row_ctr <= 659 {
             
-            // update font colours for 10%
-            if (sDriverr[row_ctr][14] == "1.1") {
+            // update font colours for 25%
+            if (sDriverr[row_ctr][14] == "1.25") {
                 sDriverr[row_ctr][30] = "5"   //red
             } else {
                 sDriverr[row_ctr][30] = "4"  //black
             }
             
-            // multiply the weighted ratings by any 10% boost
+            // multiply the weighted ratings by any 25% boost
             var dbl1 = Double(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])!)
             var dbl2 = Double(sDriverr[row_ctr][14])
             sDriverr[row_ctr][11] = String(format: "%.0f", dbl1 * dbl2!)
@@ -1070,7 +1070,7 @@ class DBHandler: ObservableObject {
         var row_ctr = 0
         while row_ctr <= 659 {
             if (isDisplayedd[row_ctr]) {
-                sDriverr[row_ctr][14] = "1.1"
+                sDriverr[row_ctr][14] = "1.25"
             } else {
                 sDriverr[row_ctr][14] = "1"
             }

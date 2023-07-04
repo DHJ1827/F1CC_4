@@ -100,11 +100,11 @@
 "recommendationsScreen" = "Recommendations Screen";
 "reliability" = "Reliability";
 "rememberRecs" = "\n\nRemember to immediately run Recommendations after changing any driver's or component's cards or coins values!";
-"resultsLine1" = "CL  ACa / NCa  PL";
-"resultsLine4B" = "CR  PR";
-"resultsLine4D" = "CR  MR PR";
-"resultRecs1" = "    Name  CL  CR  PL  ACa  ACo";
-"resultRecs2" = "  PL  PR  MR  NCa  NCo";
+"resultsLine1" = "CL        ACa / NCa        PL";
+"resultsLine4B" = "CR                        PR";
+"resultsLine4D" = "CR          MR            PR";
+"resultRecs1" = "  Name            CL     CR    PL       ACa        ACo";
+"resultRecs2" = "    PL       PR          MR        NCa             NCo";
 "shortTerm" = "Short Term";
 "shortTermFull" = "ST: Short Term";
 "speed" = "Speed";

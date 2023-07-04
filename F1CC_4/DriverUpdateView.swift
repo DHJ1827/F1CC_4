@@ -54,7 +54,7 @@ struct DriverUpdateView: View {
                         .fontWeight(.regular)
                         .frame(width: 50)
                         .offset(x:-20, y:0)
-                    Text("10%")
+                    Text("25%")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
@@ -69,7 +69,7 @@ struct DriverUpdateView: View {
                         .fontWeight(.regular)
                         .frame(width: 50)
                         .offset(x:5, y:0)
-                    Text("10%")
+                    Text("25%")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
@@ -99,7 +99,7 @@ struct DriverUpdateView: View {
                                             .frame(width: 45, alignment: .center)
                                             .offset(x:-5,y:0)
                                         Toggle("", isOn: $db.bDriverBoost[ctr])
-                                            .onChange(of: db.bDriverBoost[ctr]) { value in     //when toggle changes update 10% multiplier and font colour
+                                            .onChange(of: db.bDriverBoost[ctr]) { value in     //when toggle changes update 25% multiplier and font colour
                                                 
                                                // toggle on/off driver at common/rare/epic as well
                                                 var currDrBoost = db.bDriverBoost[ctr]
@@ -116,11 +116,11 @@ struct DriverUpdateView: View {
 
                                                 
                                                 if (db.bDriverBoost[ctr] && db.sDriver[0][0] == "2") {       // don't change bDriverBoost on initial set-up
-                                                    db.sDriver[ctr1][14] = "1.1"    //boost
+                                                    db.sDriver[ctr1][14] = "1.25"    //boost
                                                     db.sDriver[ctr1][30] = "5"   //red
-                                                    db.sDriver[ctr1 + 220][14] = "1.1"    // change all same drivers in common, rare and epic
+                                                    db.sDriver[ctr1 + 220][14] = "1.25"    // change all same drivers in common, rare and epic
                                                     db.sDriver[ctr1 + 220][30] = "5"   //red
-                                                    db.sDriver[ctr1 + 440][14] = "1.1"    // change all same drivers in common, rare and epic
+                                                    db.sDriver[ctr1 + 440][14] = "1.25"    // change all same drivers in common, rare and epic
                                                     db.sDriver[ctr1 + 440][30] = "5"   //red
                                                } else {
                                                    db.sDriver[ctr1][14] = "1.0"   // no boost

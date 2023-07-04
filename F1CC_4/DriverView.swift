@@ -233,24 +233,42 @@ struct DriverView: View {
                                     let colorBack = cmode[colorInt1]      //  get the level and apply the right background colour to it
                                     let colorInt2: Int = Int(db.sDriver[index_h + index_v][30])!
                                     let colorFont = cmode[colorInt2]      //  get the level and apply the right background colour to it
-                                    let sDriverName = db.sDriver[(index_h + index_v)][1]
+                                    var sDriverName = db.sDriver[(index_h + index_v)][1]
                                     
                                     VStack {
                                         Text("resultsLine1")    // CL ACa/NCa PL
                                             .font(.system(size: 9))
-                                            .frame(width: 120)
+                                            .frame(width: 120, alignment: .leading)
                                             .background(colorBack)
                                         Text(DriverDisplay[(index_h + index_v)][0])    // Stats for CL ACa/NCa PL
                                             .font(.system(size: CGFloat(fontSize[1]), design: .monospaced))
                                             .fontWeight(.semibold)
                                             .frame(width: 120, alignment: .leading)
                                             .background(colorBack)
-                                        Text(sDriverName)     // DriverName
-                                                .font(.system(size: 16))
-                                                .fontWeight(.semibold)
+                                        if (colorInt2 != 5) {
+                                            VStack {
+                                                Text(sDriverName)     // DriverName
+                                                    .font(.system(size: 16))
+                                                    .fontWeight(.semibold)
+                                                    .frame(width: 120)
+                                                    .background(colorBack)
+                                            }
+                                        } else {
+                                            VStack {
+                                                Group {
+                                                    Text(sDriverName)     // DriverName
+                                                        .font(.system(size: 16))
+                                                        .fontWeight(.semibold) +
+                                                    Text(" 25%")
+                                                        .font(.system(size: 9))
+                                                        .fontWeight(.semibold)
+                                                        .foregroundColor(Color.red)
+        
+                                                }
                                                 .frame(width: 120)
-                                                .foregroundColor(colorFont)
                                                 .background(colorBack)
+                                            }
+                                        }
                                         // ************************************************************
                                         /*
                                          Group {
@@ -264,7 +282,8 @@ struct DriverView: View {
                                                      .foregroundColor(Color.blue)
                                                      .fontWeight(.bold)
                                              }
-                                        */
+                                         .background(colorBack)
+                                       */
                                         // *************************************************************
                                         if (db.sSelectedMode == "detailMode") {
                                             VStack {
@@ -297,7 +316,7 @@ struct DriverView: View {
                                                     .font(.system(size: 9))
                                                     .frame(width: 120)
                                                     .background(colorBack)
-                                                Text("\(db.sDriver[index_v + index_h][16])      \(db.sDriver[index_v + index_h][18])")
+                                                Text("\(db.sDriver[index_v + index_h][16])    \(db.sDriver[index_v + index_h][18])")
                                                     .font(.system(size: 13, design: .monospaced))
                                                     .fontWeight(.semibold)
                                                     .frame(width: 120)
@@ -375,7 +394,7 @@ struct DriverView: View {
                 isDriverUpdateViewShowing = false
 //                for ctr in stride(from: 0, to: 650, by: 11) {
 //                    if (db.bDriverBoost[ctr]) {
-//                        db.sDriver[ctr][14] = "1.1"   // boosted multiplier
+//                        db.sDriver[ctr][14] = "1.25"   // boosted multiplier
 //                        db.sDriver[ctr][30] = "5"   //red font
 //                    } else {
 //                        db.sDriver[ctr][14] = "1.0"   // boosted multiplier
@@ -414,7 +433,7 @@ struct DriverView: View {
                 //print("!!! db.sDriver= \(db.sDriver)")
                 
                 for ctr in stride(from: 0, to: 650, by: 11) {   // set up bDriverBoost on initial run
-                    if (db.sDriver[ctr][14] == "1.1") {
+                    if (db.sDriver[ctr][14] == "1.25") {
                         db.bDriverBoost[ctr] = true
                     } else {
                         db.bDriverBoost[ctr] = false
@@ -454,7 +473,7 @@ struct DriverView: View {
         if (db.bFirstTimeLoad) {   //when loading, if its the first time then show the info sheet
             FirstTimeInfoView()
         }
-        
+        print("Test")
     }  // end of start
     
     
@@ -463,11 +482,11 @@ struct DriverView: View {
         var built = ""
         let Space = "              "
         if (db.sDriver[row_ctr][15].count + db.sDriver[row_ctr][20].count + db.sDriver[row_ctr][21].count + db.sDriver[row_ctr ][17].count) <= 10 {
-            fontSize[row_ctr] = 13
-            built = db.sDriver[row_ctr ][15] + Space.prefix(7 - db.sDriver[row_ctr ][15].count - db.sDriver[row_ctr ][20].count) + db.sDriver[row_ctr ][20] + "/" + db.sDriver[row_ctr ][21] + Space.prefix(6 - db.sDriver[row_ctr ][21].count - db.sDriver[row_ctr ][17].count) + db.sDriver[row_ctr ][17]
+            fontSize[row_ctr] = 13      // smaller length so use font 13
+            built = db.sDriver[row_ctr ][15] + Space.prefix(6 - db.sDriver[row_ctr ][15].count - db.sDriver[row_ctr ][20].count) + db.sDriver[row_ctr ][20] + "/" + db.sDriver[row_ctr ][21] + Space.prefix(7 - db.sDriver[row_ctr ][21].count - db.sDriver[row_ctr ][17].count) + db.sDriver[row_ctr ][17]
         } else {
-            fontSize[row_ctr] = 11
-            built = db.sDriver[row_ctr ][15] + Space.prefix(8 - db.sDriver[row_ctr][15].count - db.sDriver[row_ctr][20].count) + db.sDriver[row_ctr][20] + "/" + db.sDriver[row_ctr][21] + Space.prefix(8 - db.sDriver[row_ctr][21].count - db.sDriver[row_ctr][17].count) + db.sDriver[row_ctr][17]
+            fontSize[row_ctr] = 11      // larger length so use font 11
+            built = db.sDriver[row_ctr ][15] + Space.prefix(7 - db.sDriver[row_ctr][15].count - db.sDriver[row_ctr][20].count) + db.sDriver[row_ctr][20] + "/" + db.sDriver[row_ctr][21] + Space.prefix(9 - db.sDriver[row_ctr][21].count - db.sDriver[row_ctr][17].count) + db.sDriver[row_ctr][17]
         }
         
         return (built, fontSize[row_ctr])

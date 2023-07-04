@@ -11,9 +11,12 @@ struct CarSubView: View {
     
     @EnvironmentObject var db: DBHandler
     let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic]
+    //@State var PartDisplay : [[String]] = Array(repeating: Array(repeating: "1", count: 2), count: 461)
+    //@State var PartDisplay : [[String]] = Array(repeating: Array(repeating: "1", count: 2), count: 461)
     @State var fontSize: [Int] = Array(repeating: 13, count: 461)
     var ctr: Int
     var stop: Int
+    var PDisplay: [[String]]
     
     var body: some View {
         VStack{   //  parts
@@ -28,9 +31,11 @@ struct CarSubView: View {
                     VStack {
                         Text("resultsLine1")
                             .font(.system(size: 9))
-                            .frame(width: 120)
+                            .frame(width: 120, alignment: .leading)
                             .background(colorBack)
-                        Text("\(db.sPart[ctr + index_h][15])  \(db.sPart[ctr + index_h][20])/\(db.sPart[ctr + index_h][21])  \(db.sPart[ctr + index_h][17])")      // CL ACa NCa  PL
+                        
+                        Text(PDisplay[(index_h + ctr)][0])    // Stats for CL ACa/NCa PL
+                        //Text("\(db.sPart[ctr + index_h][15])     \(db.sPart[ctr + index_h][20])/\(db.sPart[ctr + index_h][21])  \(db.sPart[ctr + index_h][17])")      // CL ACa NCa  PL
                             .font(.system(size: CGFloat(fontSize[1]), design: .monospaced))
                             .fontWeight(.semibold)
                             .frame(width: 120, alignment: .leading)
@@ -69,7 +74,7 @@ struct CarSubView: View {
                                     .font(.system(size: 9))
                                     .frame(width: 120)
                                     .background(colorBack)
-                                Text("\(db.sPart[ctr + index_h][16]) \(db.sPart[ctr + index_h][18])")
+                                Text("\(db.sPart[ctr + index_h][16])    \(db.sPart[ctr + index_h][18])")
                                 //Text("\(sPart[ctr + index_h][16])     \(sPart[0][19])    \(sPart[0][18])")
                                     .font(.system(size: 13, design: .monospaced))
                                     .fontWeight(.semibold)
@@ -276,9 +281,9 @@ struct CarView: View {
                                 Text("brakes")
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                 Spacer(minLength: 10)
-                                CarSubView(ctr: 0, stop: 32)
-                                CarSubView(ctr: 33, stop: 32)
-                                CarSubView(ctr: 66, stop: 1)
+                                CarSubView(ctr: 0, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 33, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 66, stop: 1, PDisplay: PartDisplay)
                             }
                             Spacer(minLength: 15)
                         }
@@ -287,9 +292,9 @@ struct CarView: View {
                                 Text("suspension")
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                 Spacer(minLength: 10)
-                                CarSubView(ctr: 77, stop: 32)
-                                CarSubView(ctr: 110, stop: 32)
-                                CarSubView(ctr: 143, stop: 1)
+                                CarSubView(ctr: 77, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 110, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 143, stop: 1, PDisplay: PartDisplay)
                             }
                             Spacer(minLength: 15)
                         }
@@ -298,9 +303,9 @@ struct CarView: View {
                                 Text("frontwing")
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                 Spacer(minLength: 10)
-                                CarSubView(ctr: 154, stop: 32)
-                                CarSubView(ctr: 187, stop: 32)
-                                CarSubView(ctr: 220, stop: 1)
+                                CarSubView(ctr: 154, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 187, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 220, stop: 1, PDisplay: PartDisplay)
                             }
                             Spacer(minLength: 15)
                         }
@@ -309,9 +314,9 @@ struct CarView: View {
                                 Text("rearwing")
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                 Spacer(minLength: 10)
-                                CarSubView(ctr: 231, stop: 32)
-                                CarSubView(ctr: 264, stop: 32)
-                                CarSubView(ctr: 297, stop: 1)
+                                CarSubView(ctr: 231, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 264, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 297, stop: 1, PDisplay: PartDisplay)
                             }
                             Spacer(minLength: 15)
                         }
@@ -320,9 +325,9 @@ struct CarView: View {
                                 Text("gearbox")
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                 Spacer(minLength: 10)
-                                CarSubView(ctr: 308, stop: 32)
-                                CarSubView(ctr: 341, stop: 32)
-                                CarSubView(ctr: 374, stop: 1)
+                                CarSubView(ctr: 308, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 341, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 374, stop: 1, PDisplay: PartDisplay)
                             }
                             Spacer(minLength: 15)
                         }
@@ -331,9 +336,9 @@ struct CarView: View {
                                 Text("engine")
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                 Spacer(minLength: 10)
-                                CarSubView(ctr: 385, stop: 32)
-                                CarSubView(ctr: 418, stop: 32)
-                                CarSubView(ctr: 451, stop: 1)
+                                CarSubView(ctr: 385, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 418, stop: 32, PDisplay: PartDisplay)
+                                CarSubView(ctr: 451, stop: 1, PDisplay: PartDisplay)
                             }
                         }
                         
@@ -454,6 +459,7 @@ struct CarView: View {
             fontSize[row_ctr] = result.1
             row_ctr = row_ctr + 11
         }
+        PartDisplay.forEach{print($0)}
         
     }
     
@@ -464,12 +470,11 @@ struct CarView: View {
         let Space = "              "
         if (db.sPart[row_ctr][15].count + db.sPart[row_ctr][20].count + db.sPart[row_ctr][21].count + db.sPart[row_ctr][17].count) <= 10 {
             fontSize[row_ctr] = 13
-            built = db.sPart[row_ctr][15] + Space.prefix(7 - db.sPart[row_ctr][15].count - db.sPart[row_ctr][20].count) + db.sPart[row_ctr][20] + "/" + db.sPart[row_ctr][21] + Space.prefix(6 - db.sPart[row_ctr][21].count - db.sPart[row_ctr][17].count) + db.sPart[row_ctr][17]
+            built = db.sPart[row_ctr][15] + Space.prefix(6 - db.sPart[row_ctr][15].count - db.sPart[row_ctr][20].count) + db.sPart[row_ctr][20] + "/" + db.sPart[row_ctr][21] + Space.prefix(7 - db.sPart[row_ctr][21].count - db.sPart[row_ctr][17].count) + db.sPart[row_ctr][17]
         } else {
             fontSize[row_ctr] = 11
             built = db.sPart[row_ctr][15] + Space.prefix(8 - db.sPart[row_ctr][15].count - db.sPart[row_ctr][20].count) + db.sPart[row_ctr][20] + "/" + db.sPart[row_ctr][21] + Space.prefix(8 - db.sPart[row_ctr][21].count - db.sPart[row_ctr][17].count) + db.sPart[row_ctr][17]
         }
-        
         return (built, fontSize[row_ctr])
     }
     
