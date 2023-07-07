@@ -226,13 +226,13 @@ struct CarView: View {
                                 Text ("speed")
                                     .font(.system(size: 11, design: .monospaced))
                                     .frame(maxWidth: 150, alignment: .trailing)
-                                    .padding(.bottom, 20)
+                                    .padding(.bottom, 40)
                                 Text ("cornering")
                                     .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 20)
+                                    .padding(.bottom, 40)
                                 Text ("powerUnit")
                                     .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 20)
+                                    .padding(.bottom, 40)
                                 Text ("reliability")
                                     .font(.system(size: 11, design: .monospaced))
                                     .padding(.bottom, 20)
@@ -429,10 +429,24 @@ struct CarView: View {
                         errMsg = "Cards must be between 0 and 9,999 for \(db.sPart[ctr1][1])"
                     }
                 }
-                if (errCheck) {
-                    print("Good")
-                    isPartUpdateViewShowing = false
-                    
+                // check for 1+ parts/category
+                   
+                for ctr2 in stride(from: 0, to: 461, by: 77) {   // in each category, check for at least 1 part with proper CL
+                    var iErrTest = 0
+                    for ctr1 in stride(from: 0, to: 76, by: 11) {     //inside each category- 7 parts
+                        if (Int(db.sPart[ctr1 + ctr2][15]) ?? 0 > 0) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
+                            iErrTest = 1
+                        }
+                    }
+                    if (iErrTest < 1) {
+                        errCheck = false
+                        errMsg = "Each category must have at least one component with have CL > 0"
+                    }
+                }
+                   
+                   if (errCheck) {
+                       print("Good")
+                       isPartUpdateViewShowing = false
                     var sMultStripped = db.sMult[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
                     for ctr in stride(from: 0, to: 461, by: 11) {
                         if (db.sPart[ctr][15] == db.sPart[ctr][17]) {   // CL=PL so set [31 and [32] to same
@@ -443,13 +457,12 @@ struct CarView: View {
                                     (Double(sMultStripped)! > Double(db.sPart[ctr][22])!)) {   // CL<PL and ACo > NCo
                             db.sPart[ctr][31] = db.sPart[ctr][17]
                             db.sPart[ctr][32] = db.sPart[ctr][18]
-                        } else {      //  CL<PL but there aren't enoug cards to get to PL, so figure out if a lower PL can br reachewd
+                        } else {      //  CL<PL but there aren't enough cards to get to PL, so figure out if a lower PL can br reachewd
                             //print("!! blah")
-                        }
+                        }   // else
                     }   //  ctr
-                    
-                    
                     start()
+                       
                 } else {
                     print("Bad level, cards or coins input")
                     showingAlert = true

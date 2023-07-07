@@ -22,11 +22,11 @@ struct PartUpdateView: View {
     var db = DBHandler()
     
     let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic]    // colour backgroiunds for text
-
+    let sCat: [String] = ["Brakes", "Gear Box", "Rear Wing", "Front Wing", "Suspension", "Engine"]
     var body: some View {
         ScrollView() {
-
-                VStack {
+            
+            VStack {
                 Text("Update part stats")
                     .font(.title2)
                     .fontWeight(.bold)
@@ -39,10 +39,10 @@ struct PartUpdateView: View {
                         .frame(width: 75)
                     TextField("Coins",text: $sMult[11][1])
                         .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidBeginEditingNotification)) { obj in
-                                        if let textField = obj.object as? UITextField {
-                                            textField.selectedTextRange = textField.textRange(from: textField.beginningOfDocument, to: textField.endOfDocument)
-                                        }
-                                    }
+                            if let textField = obj.object as? UITextField {
+                                textField.selectedTextRange = textField.textRange(from: textField.beginningOfDocument, to: textField.endOfDocument)
+                            }
+                        }
                     
                 }   //HStack
                 
@@ -51,13 +51,12 @@ struct PartUpdateView: View {
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
-                        .offset(x:-20, y:0)
+                        .offset(x:-25, y:0)
                     Text("Cards")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
-                        .offset(x:-45, y:0)
-                    
+                        .offset(x:-50, y:0)
                     Text("Level")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
@@ -68,18 +67,20 @@ struct PartUpdateView: View {
                         .fontWeight(.regular)
                         .frame(width: 50)
                         .offset(x:25, y:0)
-                    
                 }
                 .offset(x:45, y:0)   //HStack
-
-                    ForEach(Array(stride(from: 0, to: 461, by: 22)), id: \.self) { index_v in
-                        
+                
+                ForEach(Array(stride(from: 66, to: 461, by: 77)), id: \.self) { index_z in    // last row is single (7th part in category)
+                    Text(sCat[(index_z-66)/77])
+                        .font(.system(size: 12, design: .monospaced))
+                        .fontWeight(.semibold)
+                        .frame(width: 150)
+                        .offset(x:-130, y:0)
+                    ForEach(Array(stride(from: index_z - 66, to: index_z - 10, by: 22)), id: \.self) { index_v in  // 3 rows of 2
                         HStack{
                             ForEach(Array(stride(from: 0, to: 12, by: 11)), id: \.self) { index_h in     // 2 columns wide
-                                
+                                let ctr: Int = index_v + index_h
                                 VStack {
-                                    let ctr: Int = index_v + index_h
-                                    
                                     HStack {
                                         Text(sPart[ctr][1])
                                             .font(.system(size: 12, design: .monospaced))
@@ -98,20 +99,37 @@ struct PartUpdateView: View {
                                 }  //VStack
                                 .padding(.bottom,5)
                             }  // ForEach
-                             
                         } // HStack
                     }  // ForEach
-            
-        }     //VStack
+                    VStack {
+                        HStack {
+                            Text(sPart[index_z][1])
+                                .font(.system(size: 12, design: .monospaced))
+                                .fontWeight(.semibold)
+                                .frame(width: 100)
+                                .background(cmode[Int(sPart[index_z][13])!])
+                            TextField("Level",text: $sPart[index_z][15])
+                                .font(.system(size: 12, design: .monospaced))
+                                .frame(width: 20)
+                            TextField("Cards",text: $sPart[index_z][20])
+                                .font(.system(size: 12, design: .monospaced))
+                                .frame(width: 45, alignment: .center)
+                                .offset(x:-5,y:0)
+                        }  // HStack
+                        .offset(x:-80, y:0)
+                    }  //VStack
+                    .padding(.bottom,15)
+                }
+            }     //VStack
         }     //ScrollView
         
-            VStack {
-                Button("Update/Ok", action: {
-                    isPartUpdateViewShowing = false   // returns child view
-                    print("DUV Update button done")
-                })
-            }   //VStack
-
+        VStack {
+            Button("Update/Ok", action: {
+                isPartUpdateViewShowing = false   // returns child view
+                print("DUV Update button done")
+            })
+        }   //VStack
+        
     }   //View
     
 }   // struct()

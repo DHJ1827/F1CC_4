@@ -389,21 +389,23 @@ struct DriverView: View {
                     errMsg = "Cards must be between 0 and 9,999 for \(db.sDriver[ctr1][1])"
                 }
             }
+            
+            // check for 2+ drivers
+            var iErrTest = 0
+            for ctr1 in stride(from: 0, to: 650, by: 11) {
+                if (Int(db.sDriver[ctr1][15])! > 0) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
+                    iErrTest = iErrTest + 1
+                }
+            }
+            if (iErrTest < 2) {
+                    errCheck = false
+                    errMsg = "Two or more drivers must have CL > 0"
+                }
+            
             if (errCheck) {
                 print("Good")
                 isDriverUpdateViewShowing = false
-//                for ctr in stride(from: 0, to: 650, by: 11) {
-//                    if (db.bDriverBoost[ctr]) {
-//                        db.sDriver[ctr][14] = "1.25"   // boosted multiplier
-//                        db.sDriver[ctr][30] = "5"   //red font
-//                    } else {
-//                        db.sDriver[ctr][14] = "1.0"   // boosted multiplier
-//                        db.sDriver[ctr][30] = "4"  //black font
-//                    }
-//                }   //  ctr
-                
                 start()
-                
             } else {
                 print("Bad level, cards or coins input")
                 showingAlert = true
