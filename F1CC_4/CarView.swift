@@ -10,7 +10,7 @@ import SwiftUI
 struct CarSubView: View {
     
     @EnvironmentObject var db: DBHandler
-    let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic]
+    let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic, Color.black, Color.red]
     //@State var PartDisplay : [[String]] = Array(repeating: Array(repeating: "1", count: 2), count: 461)
     //@State var PartDisplay : [[String]] = Array(repeating: Array(repeating: "1", count: 2), count: 461)
     @State var fontSize: [Int] = Array(repeating: 13, count: 461)
@@ -27,6 +27,8 @@ struct CarSubView: View {
                     
                     let colorInt1: Int = Int(db.sPart[index_h + ctr][13])!
                     let colorBack = cmode[colorInt1]      //  get the level and apply the right background colour to it
+                    var ctr3 = Int(db.sPart[(index_h + ctr)][16]) ?? 77
+
                     
                     VStack {
                         Text("resultsLine1")
@@ -52,12 +54,41 @@ struct CarSubView: View {
                                     .font(.system(size: 9))
                                     .frame(width: 120)
                                     .background(colorBack)
-                                Text("\(db.sPart[ctr + index_h][16]) \(db.sPart[ctr + index_h][19]) \(db.sPart[ctr + index_h][18])")
-                                //Text("\(sPart[ctr + index_h][16])     \(sPart[0][19])    \(sPart[0][18])")
-                                    .font(.system(size: 13, design: .monospaced))
-                                    .fontWeight(.semibold)
-                                    .frame(width: 120)
-                                    .background(colorBack)
+                                
+                                
+                                //var ctr3 = Int(db.sDriver[(index_h + index_v)][16]) ?? 77
+
+                                if (Float(db.sPart[(ctr + index_h)][16])! < 10) {    //CR < 10 so need more spaces
+                                    VStack{
+                                        Text(db.sPart[ctr + index_h][16] + "   " + db.sPart[ctr + index_h][19] + "   " + db.sPart[ctr + index_h][18])   // Stats for CR MR PR
+                                            .font(.system(size: 13, design: .monospaced))
+                                            .fontWeight(.semibold)
+                                            .frame(width: 120)
+                                            .foregroundColor(cmode[4])
+                                            .background(colorBack)
+                                    }
+                                } else {
+                                    VStack{
+                                        Text(db.sPart[ctr + index_h][16] + " " +  db.sPart[ctr + index_h][19] + " " + db.sPart[ctr + index_h][18])   // Stats for CR MR PR
+                                            .font(.system(size: 13, design: .monospaced))
+                                            .fontWeight(.semibold)
+                                            .frame(width: 120)
+                                            .foregroundColor(cmode[4])
+                                            .background(colorBack)
+                                    }  //VStack
+                                }  // else
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+//                                Text("\(db.sPart[ctr + index_h][16]) \(db.sPart[ctr + index_h][19]) \(db.sPart[ctr + index_h][18])")
+//                                    .font(.system(size: 13, design: .monospaced))
+//                                    .fontWeight(.semibold)
+//                                    .frame(width: 120)
+//                                    .background(colorBack)
                                 Text("NCo")
                                     .font(.system(size: 9, design: .monospaced))
                                     .frame(width: 120, alignment: .center)
@@ -119,7 +150,7 @@ struct CarView: View {
     @State var row_ctr = 0
     @State var fontSize: [Int] = Array(repeating: 13, count: 461)
     
-    let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic]
+    let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic, Color.black, Color.red]
     
     //******************************************************************
     

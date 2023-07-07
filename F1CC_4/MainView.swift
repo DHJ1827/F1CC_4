@@ -7,8 +7,9 @@
 // TO DO
 //
 // Code
-// when you select/deselect boost for a driver, then common, rare and epic all need to check/uncheck
-// driver =15 says error but keeps the error in the level tv in updatedriverview- should revert back to prewvious value
+// CR MR PR spacing in driver and car detailed
+// change tabview icons to android
+// driver =15 says error but keeps the error in the level tv in updatedriverview- should revert back to previous value
 // sargeant and piastri each muyst be >0
 // same above for part but each category starter must be >0
 //

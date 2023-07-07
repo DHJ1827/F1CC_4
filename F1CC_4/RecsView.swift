@@ -657,7 +657,7 @@ struct RecsSubView: View {
                                 Spacer(minLength: 15)
                             }
                             Group{
-                                Text("suspension")
+                                Text("gearbox")
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                     .frame(minWidth: 100, minHeight: 30, alignment: .leading)
                                     .padding(.horizontal, 30)
@@ -682,7 +682,7 @@ struct RecsSubView: View {
                                 Spacer(minLength: 15)
                             }
                             Group{
-                                Text("gearbox")
+                                Text("suspension")
                                     .font(.system(size: 14, weight: .bold, design: .default))
                                     .frame(minWidth: 100, minHeight: 30, alignment: .leading)
                                     .padding(.horizontal, 30)

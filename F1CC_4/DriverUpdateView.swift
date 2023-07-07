@@ -81,10 +81,9 @@ struct DriverUpdateView: View {
                         
                         HStack{
                             ForEach(Array(stride(from: 0, to: 12, by: 11)), id: \.self) { index_h in     // 2 columns wide
-                                
                                 VStack {
                                     var ctr: Int = index_v + index_h
-                                    
+                                            
                                     HStack {
                                         Text(db.sDriver[ctr][1])
                                             .font(.system(size: 12, design: .monospaced))
@@ -104,18 +103,17 @@ struct DriverUpdateView: View {
                                                // toggle on/off driver at common/rare/epic as well
                                                 var currDrBoost = db.bDriverBoost[ctr]
                                                 var ctr1 = ctr
-                                                if (ctr >= 220) {
-                                                    ctr1 = ctr - 220
-                                                } else if (ctr >= 440) {
+                                                if (ctr >= 440) {
                                                     ctr1 = ctr - 440
+                                                } else if (ctr >= 220) {
+                                                    ctr1 = ctr - 220
                                                 }
                                                 print ("!!ctr changed: ",ctr, db.bDriverBoost[ctr], ctr1)
-//                                                db.bDriverBoost[ctr1] = currDrBoost
-//                                                db.bDriverBoost[ctr1 + 220] = currDrBoost
-//                                                db.bDriverBoost[ctr1 + 440] = currDrBoost
-
-                                                
-                                                if (db.bDriverBoost[ctr] && db.sDriver[0][0] == "2") {       // don't change bDriverBoost on initial set-up
+                                                db.bDriverBoost[ctr1] = currDrBoost
+                                                db.bDriverBoost[ctr1 + 220] = currDrBoost
+                                                db.bDriverBoost[ctr1 + 440] = currDrBoost
+                                               
+                                                if (db.bDriverBoost[ctr] && db.sDriver[0][0] == "2") {       // don't change bDriverBoost on initial set-up ie. [0][0] =0
                                                     db.sDriver[ctr1][14] = "1.25"    //boost
                                                     db.sDriver[ctr1][30] = "5"   //red
                                                     db.sDriver[ctr1 + 220][14] = "1.25"    // change all same drivers in common, rare and epic

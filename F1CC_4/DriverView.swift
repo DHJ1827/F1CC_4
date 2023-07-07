@@ -233,7 +233,9 @@ struct DriverView: View {
                                     let colorBack = cmode[colorInt1]      //  get the level and apply the right background colour to it
                                     let colorInt2: Int = Int(db.sDriver[index_h + index_v][30])!
                                     let colorFont = cmode[colorInt2]      //  get the level and apply the right background colour to it
-                                    var sDriverName = db.sDriver[(index_h + index_v)][1]
+                                    //var sDriverName = db.sDriver[(index_h + index_v)][1]
+                                    var ctr3 = Int(db.sDriver[(index_h + index_v)][16]) ?? 77
+                                    
                                     
                                     VStack {
                                         Text("resultsLine1")    // CL ACa/NCa PL
@@ -247,7 +249,7 @@ struct DriverView: View {
                                             .background(colorBack)
                                         if (colorInt2 != 5) {
                                             VStack {
-                                                Text(sDriverName)     // DriverName
+                                                Text(db.sDriver[(index_h + index_v)][1])     // DriverName
                                                     .font(.system(size: 16))
                                                     .fontWeight(.semibold)
                                                     .frame(width: 120)
@@ -256,7 +258,7 @@ struct DriverView: View {
                                         } else {
                                             VStack {
                                                 Group {
-                                                    Text(sDriverName)     // DriverName
+                                                    Text(db.sDriver[(index_h + index_v)][1])     // DriverName
                                                         .font(.system(size: 16))
                                                         .fontWeight(.semibold) +
                                                     Text(" 25%")
@@ -291,13 +293,11 @@ struct DriverView: View {
                                                     .font(.system(size: 9))
                                                     .frame(width: 120)
                                                     .background(colorBack)
-                                                Text("\(db.sDriver[index_v + index_h][16]) \(db.sDriver[index_v + index_h][19]) \(db.sDriver[index_v + index_h][18])")   // Stats for CR MR PR
-                                                //Text($db.sDriver[index_v + index_h][16],$db.sDriver[index_v + index_h][19], db.sDriver[index_v + index_h][18])
-                                                    .font(.system(size: 13, design: .monospaced))
-                                                    .fontWeight(.semibold)
-                                                    .frame(width: 120)
-                                                    .foregroundColor(cmode[4])
-                                                    .background(colorBack)
+//                                                Text("\(index_v+index_h)")    // CR MR PR
+//                                                    .font(.system(size: 9))
+//                                                    .frame(width: 120)
+//                                                    .background(colorBack)
+                                                DriverSubView(ctr2: index_v+index_h, colorBack: colorBack, ctr3: ctr3)
                                                 Text("NCo")
                                                     .font(.system(size: 9, design: .monospaced))
                                                     .frame(width: 120, alignment: .center)
@@ -310,9 +310,9 @@ struct DriverView: View {
                                                     .background(colorBack)
                                             }   //VStack
                                             .padding(.bottom, 6)
-                                        } else {
+                                        } else {           //Basic View
                                             VStack {
-                                                Text("resultsLine4B")
+                                                Text("resultsLine4B")     //CR PR
                                                     .font(.system(size: 9))
                                                     .frame(width: 120)
                                                     .background(colorBack)
@@ -409,18 +409,18 @@ struct DriverView: View {
                 showingAlert = true
             }
         })    // sheet
-        
-        {DriverUpdateView(isDriverUpdateViewShowing: $isDriverUpdateViewShowing)
+        {
+            DriverUpdateView(isDriverUpdateViewShowing: $isDriverUpdateViewShowing)
                 .environmentObject(db)
         }
         .onAppear(perform: start)
-        
     }   //end of body
     
     
     func start() {
         
         print("!!! DV start()...")
+
         
         if (db.sDriver[0][29] == "1") {    // if max_lvl hasn't been set = db hasn't loaded into sDriver ie. it's the first time running
             try! db.setup()   //create db
@@ -461,6 +461,8 @@ struct DriverView: View {
         } catch {
             print("\nDriverUpdateView: db.updateDriver and/or db.updateMult failed")
         }
+
+        
         
         row_ctr = 0
         while row_ctr <= 659 {    // build the first row strings for each driver
@@ -522,6 +524,46 @@ struct DriverView: View {
     
     
 }   //struct
+
+struct DriverSubView: View {
+    
+    @EnvironmentObject var db: DBHandler
+    let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic, Color.black, Color.red]
+    var ctr2: Int
+    var colorBack: Color
+    var ctr3: Int
+    
+    var body: some View {
+        
+//        Text("\(ctr3)")  // Stats for CR MR PR
+//            .font(.system(size: 13, design: .monospaced))
+//            .fontWeight(.semibold)
+//            .frame(width: 120)
+//            .foregroundColor(cmode[4])
+//            .background(colorBack)
+    
+        if (ctr3 < 10) {    //CR < 10 so need more spaces
+            VStack{
+                Text(db.sDriver[ctr2][16] + "   " + db.sDriver[ctr2][19] + "   " + db.sDriver[ctr2][18])   // Stats for CR MR PR
+                    .font(.system(size: 13, design: .monospaced))
+                    .fontWeight(.semibold)
+                    .frame(width: 120)
+                    .foregroundColor(cmode[4])
+                    .background(colorBack)
+            }
+        } else {
+            VStack{
+                Text(db.sDriver[ctr2][16] + " " +  db.sDriver[ctr2][19] + " " + db.sDriver[ctr2][18])   // Stats for CR MR PR
+                    .font(.system(size: 13, design: .monospaced))
+                    .fontWeight(.semibold)
+                    .frame(width: 120)
+                    .foregroundColor(cmode[4])
+                    .background(colorBack)
+            }  //VStack
+        }  // else
+    } //view
+}  //struct
+
 
 struct InfoSheetDriverView: View {
     var body: some View {
