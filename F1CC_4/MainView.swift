@@ -7,16 +7,22 @@
 // TO DO
 //
 // Code
-// change tabview icons to android
-// driver =15 says error but keeps the error in the level tv in updatedriverview- should revert back to previous value
-// change part update view into categpries
+// figure out if rear wing is first or front wing is in cars, update, recs, etc.
+// detailed Recs- sr4 spacing when NCa and NCo are 0 vs when sR4 is multiline and NCa is larger
+// add space to RSide of factor when PL value is < 10 ie. right justify just like LH is already- or is this  already done?!
+// fix team score calcs
+// 
+//
+// Translations
+// sR1 and sR4 spacing in driver, car, recs
+//
 // UI
-// update translations with spacing from results1 etc from EN to other langs
-// add translations for error messages
+// adjusr spacing in driver update LH column for Level Check pasrt update as well for same spacing issue?
+// Team score in Fr is missing
 // fill in ios icon
 //
 //Test
-// check all screens for translations
+// LAST: check all screens for translations
 // check all buttons for good/bad input eg. 0, -2, 6,000, HJU, 3.2, 4,567,892,332, etc.
 // check all drivers, parts= 0
 // Try min, mid, max. Try driver update, part update, coins, extremes= "",0,9999999,2,345,etc. Slider extremes. Check translations with F1 Clash app.
@@ -31,9 +37,8 @@
 // add commas (or . for localization) to Ca and Co for better readibility
 // add 10% to drivers when boosted and add up arrow to Recs Detailed drivers when upgrade needed
 // when a driver 10% is checked, need to check/unlock the other colours of that same driver- tough
-
-// To print array
-// db.sDriver.forEach{print($0)}
+// change tabview icons to android
+// To print array: db.sDriver.forEach{print($0)}
 
 import SwiftUI
 

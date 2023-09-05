@@ -25,16 +25,16 @@ struct DriverUpdateView: View {
         ScrollView() {
 
                 VStack {
-                Text("Update driver stats")
+                Text("updateDriverStats")
                     .font(.title2)
                     .fontWeight(.bold)
                 Spacer()
                 
                 HStack {
-                    Text("Coins:")
+                    Text("coin")
                         .font(.body)
                         .fontWeight(.semibold)
-                        .frame(width: 75)
+                        .frame(width: 125)
                     TextField("Coins",text: $db.sMult[11][1])
                         .onReceive(NotificationCenter.default.publisher(for: UITextField.textDidBeginEditingNotification)) { obj in
                                         if let textField = obj.object as? UITextField {
@@ -45,11 +45,12 @@ struct DriverUpdateView: View {
                 }   //HStack
                 
                 HStack {
-                    Text("Level")
+                    Text("level")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
-                    Text("Cards")
+                        .offset(x:-5, y:0)
+                    Text("cards")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
@@ -59,12 +60,12 @@ struct DriverUpdateView: View {
                         .fontWeight(.regular)
                         .frame(width: 50)
                         .offset(x:-40, y:0)
-                    Text("Level")
+                    Text("level")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
                         .offset(x:20, y:0)
-                    Text("Cards")
+                    Text("cards")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
@@ -93,9 +94,11 @@ struct DriverUpdateView: View {
                                         TextField("Level",text: $db.sDriver[ctr][15])
                                             .font(.system(size: 12, design: .monospaced))
                                             .frame(width: 20)
+                                            .multilineTextAlignment(.trailing)
                                         TextField("Cards",text: $db.sDriver[ctr][20])
                                             .font(.system(size: 12, design: .monospaced))
                                             .frame(width: 45, alignment: .center)
+                                            .multilineTextAlignment(.trailing)
                                             .offset(x:-5,y:0)
                                         Toggle("", isOn: $db.bDriverBoost[ctr])
                                             .onChange(of: db.bDriverBoost[ctr]) { value in     //when toggle changes update 25% multiplier and font colour
@@ -144,7 +147,7 @@ struct DriverUpdateView: View {
         }     //ScrollView
         
             VStack {
-                Button("Update/Ok", action: {
+                Button("update", action: {
                     isDriverUpdateViewShowing = false   // returns child view
                     print("DUV Update button done")
                 })

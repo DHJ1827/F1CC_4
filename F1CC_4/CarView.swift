@@ -141,6 +141,7 @@ struct CarView: View {
     @State var isPartUpdateViewShowing: Bool = false
     @State private var showingInfoSheet = false
     @State var errMsg = ""
+    @State var errMsgTemp = ""
     
     var ctr = 0
     var ctr1 = 0
@@ -149,6 +150,8 @@ struct CarView: View {
     @State var PartDisplay : [[String]] = Array(repeating: Array(repeating: "1", count: 2), count: 461)
     @State var row_ctr = 0
     @State var fontSize: [Int] = Array(repeating: 13, count: 461)
+    let assetLevel = ["","","","","","","","",NSLocalizedString("epic", comment: ""),NSLocalizedString("rare", comment: ""),"",NSLocalizedString("common", comment: "")]
+
     
     let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic, Color.black, Color.red]
     
@@ -226,15 +229,17 @@ struct CarView: View {
                                 Text ("speed")
                                     .font(.system(size: 11, design: .monospaced))
                                     .frame(maxWidth: 150, alignment: .trailing)
-                                    .padding(.bottom, 40)
+                                    .padding(.bottom, 20)
                                 Text ("cornering")
                                     .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 40)
+                                    .padding(.bottom, 20)
                                 Text ("powerUnit")
                                     .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 40)
+                                    .lineLimit(1)
+                                    .padding(.bottom, 20)
                                 Text ("reliability")
                                     .font(.system(size: 11, design: .monospaced))
+                                    .lineLimit(1)
                                     .padding(.bottom, 20)
                             }
                             .offset(x: -5, y:40)
@@ -406,27 +411,37 @@ struct CarView: View {
                 if db.sMult[11][1].isEmpty {    //check for empty ACo string
                     db.sMult[11][1] = "0"
                 }
+                
                 // check Coins value
                 if (Int(db.sMult[11][1].replacingOccurrences(of: ",", with: ""))! < 0 || Int(db.sMult[11][1].replacingOccurrences(of: ",", with: ""))! > 99999999) {
                     errCheck = false
-                    errMsg = "Coins must be between 0 and 99,999,999"
+                    errMsgTemp = NSLocalizedString("ACo_error", comment: "")
+                    errMsg = String.localizedStringWithFormat(errMsgTemp)
                     showingAlert = true
+                    db.sMult[11][1] = "0"   // reset coins
                 }
                 
                 // check levels value
                 for ctr in stride(from: 0, to: 461, by: 11) {
-                    if (!((0...Int(db.sPart[ctr][29])! ~= Int(db.sPart[ctr][15]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
+                    if (!((0...Int(db.sPart[ctr][29])! ~= Int(db.sPart[ctr][15]) ?? .min)) && errCheck) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999 AND still no error
                         errCheck = false
-                        errMsg = "Levels must be between 0 and \(db.sPart[ctr][29]) for \(db.sPart[ctr][1])"
+                        errMsgTemp = NSLocalizedString("CL_error", comment: "")
+                        errMsg = String.localizedStringWithFormat(errMsgTemp)
+                        errMsg = errMsg + db.sPart[ctr][29] + " for " + db.sPart[ctr][1] + " (" + assetLevel[Int(db.sPart[ctr][29])!] + ")"
                         showingAlert = true
+                        db.sPart[ctr][15] = "0"   // reset level
                     }
                 }
                 
                 //check cards value
                 for ctr1 in stride(from: 0, to: 461, by: 11) {
-                    if (!((0...99999 ~= Int(db.sPart[ctr1][20]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
+                    if (!((0...99999 ~= Int(db.sPart[ctr1][20]) ?? .min)) && errCheck) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999 AND still no error
                         errCheck = false
-                        errMsg = "Cards must be between 0 and 9,999 for \(db.sPart[ctr1][1])"
+                        errMsgTemp = NSLocalizedString("ACa_error", comment: "")
+                        errMsg = String.localizedStringWithFormat(errMsgTemp)
+                        errMsg = errMsg + db.sPart[ctr][1] + " (" + assetLevel[Int(db.sPart[ctr][29])!] + ")"
+                        showingAlert = true
+                        db.sPart[ctr1][20] = "0"   // reset cards
                     }
                 }
                 // check for 1+ parts/category
@@ -438,16 +453,18 @@ struct CarView: View {
                             iErrTest = 1
                         }
                     }
-                    if (iErrTest < 1) {
+                    if (iErrTest < 1 && errCheck) {  // AND still no error
                         errCheck = false
-                        errMsg = "Each category must have at least one component with have CL > 0"
+                        errMsgTemp = NSLocalizedString("noParts_error", comment: "")
+                        errMsg = String.localizedStringWithFormat(errMsgTemp)
+                        showingAlert = true
                     }
                 }
                    
                    if (errCheck) {
                        print("Good")
                        isPartUpdateViewShowing = false
-                    var sMultStripped = db.sMult[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
+                    let sMultStripped = db.sMult[11][1].replacingOccurrences(of: ",", with: "") // remove , from string
                     for ctr in stride(from: 0, to: 461, by: 11) {
                         if (db.sPart[ctr][15] == db.sPart[ctr][17]) {   // CL=PL so set [31 and [32] to same
                             //print("!!379 \(db.sPart[0][15]) \(db.sDriver[0][31])")
@@ -490,11 +507,13 @@ struct CarView: View {
         
         db.sPart = db.sPartCalc(sPart: db.sPart, sMult: db.sMult, sCard: db.sCard)      //update calculations
         do {
-            db.sPart = try db.updatePart(sPart: db.sPart)
-            try db.updateMult()
+            db.sPart = try db.updatePart(sPart: db.sPart)  //update db with any calc changed
+            db.sMult = try db.updateMult(sMult: db.sMult)
+            
         } catch {
-            print("\nPartUpdate: db.updatePart and/or db.updateMult failed")
+            print("\nDriverUpdateView: db.updateDriver and/or db.updateMult failed")
         }
+        
         
         row_ctr = 0
         while row_ctr <= 461 {    // build the first row strings for each driver- change to 60 when ready
@@ -503,7 +522,7 @@ struct CarView: View {
             fontSize[row_ctr] = result.1
             row_ctr = row_ctr + 11
         }
-        PartDisplay.forEach{print($0)}
+        //PartDisplay.forEach{print($0)}
         
     }
     
@@ -530,11 +549,13 @@ struct CarView: View {
         db.sMult[2][1] = String(format: "%.0f", multPowerUnit)
         db.sMult[3][1] = String(format: "%.0f", multReliability)
         do {
-            try db.updateMult()
-            db.sPart = try db.sPartCalc(sPart: db.sPart, sMult: db.sMult, sCard: db.sCard)
+            db.sMult = try db.updateMult(sMult: db.sMult)
+            
         } catch {
-            print("CarView: db.updateMult and/or db.sPartCalc failed")
+            print("\nDriverUpdateView: db.updateDriver and/or db.updateMult failed")
         }
+        db.sPart = try db.sPartCalc(sPart: db.sPart, sMult: db.sMult, sCard: db.sCard)
+        
     }
     
 }   //struct

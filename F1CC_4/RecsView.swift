@@ -531,10 +531,10 @@ struct RecsSubView: View {
                         ForEach(Array(stride(from: 0, to: 34, by: 11)), id: \.self) { index_v in
                             
                             let sDriverList: [String] = ["ST", "ST", "MT", "LT"]
-                            var iDriverTerm = Int(index_v)/11      // index_v is not an Int- needs to be cast first !!!!!!!
+                            let iDriverTerm = Int(index_v)/11      // index_v is not an Int- needs to be cast first !!!!!!!
                             let transDriverString = LocalizedStringKey(sDriverList[iDriverTerm]) // works
                             let colorInt2: Int = Int(db.sDriver[index_v][30])!
-                            let colorFont = cmode[colorInt2]      //  get the level and apply the right background colour to it
+
                             
                             HStack(alignment: .top) {
                                 
@@ -901,9 +901,7 @@ struct RecsSubView: View {
             //    var interstitial: GADInterstitialAd?
             
             var factors: [String]
-            var strertyy = db.sPart[0][15]
-            var stfrertyy = db.sDriver[0][15]
-            
+             
             print("RV start....")
             //print("RV start2= ", Double(db.sDriver[0][16])!)
             //print(Recs)
@@ -923,14 +921,15 @@ struct RecsSubView: View {
             
             //var interstitial : Interstitial = Interstitial()
             
+            print("!!!!adMobCtr start= ",db.adMobCtr)
             db.adMobCtr = db.adMobCtr + 1
-            //print("adMobCtr= ",db.adMobCtr)
+            
             if (db.adMobCtr >= 3) {
                 db.adMobCtr = 0
-                //self.interstitial.showAd()
+                self.interstitial.showAd()
             }
             
-            print("!!adMobCtr= ",db.adMobCtr)
+            print("!!!!adMobCtr end= ",db.adMobCtr)
             
             
             //*********************************************************************************************************
@@ -1127,12 +1126,9 @@ struct RecsSubView: View {
             row_ctr = 4     // 0-3 = drivers, 4-21 are parts
             pitStopTime = 0
             while row_ctr <= 7  { // < 461
-                var id = Int(Recs[row_ctr][0])
-                var CL = Int(db.sPart[id][15])!
-                var pit = 0.0
-                var sTextd = db.sPart[id][15]
+                let id = Int(Recs[row_ctr][0])
+                let CL = Int(db.sPart[id][15])!
                 pitStopTime = pitStopTime + Double(db.sPart[Int(Recs[row_ctr][0]) + Int(db.sPart[id][15])! - 1][7])!
-                pit = Double(db.sPart[id + CL - 1][7])!
                 
                 //pitStopTime = pitStopTime + sPart[Recs[row_ctr + sPart[row_ctr][15] - 1][0]][7]   // sRecs[rowctr] finds id. get CL[15] - 1 to get pitstoptime in [7]
                 row_ctr += 1
@@ -1270,7 +1266,6 @@ struct RecsSubView: View {
             //    print("!!! Rstart: \(RStart)")
             //    print("!!! maxDriverStat: \(maxDriverStat)")
             var RecNumber = 0  // 22 values of recommended drivers and parts
-            var sTemp = ""
             
             row_ctr = 0    // 4 drivers x 4 strings
             var rec_ctr = 0   // 4 drivers (0 to 3) in Recs[]
@@ -1345,7 +1340,6 @@ struct RecsSubView: View {
                 
                 let xCL = Int(db.sDriver[RecNumber][15])!    // CL value
                 let xPL = Int(db.sDriver[RecNumber][17])!    // PL value
-                var sTemp = ""
                 
                 //Overtaking
                 //if overtaking(CL) < 10, add space. if overtaking(PL) < 10, add space.
@@ -1534,19 +1528,16 @@ struct RecsSubView: View {
                 
                 let xCL = Int(db.sPart[RecNumber][15])!
                 let xPL = Int(db.sPart[RecNumber][17])!
-                var xLSpace = 0   //extra LH space needed for small CL
-                var xRSpace = 0   //extra RH space needed for small PL
+                let xRSpace = 0   //extra RH space needed for small PL
                 
                 LStart = 20 - Int(maxPartStat/2) - 4   // left start column for capabilities ie pos1
                 RStart = 20 + Int(maxPartStat/2) + 3   // right start column for capabilities ie pos4
                 let pos1 = LStart   // start pos of CL
                 var pos2 = 0   // start pos of capabilities
-                var pos3 = 0   // end pos of capabilities
                 let pos4 = RStart   // start pos of PL
                 
                 //Speed
                 pos2 = 20 - Int(factors[5].count/2)
-                pos3 = 20 + Int(factors[5].count/2)
                 var sCL = db.sPart[RecNumber + xCL - 1][3]
                 var sPL = db.sPart[RecNumber + xPL - 1][3]
                 if (Int(sCL)! < 10) {
@@ -1560,7 +1551,6 @@ struct RecsSubView: View {
                 
                 //Cornering
                 pos2 = 20 - Int(factors[6].count/2)
-                pos3 = 19 + Int(factors[6].count/2)    //shifted because Aero is even
                 sCL = db.sPart[RecNumber + xCL - 1][4]
                 sPL = db.sPart[RecNumber + xPL - 1][4]
                 if (Int(sCL)! < 10) {
@@ -1574,7 +1564,6 @@ struct RecsSubView: View {
                 
                 //Power unit
                 pos2 = 20 - Int(factors[7].count/2)
-                pos3 = 19 + Int(factors[7].count/2)    //shifted because Grip is even
                 sCL = db.sPart[RecNumber + xCL - 1][5]
                 sPL = db.sPart[RecNumber + xPL - 1][5]
                 if (Int(sCL)! < 10) {
@@ -1588,7 +1577,6 @@ struct RecsSubView: View {
                 
                 //Reliability
                 pos2 = 20 - Int(factors[8].count/2)
-                pos3 = 20 + Int(factors[8].count/2)
                 sCL = db.sPart[RecNumber + xCL - 1][6]
                 sPL = db.sPart[RecNumber + xPL - 1][6]
                 if (Int(sCL)! < 10) {

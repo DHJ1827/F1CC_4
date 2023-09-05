@@ -5,6 +5,13 @@
   Created by David Joyce on 2023-03-16.
   
 */
+"about" = "Über F1CC";
+"ACa_error" = "Karten müssen < 10.000 sein für ";
+"ACa" = "VKa";
+"ACo_error" = " Münzen müssen > 0 und > 100.000.000 sein";
+"ACo" = "VMu";
+"admob_ad_unit_id_test" = "ca-app-pub-3940256099942544/8691691433";
+"admob_ad_unit_id" = "ca-app-pub-4058577522896164/8172551523";
 "aero" = "Aero";
 "and" = "und";
 "andAlso" = "und wähle ihn aus. Sie sollten auch auswählen";
@@ -23,16 +30,18 @@
 "basicOneUpgrade %@ %@" = " und upgrade %@ auf level %@";
 "basicTwoUpgrade %@ %@ %@ %@" = " und upgrade %@ auf level %@ und %@ auf level %@";
 "blank" = "%d";
+"boost" = "Boost";
 "brakes" = "Bremsen";
 "cancel" = "Stornieren";
 "cards" = "Karten";
-"CL_error" = "Der Aktuelles Stufe muss zwischen 0 und 11 liegen ";
+"CL_error" = "Der Aktuelles Stufe muss zwischen 0 und ";
 "CL" = "AS";
-"coins %@" = "Münzen:\n %@";
+"coin" = "Münzen: ";
+"coins %@" = "Münzen: %@";
 "common" = "Verbreitet";
 "components" ="Komponente";
 "componentsScreen" = "Komponentenbildschirm";
-"componentsSummary" = "Komponentenempfehlungen";
+"componentsSummary" = "  Komponentenempfehlungen  ";
 "consistency" = "Konstanz";
 "cornering" = "Kurenverhalten";
 "CR" = "AB";
@@ -43,9 +52,10 @@
 "details" = "Einzelheiten";
 "driver" = "Rennfahrer";
 "driverScreen" = "Fahrerbildschirm";
-"driverSummary" = "Empfehlungen für Rennfahrer";
+"driverSummary" = "  Empfehlungen für Rennfahrer  ";
 "engine" = "Motor";
 "epic" = "Epos";
+"error" = "Fehler";
 "frontwing" = "Vorderflügel";
 "fuelManagement" = "Sprit-Management";
 "gearbox" = "Getriebe";
@@ -73,12 +83,14 @@
 "NCo" = "BMu";
 "neededCards" = "Benötigte Karten";
 "neededCoins" = "Benötigte Münzen";
+"noDrivers_error" = "Zwei oder mehr Rennfahrer müssen AS > 0 haben";
+"noParts_error" = "Jede Kategorie muss mindestens eine Komponente mit AS > 0 haben";
 "none" = "Keiner";
 "number_of_coins" = "Anzahl Münzen";
 "numberCoins" = "Anzahl Münzen";
 "ok" = "OK";
 "overtaking" = "Überholen";
-"pitStopTime %@" = "Durchschnittliche Zeit für PS %@";
+"pitStopTime %@" = "Durchschnittliche Zeit für PS: %@";
 "PL" = "MS";
 "possibleLevel" = "Mögliches Stufe";
 "possibleRating" = "Mögliche Bewertung";
@@ -93,11 +105,11 @@
 "recommendationsScreen" = "Empfehlungsbildschirm";
 "reliability" = "Kuverlässignkeit";
 "rememberRecs" = "\n\nDenken Sie daran, Empfehlungen sofort auszuführen, nachdem Sie die Karten- oder Münzwerte eines Fahrers oder einer Komponente geändert haben!";
-"resultsLine1" = "AS  VKa / BKa  MS";
-"resultsLine4B" = "AB  MB";
-"resultsLine4D" = "AB  Be MB";
-"resultRecs1" = "     Name     AS     AB     MS     VKa     VMu";
-"resultRecs2" = "   MS     MB     Be     BKa     BMu";
+"resultsLine1" = "AS        VKa / BKa        MS";
+"resultsLine4B" = "AB                    MB";
+"resultsLine4D" = "AB            Be              MB";
+"resultRecs1" = "   Name           AS     AB    MS       VKa         VMu";
+"resultRecs2" = "    MS       MB         Be          BKa           BMu";
 "shortTerm" = "Kurz-Ziele";
 "shortTermFull" = "KZ: Kurz-Ziele";
 "speed" = "Tempo";
@@ -105,11 +117,12 @@
 "ST_recs" = "KZ: Kurz-Ziele";
 "summary" = "Zusammenfassung";
 "suspension" = "Suspension";
-"teamScore %@" = "Team-Punkte %@";
+"teamScore %@" = "  Team-Punkte: %@  ";
 "tireManagement" = "Reifen-Management";
 "title_name" = "F1 Clash Companion";
 "toLevel" = "auf Stufe";
 "TL" = "ZN";
 "TR" = "ZB";
+"update" = "Aktualisieren / Ok";
 "updateDriverStats" = "Treiberstatistiken aktualisieren";
 "updatePartStats" = "Rennwagenstatistik aktualisieren:";

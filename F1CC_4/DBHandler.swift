@@ -24,7 +24,7 @@ class DBHandler: ObservableObject {
     @Published var sSelectedMode: String = "basicMode"
     @Published var photoNum: String = "F1" + String(Int.random(in: 11...20))
     //@Published var photoNum: String = "F114"
-    @Published var adMobCtr: Int = 3
+    @Published var adMobCtr: Int = 0
     @Published var bFirstTimeLoad: Bool = false
     
     let path = NSSearchPathForDirectoriesInDomains(
@@ -289,7 +289,7 @@ class DBHandler: ObservableObject {
     // ******************************************e
     
     func dbReadDriverBoost(sDriver: [[String]], bDriverBoost: [Bool]) throws -> [Bool] {
-        var bDriverBoostt = bDriverBoost
+        let bDriverBoostt = bDriverBoost
         return bDriverBoostt
     }
     
@@ -297,7 +297,7 @@ class DBHandler: ObservableObject {
     // ******************************************e
     
     func updateDriver(sDriver: [[String]]) throws -> [[String]]  {
-        var sDriverr = sDriver
+        let sDriverr = sDriver
         let dbQueue = try DatabaseQueue(path: path + dbName)
         
         do {
@@ -324,7 +324,7 @@ class DBHandler: ObservableObject {
     // ******************************************
     
     func updatePart(sPart: [[String]]) throws -> [[String]] {
-        var sPartt = sPart
+        let sPartt = sPart
         let dbQueue = try DatabaseQueue(path: path + dbName)
         
         do {
@@ -351,10 +351,10 @@ class DBHandler: ObservableObject {
     // ******************************************
     // ******************************************
     
-    func updateMult() throws  {
+    func updateMult(sMult: [[String]]) throws -> [[String]]  {
         
         //print("!!", sMult)
-        
+        let sMultt = sMult
         let dbQueue = try DatabaseQueue(path: path + dbName)
         do {
             try dbQueue.write { db in
@@ -370,7 +370,7 @@ class DBHandler: ObservableObject {
         } catch {
             print("Error")
         }
-        //return sMultt
+        return sMultt
     }        //updateMult()
     
     
@@ -379,11 +379,11 @@ class DBHandler: ObservableObject {
         //  Calculate sDriver values
         
         var sDriverr = sDriver
-        var sMultt = sMult
-        var sCardd = sCard
+        let sMultt = sMult
+        let sCardd = sCard
         
         
-        var ACo = Int(sMult[11][1].replacingOccurrences(of: ",", with: ""))!  // available coins
+        let ACo = Int(sMult[11][1].replacingOccurrences(of: ",", with: ""))!  // available coins
         var tempPLplus1Coins = 0
         var tempPLplus2Coins = 0
         var row_ctr = 0
@@ -429,8 +429,8 @@ class DBHandler: ObservableObject {
             }
             
             // multiply the weighted ratings by any 25% boost
-            var dbl1 = Double(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])!)
-            var dbl2 = Double(sDriverr[row_ctr][14])
+            let dbl1 = Double(Int(sDriverr[row_ctr][3])! * Int(sMultt[5][1])! + Int(sDriverr[row_ctr][4])! * Int(sMultt[6][1])! + Int(sDriverr[row_ctr][5])! * Int(sMultt[7][1])! + Int(sDriverr[row_ctr][6])! * Int(sMultt[8][1])! + Int(sDriverr[row_ctr][7])! * Int(sMultt[9][1])!)
+            let dbl2 = Double(sDriverr[row_ctr][14])
             sDriverr[row_ctr][11] = String(format: "%.0f", dbl1 * dbl2!)
 
             row_ctr = row_ctr + 1
@@ -667,7 +667,7 @@ class DBHandler: ObservableObject {
             }
 
             if (tempCL > 0) {   //  otherwise[27] stays at .0000001
-                var testtt = Int(sDriverr[row_ctr + tempCL - 1][10])!
+                let testtt = Int(sDriverr[row_ctr + tempCL - 1][10])!
                 if (tempPLplus2Coins != Int(sDriverr[row_ctr + tempCL - 1][10])!) {    // handle divide by 0
                     sDriverr[row_ctr][27] =  String( ACo / (tempPLplus2Coins - Int(sDriverr[row_ctr + tempCL - 1][10])!) )
                 }
@@ -747,10 +747,10 @@ class DBHandler: ObservableObject {
         //  Calculate sPart values
         
         var sPartt = sPart
-        var sMultt = sMult
-        var sCardd = sCard
+        let sMultt = sMult
+        let sCardd = sCard
         
-        var ACo = Int(sMult[11][1].replacingOccurrences(of: ",", with: ""))!  // available coins
+        let ACo = Int(sMult[11][1].replacingOccurrences(of: ",", with: ""))!  // available coins
         var tempPLplus1Coins = 0
         var tempPLplus2Coins = 0
         
@@ -1064,10 +1064,10 @@ class DBHandler: ObservableObject {
     
     func updateIsDisplayed(sDriver: [[String]], isDisplayed: [Bool]) -> [[String]]  {
         
-        var isDisplayedd = isDisplayed   //temp holder
+        let isDisplayedd = isDisplayed   //temp holder
         var sDriverr = sDriver
         
-        var row_ctr = 0
+        let row_ctr = 0
         while row_ctr <= 659 {
             if (isDisplayedd[row_ctr]) {
                 sDriverr[row_ctr][14] = "1.25"

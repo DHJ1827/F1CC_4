@@ -6,9 +6,9 @@
  
  */
 "about" = "About F1CC";
-"ACa_error" = "Cards must be &lt;10,000 for ";
+"ACa_error" = "Cards must be < 10,000 for ";
 "ACa" = "ACa";
-"ACo_error" = " Coins must be &gt; 0 and &lt; 100,000,000";
+"ACo_error" = " Coins must be > 0 and < 100,000,000";
 "ACo" = "ACo";
 "admob_ad_unit_id_test" = "ca-app-pub-3940256099942544/8691691433";
 "admob_ad_unit_id" = "ca-app-pub-4058577522896164/8172551523";
@@ -30,16 +30,18 @@
 "basicOneUpgrade %@ %@" = " and upgrade %@ to level %@";
 "basicTwoUpgrade %@ %@ %@ %@" = " and upgrade %@ to level %@ and %@ to level %@";
 "blank" = "%d";
+"boost" = "Boost";
 "brakes" = "Brakes";
 "cancel" = "Cancel";
 "cards" = "Cards";
-"CL_error" = "Current Level must be between 0 - 11 for ";
+"CL_error" = "Current Level must be between 0 - ";
 "CL" = "CL";
+"coin" = "Coins: ";
 "coins %@" = "Coins: %@";
 "common" = "Common";
 "components" ="Components";
 "componentsScreen" = "Components Screen";
-"componentsSummary" = "Components Recommendations";
+"componentsSummary" = "  Components Recommendations  ";
 "consistency" = "Consistency";
 "cornering" = "Cornering";
 "CR" = "CR";
@@ -50,9 +52,10 @@
 "details" = "Details";
 "driver" = "Driver";
 "driverScreen" = "Driver Screen";
-"driverSummary" = "Driver Recommendation";
+"driverSummary" = "  Driver Recommendation  ";
 "engine" = "Engine";
 "epic" = "Epic";
+"error" = "Error";
 "frontwing" = "Front Wing";
 "fuelManagement" = "Fuel Management";
 "gearbox" = "Gear Box";
@@ -60,7 +63,7 @@
 "immediate" = " immediately";
 "info_contents_driver" = "F1 Clash Companion will help you to determine and prioritize driver and car upgrades. \n\nClick on the Drivers screen and the Car screen to enter your levels, cards and coins. Go to the Recommendations screen to see your best choices for game play.  Update your levels, cards and coins frequently and check back to the Recommendations screen for further guidance!\n\nFor each driver, the statistics are: \nCL= Current Level of the driver\nACa= number of Available Cards\nNCa= number of Needed Cards to upgrade to the next level \nPL= Possible Level of the driver, using the NCa\nCR= Current Rating which indicates the strength (0-100) of the driver at the CL\nPR= Possible Rating which indicates the strength (0-100) of the driver at the PL\nMR= Maximum Rating which is the highest possible rating for the driver \nNCo= Number of Needed Coins to upgrade to the PL.\n\nThere also 5 Component Amplifiers sliders. You can vary these amplifiers to analyze their impact on racing. \n\n";
 "info_contents_part" = "F1 Clash Companion will help you to determine and prioritize driver and car upgrades. \n\nClick on the Drivers screen and the Car screen to enter your levels, cards and coins. Go to the Recommendations screen to see your best choices for game play.  Update your levels, cards and coins frequently and check back to the Recommendations screen for further guidance!\n\nFor each component, the statistics are: \nCL= Current Level of the component\nACa= number of Available Cards\nNCa= number of Needed Cards to upgrade to the next level \nPL= Possible Level of the component, using the NCa\nCR= Current Rating which indicates the strength (0-100) of the component at the CL\nPR= Possible Rating which indicates the strength (0-100) of the component at the PL\nMR= Maximum Rating which is the highest possible rating for the component \nNCo= Number of Needed Coins to upgrade to the PL.\n\nThere also 4 Component Amplifiers sliders. You can vary these amplifiers to analyze their impact on racing. \n\n";
-"info_contents_recs" = "The Basic Recommendations screen lists your best choices for drivers and components. The Detailed Recommendations screen has more information and lists the shot term (ST), medium term (MT) and long term (LT) recommendations for the drivers and the components. Any driver or component in red font should be upgraded immediately. Medium term (MT) and long term (LT) recommendations are targets for future priority upgrades. \n\n";
+"info_contents_recs" = "The Basic Recommendations screen lists your best choices for drivers and components. The Detailed Recommendations screen has more information and lists the short term (ST), medium term (MT) and long term (LT) recommendations for the drivers and the components. Any driver or component in red font should be upgraded immediately. Medium term (MT) and long term (LT) recommendations are targets for future priority upgrades. \n\n";
 "intro" = "F1 Clash Companion will help you to determine and prioritize driver and car upgrades. \n\nFor the initial set-up: click on the drivers below and enter your levels, cards and coins and then go to the Car screen and click on the components to enter your levels and cards. Go to the Recommendations screen to see your best choices for game play. \n\nUpdate your levels, cards and coins frequently and check back to the Recommendations screen for further guidance!\n\n";
 "IU" = "IU";
 "legend" = "Legend";
@@ -80,6 +83,8 @@
 "NCo" = "NCo";
 "neededCards" = "Needed Cards";
 "neededCoins" = "Needed Coins";
+"noDrivers_error" = "Two or more drivers must have CL > 0";
+"noParts_error" = "Each category must have at least one component with CL > 0";
 "none" = "None";
 "number_of_coins" = "Number of coins";
 "numberCoins" = "Number of Coins:";
@@ -101,10 +106,10 @@
 "reliability" = "Reliability";
 "rememberRecs" = "\n\nRemember to immediately run Recommendations after changing any driver's or component's cards or coins values!";
 "resultsLine1" = "CL        ACa / NCa        PL";
-"resultsLine4B" = "CR              PR";
+"resultsLine4B" = "CR                  PR";
 "resultsLine4D" = "CR          MR            PR";
-"resultRecs1" = "  Name            CL     CR    PL       ACa        ACo";
-"resultRecs2" = "    PL       PR          MR        NCa             NCo";
+"resultRecs1" = "   Name            CL    CR    PL       ACa         ACo";
+"resultRecs2" = "    PL       PR         MR          NCa           NCo";
 "shortTerm" = "Short Term";
 "shortTermFull" = "ST: Short Term";
 "speed" = "Speed";
@@ -112,11 +117,12 @@
 "ST_recs" = "ST: Short Term";
 "summary" = "Summary";
 "suspension" = "Suspension";
-"teamScore %@" = "Team Score: %@";
+"teamScore %@" = "  Team Score: %@  ";
 "tireManagement" = "Tire Management";
 "title_name" = "F1 Clash Companion";
 "toLevel" = "to Level";
 "TL" = "TL";
 "TR" = "TR";
+"update" = "Update / Ok";
 "updateDriverStats" = "Update driver stats:";
 "updatePartStats" = "Update car stats:";

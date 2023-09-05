@@ -24,8 +24,9 @@ struct DriverView: View {
     @State var isDriverUpdateViewShowing: Bool = false
     @State private var showingInfoSheet = false
     @State var errMsg = ""
+    @State var errMsgTemp = ""       //temp holder
     
-    @State var colorFont: Color = Color.black
+    //@State var colorFont: Color = Color.black
     
     var ctr = 0
     var ctr1 = 0
@@ -40,8 +41,8 @@ struct DriverView: View {
     @State var fontSize: [Int] = Array(repeating: 13, count: 660)
     
     let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic, Color.black, Color.red]
-    let assetLevel = ["","","","","","","","","epic","rare","","common"]
-    
+    //let assetLevel = ["","","","","","","","","epic","rare","","common"]
+    let assetLevel = ["","","","","","","","",NSLocalizedString("epic", comment: ""),NSLocalizedString("rare", comment: ""),"",NSLocalizedString("common", comment: "")]
     //******************************************************************
     
     var body: some View {
@@ -128,18 +129,20 @@ struct DriverView: View {
                                 Text ("overtaking")
                                     .font(.system(size: 11, design: .monospaced))
                                     .frame(maxWidth: 150, alignment: .trailing)
-                                    .padding(.bottom, 20)
+                                    .offset(x: 0, y: 5)
+                                    .padding(.bottom, 30)
                                 Text ("defending")
                                     .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 20)
+                                    .padding(.bottom, 23)
                                 Text ("qualifying")
                                     .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 22)
+                                    .padding(.bottom, 21)
                                 Text ("raceStart")
                                     .font(.system(size: 11, design: .monospaced))
-                                    .padding(.bottom, 22)
+                                    .padding(.bottom, 20)
                                 Text ("tireManagement")
                                     .font(.system(size: 11, design: .monospaced))
+                                    .lineLimit(1)
                                     .padding(.bottom, 22)
                             }
                             .offset(x: -5, y:20)
@@ -166,7 +169,7 @@ struct DriverView: View {
                                 }
                                 .accentColor(Color.colours.backgrd_blue)
                                 .frame(width: 100)
-                                .offset(x: -5, y: 0)
+                                .offset(x: -5, y: 5)
                                 
                                 Slider(value: $multDefend, in: 0...200,step: 1,onEditingChanged: { data in
                                     self.alphaToShow = String(Character(UnicodeScalar(Int(self.multDefend))!))
@@ -176,7 +179,7 @@ struct DriverView: View {
                                 }
                                 .accentColor(Color.colours.backgrd_blue)
                                 .frame(width: 100)
-                                .offset(x: -5, y: 0)
+                                .offset(x: -5, y: 10)
                                 
                                 Slider(value: $multConsist, in: 0...200,step: 1,onEditingChanged: { data in
                                     self.alphaToShow = String(Character(UnicodeScalar(Int(self.multConsist))!))
@@ -186,7 +189,7 @@ struct DriverView: View {
                                 }
                                 .accentColor(Color.colours.backgrd_blue)
                                 .frame(width: 100)
-                                .offset(x: -5, y: 0)
+                                .offset(x: -5, y: 10)
                                 
                                 
                                 Slider(value: $multStart, in: 0...200,step: 1,onEditingChanged: { data in
@@ -197,7 +200,7 @@ struct DriverView: View {
                                 }
                                 .accentColor(Color.colours.backgrd_blue)
                                 .frame(width: 100)
-                                .offset(x: -5, y: 0)
+                                .offset(x: -5, y:10)
                                 
                                 Slider(value: $multTire, in: 0...200,step: 1,onEditingChanged: { data in
                                     self.alphaToShow = String(Character(UnicodeScalar(Int(self.multTire))!))
@@ -207,7 +210,7 @@ struct DriverView: View {
                                 }
                                 .accentColor(Color.colours.backgrd_blue)
                                 .frame(width: 100)
-                                .offset(x: -5, y: 0)
+                                .offset(x: -5, y: 10)
                                 
                             }  //VStack of sliders
                             .offset(x:-5, y: -10)
@@ -232,9 +235,9 @@ struct DriverView: View {
                                     let colorInt1: Int = Int(db.sDriver[index_h + index_v][13])!
                                     let colorBack = cmode[colorInt1]      //  get the level and apply the right background colour to it
                                     let colorInt2: Int = Int(db.sDriver[index_h + index_v][30])!
-                                    let colorFont = cmode[colorInt2]      //  get the level and apply the right background colour to it
-                                    //var sDriverName = db.sDriver[(index_h + index_v)][1]
-                                    var ctr3 = Int(db.sDriver[(index_h + index_v)][16]) ?? 77
+                                    //let colorFont = cmode[colorInt2]      //  get the level and apply the right background colour to it
+                                    //let sDriverName = db.sDriver[(index_h + index_v)][1]
+                                    let ctr3 = Int(db.sDriver[(index_h + index_v)][16]) ?? 77
                                     
                                     
                                     VStack {
@@ -366,40 +369,53 @@ struct DriverView: View {
             if db.sMult[11][1].isEmpty {    //check for empty ACo string
                 db.sMult[11][1] = "0"
             }
+            
             // check Coins value
-            if (Int(db.sMult[11][1].replacingOccurrences(of: ",", with: ""))! > 99999999) {
+            if (Int(db.sMult[11][1].replacingOccurrences(of: ",", with: ""))! < 0   || Int(db.sMult[11][1].replacingOccurrences(of: ",", with: ""))! > 99999999) {
                 errCheck = false
-                errMsg = "Coins must be between 0 and 99,999,999"
+                errMsgTemp = NSLocalizedString("ACo_error", comment: "")
+                errMsg = String.localizedStringWithFormat(errMsgTemp)
                 showingAlert = true
+                db.sMult[11][1] = "0"   // reset coins
             }
             
             // check levels value
             for ctr in stride(from: 0, to: 650, by: 11) {
-                if (!((0...Int(db.sDriver[ctr][29])! ~= Int(db.sDriver[ctr][15]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
+                if (!((0...Int(db.sDriver[ctr][29])! ~= Int(db.sDriver[ctr][15]) ?? .min)) && errCheck) {     // check if Level is > 0 and < maxLevel AND still no error
                     errCheck = false
-                    errMsg = "Levels must be between 0 and \(db.sDriver[ctr][29]) for \(db.sDriver[ctr][1]) (\(assetLevel[Int(db.sDriver[ctr][29])!]))"
+                    errMsgTemp = NSLocalizedString("CL_error", comment: "")
+                    errMsg = String.localizedStringWithFormat(errMsgTemp)
+                    errMsg = errMsg + db.sDriver[ctr][29] + " for " + db.sDriver[ctr][1] + " (" + assetLevel[Int(db.sDriver[ctr][29])!] + ")"
                     showingAlert = true
+                    db.sDriver[ctr][15] = "0"   // reset level
+
                 }
             }
             
             //check cards levels
             for ctr1 in stride(from: 0, to: 650, by: 11) {
-                if (!((0...99999 ~= Int(db.sDriver[ctr1][20]) ?? .min))) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
+                if (!((0...99999 ~= Int(db.sDriver[ctr1][20]) ?? .min)) && errCheck) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999 AND still no error
                     errCheck = false
-                    errMsg = "Cards must be between 0 and 9,999 for \(db.sDriver[ctr1][1])"
+                    errMsgTemp = NSLocalizedString("ACa_error", comment: "")
+                    errMsg = String.localizedStringWithFormat(errMsgTemp)
+                    errMsg = errMsg + db.sDriver[ctr1][1] + " (" + assetLevel[Int(db.sDriver[ctr1][29])!] + ")"
+                    showingAlert = true
+                    db.sDriver[ctr1][20] = "0"   // reset cards
                 }
             }
             
             // check for 2+ drivers
             var iErrTest = 0
             for ctr1 in stride(from: 0, to: 650, by: 11) {
-                if (Int(db.sDriver[ctr1][15])! > 0) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999
+                if (Int(db.sDriver[ctr1][15])! > 0) {     // check if Level is > 0 and < maxLevel and Cards > 0  and < 99,999,999 AND still no error
                     iErrTest = iErrTest + 1
                 }
             }
-            if (iErrTest < 2) {
-                    errCheck = false
-                    errMsg = "Two or more drivers must have CL > 0"
+            if (iErrTest < 2 && errCheck) {
+                errCheck = false
+                errMsgTemp = NSLocalizedString("noDrivers_error", comment: "")
+                errMsg = String.localizedStringWithFormat(errMsgTemp)
+                showingAlert = true
                 }
             
             if (errCheck) {
@@ -458,7 +474,7 @@ struct DriverView: View {
         
         do {
             db.sDriver = try db.updateDriver(sDriver: db.sDriver)  //update db with any calc changed
-            try db.updateMult()
+            db.sMult = try db.updateMult(sMult: db.sMult)
             
         } catch {
             print("\nDriverUpdateView: db.updateDriver and/or db.updateMult failed")
@@ -504,12 +520,15 @@ struct DriverView: View {
         db.sMult[7][1] = String(format: "%.0f", multConsist)
         db.sMult[8][1] = String(format: "%.0f", multStart)
         db.sMult[9][1] = String(format: "%.0f", multTire)
+        
         do {
-            try db.updateMult()
-            db.sDriver = try db.sDriverCalc(sDriver: db.sDriver, sMult: db.sMult, sCard: db.sCard, bDriverBoost: db.bDriverBoost)
+            db.sDriver = try db.updateDriver(sDriver: db.sDriver)  //update db with any calc changed
+            db.sMult = try db.updateMult(sMult: db.sMult)
+            
         } catch {
-            print("DriverView: db.updateMult and/or db.sDriverCalc failed")
+            print("\nDriverUpdateView: db.updateDriver and/or db.updateMult failed")
         }
+        
     }
     
     func printArrRow(arrName: [[String]], xRow: Int) {

@@ -22,18 +22,18 @@ struct PartUpdateView: View {
     var db = DBHandler()
     
     let cmode: [Color] = [Color.white, Color.colours.common, Color.colours.rare, Color.colours.epic]    // colour backgroiunds for text
-    let sCat: [String] = ["Brakes", "Gear Box", "Rear Wing", "Front Wing", "Suspension", "Engine"]
+    let sCat: [String] = [NSLocalizedString("brakes", comment: ""),NSLocalizedString("gearbox", comment: ""),NSLocalizedString("rearwing", comment: ""),NSLocalizedString("frontwing", comment: ""),NSLocalizedString("suspension", comment: ""),NSLocalizedString("engine", comment: "")]
     var body: some View {
         ScrollView() {
             
             VStack {
-                Text("Update part stats")
+                Text("updatePartStats")
                     .font(.title2)
                     .fontWeight(.bold)
                 Spacer()
                 
                 HStack {
-                    Text("Coins:")
+                    Text("coin")
                         .font(.body)
                         .fontWeight(.semibold)
                         .frame(width: 75)
@@ -47,26 +47,26 @@ struct PartUpdateView: View {
                 }   //HStack
                 
                 HStack {
-                    Text("Level")
+                    Text("level")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
-                        .offset(x:-25, y:0)
-                    Text("Cards")
+                        .offset(x:0, y:0)
+                    Text("cards")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
-                        .offset(x:-50, y:0)
-                    Text("Level")
+                        .offset(x:-20, y:0)
+                    Text("level")
+                        .font(.system(size: 9, design: .monospaced))
+                        .fontWeight(.regular)
+                        .frame(width: 55)
+                        .offset(x:60, y:0)
+                    Text("cards")
                         .font(.system(size: 9, design: .monospaced))
                         .fontWeight(.regular)
                         .frame(width: 50)
-                        .offset(x:50, y:0)
-                    Text("Cards")
-                        .font(.system(size: 9, design: .monospaced))
-                        .fontWeight(.regular)
-                        .frame(width: 50)
-                        .offset(x:25, y:0)
+                        .offset(x:40, y:0)
                 }
                 .offset(x:45, y:0)   //HStack
                 
@@ -87,12 +87,14 @@ struct PartUpdateView: View {
                                             .fontWeight(.semibold)
                                             .frame(width: 100)
                                             .background(cmode[Int(sPart[ctr][13])!])
-                                        TextField("Level",text: $sPart[ctr][15])
+                                        TextField("level",text: $sPart[ctr][15])
                                             .font(.system(size: 12, design: .monospaced))
                                             .frame(width: 20)
-                                        TextField("Cards",text: $sPart[ctr][20])
+                                            .multilineTextAlignment(.trailing)
+                                        TextField("cards",text: $sPart[ctr][20])
                                             .font(.system(size: 12, design: .monospaced))
-                                            .frame(width: 45, alignment: .center)
+                                            .frame(width: 40, alignment: .center)
+                                            .multilineTextAlignment(.trailing)
                                             .offset(x:-5,y:0)
                                     }  // HStack
                                     .offset(x:15, y:0)
@@ -108,12 +110,14 @@ struct PartUpdateView: View {
                                 .fontWeight(.semibold)
                                 .frame(width: 100)
                                 .background(cmode[Int(sPart[index_z][13])!])
-                            TextField("Level",text: $sPart[index_z][15])
+                            TextField("level",text: $sPart[index_z][15])
                                 .font(.system(size: 12, design: .monospaced))
                                 .frame(width: 20)
-                            TextField("Cards",text: $sPart[index_z][20])
+                                .multilineTextAlignment(.trailing)
+                            TextField("cards",text: $sPart[index_z][20])
                                 .font(.system(size: 12, design: .monospaced))
-                                .frame(width: 45, alignment: .center)
+                                .frame(width: 40, alignment: .center)
+                                .multilineTextAlignment(.trailing)
                                 .offset(x:-5,y:0)
                         }  // HStack
                         .offset(x:-80, y:0)
@@ -124,7 +128,7 @@ struct PartUpdateView: View {
         }     //ScrollView
         
         VStack {
-            Button("Update/Ok", action: {
+            Button("update", action: {
                 isPartUpdateViewShowing = false   // returns child view
                 print("DUV Update button done")
             })
